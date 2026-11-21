@@ -1,25 +1,700 @@
-English,Russian,Example,WrongEN,WrongRU,Explanation,Hint,Audio,Tags,GUID
+﻿English,Russian,Example,WrongEN,WrongRU,Explanation,Hint,Audio,Tags,GUID
 to borrow,одалживать; брать взаймы,Can I borrow your pen?,to lend; to bring; to buy,давать взаймы; приносить; покупать,<b>borrow</b> — брать у кого-то; <b>lend</b> — давать кому-то.,,,level::A1-A2 pos::verb,
-weather,погода,The weather is nice today.,whether; feather; leather,ли; перо; кожа,<b>weather</b> — погода; <b>whether</b> — «ли» (I don't know whether…).,,,level::A1-A2 pos::noun,
-to remember,помнить; вспоминать,I remember your name.,to remind; to repeat; to return,напоминать; повторять; возвращаться,<b>remind sb</b> — напоминать кому-то; <b>remember</b> — помнить самому.,,,level::A1-A2 pos::verb,
 quiet,тихий; спокойный,The library is very quiet.,quite; quick; quit,довольно; быстрый; бросить,<b>quiet</b> [ˈkwaɪət] — тихий; <b>quite</b> [kwaɪt] — довольно.,,,level::A1-A2 pos::adj,
-expensive,дорогой,This phone is too expensive.,extensive; expressive; excessive,обширный; выразительный; чрезмерный,,,,level::A1-A2 pos::adj,
-to arrive,прибывать; приезжать,We arrive at noon.,to argue; to arrange; to approve,спорить; организовывать; одобрять,"<b>arrive at</b> (место) / <b>arrive in</b> (город, страна).",,,level::A1-A2 pos::verb,
-usually,обычно,I usually walk to work.,actually; easily; really,на самом деле; легко; действительно,,,,level::A1-A2 pos::adv,
-kitchen,кухня,She is cooking in the kitchen.,chicken; kitten; ticket,курица; котёнок; билет,,,,level::A1-A2 pos::noun,
-to achieve,достигать; добиваться,She worked hard to achieve her goals.,to archive; to arrive; to believe,архивировать; прибывать; верить,,,,level::B1-B2 pos::verb,
-reliable,надёжный,He is a reliable friend.,reachable; readable; relevant,доступный; читаемый; уместный,,,,level::B1-B2 pos::adj,
-to look forward to,ждать с нетерпением,I look forward to your reply.,to look up to; to look down on; to look out for,уважать; смотреть свысока; остерегаться,После <b>to</b> — существительное или -ing: look forward to <i>seeing</i> you.,,,level::B1-B2 pos::phrasal,
-opportunity,возможность; шанс,This job is a great opportunity.,opposition; operation; ownership,оппозиция; операция; владение,,,,level::B1-B2 pos::noun,
-to improve,улучшать; совершенствовать,I want to improve my English.,to approve; to prove; to remove,одобрять; доказывать; удалять,,,,level::B1-B2 pos::verb,
-however,однако,"It was late; however, we kept working.",whatever; whenever; moreover,что угодно; когда угодно; более того,,,,level::B1-B2 pos::linking,
-to figure out,понять; разобраться,I can't figure out this problem.,to find out; to point out; to give out,узнать; указать; раздавать,,,,level::B1-B2 pos::phrasal,
-challenge,вызов; трудная задача,Learning a language is a real challenge.,change; channel; charge,изменение; канал; заряд,,,,level::B1-B2 pos::noun,
-to take for granted,принимать как должное,Don't take your health for granted.,to take into account; to take part in; to take advantage of,учитывать; участвовать; воспользоваться,,,,level::B2-C1 pos::idiom,
-reluctant,неохотный,She was reluctant to admit her mistake.,relevant; resilient; redundant,уместный; устойчивый; избыточный,<b>be reluctant to do sth</b> — делать что-то неохотно.,,,level::B2-C1 pos::adj,
-to come up with,придумать,We need to come up with a better plan.,to come across; to come down with; to put up with,случайно наткнуться; заболеть; терпеть,,,,level::B2-C1 pos::phrasal,
-thorough,тщательный; основательный,The doctor gave me a thorough check-up.,through; though; thought,через; хотя; мысль,,,,level::B2-C1 pos::adj,
 to undermine,подрывать; ослаблять,Constant criticism can undermine confidence.,to underline; to underestimate; to undertake,подчёркивать; недооценивать; предпринимать,,,,level::B2-C1 pos::verb,
-nevertheless,тем не менее,"It was raining; nevertheless, we went out.",in addition; meanwhile; otherwise,кроме того; тем временем; иначе,,,,level::B2-C1 pos::linking,
-to get the hang of,освоиться; набить руку,You'll get the hang of it soon.,to get the ball rolling; to get cold feet; to get on sb's nerves,начать дело; струсить; действовать на нервы,,,,level::B2-C1 pos::idiom,
-straightforward,простой; понятный,The instructions are straightforward.,stressful; startling; strenuous,напряжённый; поразительный; изнурительный,,,,level::B2-C1 pos::adj,
+approach,подход,We need a new approach.,appearance; reproach; attempt,внешность; упрёк; попытка,,,,level::B1-B2 pos::noun,"Q,1QDh)3{}"
+issue,вопрос; проблема,This is a serious issue.,tissue; affair; cause,салфетка; дело; причина,,,,level::B1-B2 pos::noun,pa`Rv!IytE
+outcome,результат; исход,We're happy with the outcome.,income; outlook; output,доход; взгляд на вещи; выработка,,,,level::B1-B2 pos::noun,OT$O`oE^vK
+to improve,улучшать; улучшаться; совершенствовать,I want to improve my English.,to prove; to approve; to increase,доказывать; одобрять; увеличивать,,,,level::B1-B2 pos::verb,
+to persuade,убеждать; уговаривать; уговорить,I persuaded him to stay.,to pursue; to prevent; to provide,преследовать; предотвращать; обеспечивать,,,,level::B1-B2 pos::verb,Du{VWq;7K+
+requirement,требование,What are the requirements for this job?,retirement; recruitment; refinement,выход на пенсию; набор персонала; утончённость,,,,level::B1-B2 pos::noun,QKm^8UNtD5
+capable,способный,She's capable of doing it herself.,comparable; culpable; available,сравнимый; виновный; доступный,be capable <b>of</b> + -ing.,,,level::B1-B2 pos::adj,N0#a*p9X~O
+purpose,цель; назначение,What's the purpose of your visit?,proposal; response; promise,предложение; ответ; обещание,,,,level::B1-B2 pos::noun,Nm<I@-yiqi
+consistent,последовательный; постоянный,You need to be consistent.,convenient; persistent; considerate,удобный; настойчивый; внимательный к другим,,,,level::B1-B2 pos::adj,t5wqW=-~_M
+trade-off,компромисс; цена выбора,It's a trade-off between quality and speed.,trademark; payoff; takeoff,товарный знак; отдача; взлёт,,,,level::Pro domain::work,OPb>{d+f[g
+repetitive,однообразный; повторяющийся,The work is a bit repetitive.,respective; receptive; relative,соответствующий; восприимчивый; относительный,<b>repetitive tasks</b> — рутинные однообразные задачи.,,,level::B1-B2 pos::adj,Q3Xbyb=(Nr
+arrogant,высокомерный; надменный,He's smart but a little arrogant.,ignorant; elegant; abundant,невежественный; элегантный; обильный,,,,level::B1-B2 pos::adj,Jdi3O5gN7N
+constraint,ограничение,We have tight time constraints.,complaint; contrast; content,жалоба; контраст; содержание,<b>time / budget constraints</b> — ограничения по времени / бюджету.,,,level::B2-C1 pos::noun,M:~TlHwc`a
+pacing,темп; распределение темпа,The pacing of the video is too slow.,spacing; pricing; placing,интервал; ценообразование; размещение,"От <i>pace</i> — темп. <b>pacing</b> — как распределён темп: в видео, игре, презентации, работе.",,,level::B2-C1 pos::noun,PTOY>FiJzO
+reunion,встреча; воссоединение,We had a school reunion last summer.,union; reaction; occasion,союз; реакция; повод,<b>a family / school reunion</b> — встреча родных / выпускников.,,,level::B1-B2 pos::noun,f?}{jKC&&U
+consumer,потребитель,Consumers want cheaper products.,commuter; contributor; container,пригородный пассажир; участник; ёмкость,<b>consumer</b> — потребитель вообще; <i>customer</i> — клиент конкретной компании.,,,level::B1-B2 pos::noun,hLfbjF]V7^
+to edit,редактировать; править,Can you edit my text before I send it?,to omit; to emit; to audit,пропустить; испускать; проверять отчётность,<b>an edit</b> — правка: <i>I made a few edits.</i>,,,level::B1-B2 pos::verb,"m3.!CO4,EC"
+reluctant,неохотный; нежелающий,She was reluctant to admit her mistake.,relevant; resilient; redundant,уместный; устойчивый; избыточный,<b>be reluctant to do sth</b> — делать что-то неохотно. Не путать с <i>relevant</i> (уместный).,,,level::B1-B2,
+to come across,наткнуться; случайно найти; производить впечатление,I often come across this word in books.,to come over; to come down with; to get across,заходить в гости; заболеть; донести мысль,He comes across as friendly — он производит впечатление дружелюбного.,,,level::B2-C1 pos::phrasal,wot6mT#rw}
+to come up with,придумать; придумывать,We need to come up with a better plan.,to come across; to put up with; to come down with,случайно наткнуться; терпеть; заболеть (чем-то),<b>come up with</b> an idea / a plan / a solution. <i>come across</i> — случайно найти.,,,level::B1-B2,
+to come down with,заболеть; слечь с,I think I'm coming down with a cold.,to come up with; to come across; to put up with,придумать; наткнуться; терпеть,,,,level::B2-C1 pos::phrasal,"J||f[_52,6"
+to be,быть; являться,I want to be a doctor.,to have; to do; to go,иметь; делать; идти,"Формы: I <b>am</b>, he/she <b>is</b>, we/you/they <b>are</b>.",,,level::A1-A2 pos::verb,"oBo43|[,sU"
+to clarify,уточнить; прояснить,Could you clarify what you mean?,to classify; to justify; to qualify,классифицировать; оправдывать; получить квалификацию,,,,level::B1-B2 pos::verb,emKM;j5_.}
+to take for granted,принимать как должное,Don't take your health for granted.,to take into account; to take part in; to take advantage of,принимать во внимание; принимать участие; воспользоваться,Объект встаёт в середину: <b>take sth for granted</b>.,,,level::B1-B2,
+to bring about,вызывать; приводить к,Technology can bring about real change.,to bring up; to bring back; to bring in,поднимать тему; возвращать; вводить,,,,level::B2-C1 pos::phrasal,lBsNv{RL4h
+eventually,в конце концов; в итоге,"Eventually, he found a job he loved.",actually; occasionally; evidently,на самом деле; иногда; очевидно,Ложный друг: <i>eventually</i> ≠ «возможно». «Возможно» — <i>possibly</i>.,,,level::B1-B2,rJ1c+_!P_&
+to cut down on,сокращать; уменьшать потребление,I'm trying to cut down on sugar.,to cut off; to put up with; to cut in,отключать; терпеть; перебивать,,,,level::B2-C1 pos::phrasal,nIh1WDRW}}
+to have,иметь; есть,I have two brothers.,to give; to take; to keep,давать; брать; хранить,«У меня есть…» = <b>I have…</b>,,,level::A1-A2 pos::verb,vV1`E_fg>g
+to get rid of,избавиться от; избавиться,I need to get rid of these old clothes.,to get used to; to get along with; to get over,привыкнуть к; ладить с; оправиться от,<b>get rid of sth/sb</b> — избавиться от чего-то или кого-то.,,,level::B1-B2,oN{01c6IL3
+to assign,поручить; назначить,I'll assign this task to Anna.,to align; to sign; to resign,согласовать; подписать; уволиться,<b>assign sth to sb</b> — поручить что-то кому-то.,,,level::B1-B2 pos::verb,Pv_QRQ6SJu
+to back up,поддерживать; делать резервную копию,Always back up your files.,to back down; to back out; to set up,отступать; отказываться; создавать,,,,level::B2-C1 pos::phrasal,DraCB?cg6{
+thorough,тщательный; основательный,The police carried out a thorough investigation.,thoughtful; tough; rough,заботливый; жёсткий; грубый,Произношение: /ˈθʌrə/. Не путать с <i>through</i> /θruː/ — через.,,,level::B1-B2,
+to back out,отказаться; пойти на попятную,He backed out of the deal at the last minute.,to back up; to make out; to stand out,поддерживать; разобрать; выделяться,,,,level::B2-C1 pos::phrasal,"ygJ0/xt,t="
+to do,делать,What do you do on weekends?,to go; to see; to give,идти; видеть; давать,"<b>do</b> — действие, занятие: do homework, do sport. <b>make</b> — создать что-то: make a cake.",,,level::A1-A2 pos::verb,qy~tMB.wO%
+to figure out,разобраться; понять; выяснить,I can't figure out how this app works.,to find out; to carry out; to point out,узнать; выполнить; указать,<i>figure out</i> — понять своим умом. <i>find out</i> — узнать (информацию).,,,level::B1-B2,
+to stand out,выделяться,Bright colours stand out.,to stand up for; to stand by; to make out,заступаться; быть наготове; разобрать,,,,level::B2-C1 pos::phrasal,ip.?.BKI!z
+feedback,отзыв; обратная связь,Thanks for the feedback!,setback; comeback; payback,неудача; возвращение; расплата,"Неисчисляемое: <i>some feedback</i>, не <s>a feedback</s>.",,,level::B1-B2 pos::noun,FP4U^[wyNs
+affordable,доступный по цене; недорогой,They are looking for an affordable apartment.,available; reliable; valuable,имеющийся в наличии; надёжный; ценный,<b>afford</b> — позволить себе (по деньгам): <i>I can't afford it.</i>,,,level::B1-B2,t-!.rDW]QE
+to stand up for,заступаться; отстаивать,You should stand up for yourself.,to stand out; to look up to; to put up with,выделяться; уважать; терпеть,,,,level::B2-C1 pos::phrasal,Gm$=^3]g]`
+to make,делать; создавать; готовить,I make breakfast every morning.,to take; to bring; to find,брать; приносить; находить,"make tea, make a mistake, make friends.",,,level::A1-A2 pos::verb,H.qxIH)U;i
+to make sense,иметь смысл,Your explanation doesn't make sense to me.,to make sure; to make a difference; to make an effort,убедиться; иметь значение; приложить усилие,<b>It makes sense</b> — логично. <b>make sense of sth</b> — разобраться в чём-то.,,,level::B1-B2,I5y{4dg%h7
+to look up to,уважать; восхищаться,I've always looked up to my father.,to look down on; to look up; to look into,смотреть свысока; искать; изучать,,,,level::B2-C1 pos::phrasal,BLDgS/kz;_
+other,другой; другие,I have two other questions.,older; either; rather,старше; любой из двух; скорее,<b>other</b> + мн. число или the other; <i>another</i> — ещё один (ед. ч.).,,,level::A1-A2 pos::adj,rqC[0SJg.a
+nevertheless,тем не менее; однако,"The task was difficult; nevertheless, we finished it on time.",therefore; moreover; meanwhile,поэтому; более того; тем временем,Связка для контраста. Синоним — <i>nonetheless</i>.,,,level::B1-B2,
+to adjust,настроить; подогнать; приспособиться,You can adjust the brightness here.,to adopt; to admire; to arrange,принять; восхищаться; организовать,"<b>adjust to sth</b> — привыкнуть, приспособиться к чему-то.",,,level::B1-B2 pos::verb,v$=N`cN^*?
+well,хорошо; ну,She speaks English very well.,good; fine; wall,хороший; прекрасный; стена,"<b>well</b> — наречие (говорит хорошо), <i>good</i> — прилагательное (хороший). <i>Well, …</i> — «Ну, …».",,,level::A1-A2 pos::adv,vz_t6hJ*up
+to look down on,смотреть свысока; презирать,Don't look down on people.,to look up to; to look after; to let down,уважать; заботиться; подводить,,,,level::B2-C1 pos::phrasal,m?JU>48m1b
+to go,идти; ехать,Let's go home.,to come; to stay; to run,приходить; оставаться; бежать,"<b>go</b> — туда (от говорящего), <b>come</b> — сюда (к говорящему).",,,level::A1-A2 pos::verb,wop8B@b5&&
+because,потому что,I stayed home because it was raining.,before; besides; beside,до того как; кроме того; рядом с,<b>because of</b> + сущ.: <i>because of the rain</i>.,,,level::A1-A2 pos::linking,O$qo]nu1ie
+to give up,бросать; сдаваться; бросить,"Don't give up, you're almost there.",to give away; to take up; to put off,отдавать; начинать заниматься; откладывать,give up smoking — бросить курить.,,,level::B1-B2 pos::phrasal,1#v2DIrt-
+to let down,подводить; разочаровывать,I won't let you down.,to turn down; to back down; to look down on,отклонять; отступать; смотреть свысока,,,,level::B2-C1 pos::phrasal,u`0kiXu[]y
+just,просто; только что; как раз,I've just finished my work.,yet; still; ever,ещё; всё ещё; когда-либо,<b>just</b> — «только что» с Present Perfect; <i>just a minute</i> — минутку.,,,level::A1-A2 pos::adv,pH=-M0p|4v
+to put off,откладывать; отложить,Don't put off the meeting again.,to put on; to give up; to call off,надевать; бросать; отменять,"<b>put off</b> — перенести на потом, <b>call off</b> — отменить совсем.",,,level::B1-B2 pos::phrasal,JJnOfRu3Bf
+to get away with,сойти с рук; уйти безнаказанным,He thinks he can get away with lying.,to get along with; to get rid of; to get over,ладить с; избавиться от; оправиться от,,,,level::B2-C1 pos::phrasal,kbJ1X|Jrr
+also,тоже; также,She also works on weekends.,always; already; almost,всегда; уже; почти,<b>also</b> — перед глаголом; в конце фразы — <i>too</i>.,,,level::A1-A2 pos::adv,EPz6gaX$:R
+to align,согласовать; договориться,Let's align on the plan before Monday.,to assign; to resign; to design,поручить; уволиться; проектировать,<b>to align on sth</b> — прийти к общему пониманию.,,,level::Pro domain::work,sE9L)KmGS9
+to come,приходить; приезжать,Can you come to my party?,to go; to leave; to stay,идти; уходить; оставаться,Come here! — Иди сюда!,,,level::A1-A2 pos::verb,Ou-R&)*Oty
+only,только; единственный,It's the only way to do it.,lonely; ugly; early,одинокий; некрасивый; ранний,,,,level::A1-A2 pos::adv,KV:U4W2UP?
+to call off,отменять; отменить,They called off the match because of rain.,to put off; to call back; to turn down,откладывать; перезванивать; отклонять,,,,level::B1-B2 pos::phrasal,N65p=J__(4
+to get on with,продолжать; продолжать заниматься,Let's get on with the meeting.,to get over; to get through; to get by,пережить; дозвониться; обходиться,,,,level::B2-C1 pos::phrasal,G)>igoGu!L
+most,большинство; самый,Most people like music.,almost; mostly; must,почти; в основном; должен,<b>most people</b> — без of; <i>most of the people</i> — с артиклем.,,,level::A1-A2 pos::adj,uD!0Z#&]>O
+to turn down,отклонять; отказываться; убавлять,She turned down the job offer.,to turn up; to take on; to put off,прибавлять; брать на себя; откладывать,turn down an offer — отклонить предложение; turn down the music — сделать тише.,,,level::B1-B2 pos::phrasal,"b,-Ks(7E~Y"
+to get by,обходиться; справляться,We get by on one salary.,to get over; to get away; to get across,пережить; сбежать; донести мысль,,,,level::B2-C1 pos::phrasal,k1^%kmhiLh
+to mean,значить; иметь в виду,What does this word mean?,to meet; to mend; to mind,встречать; чинить; возражать,"<b>I mean …</b> — то есть, я имею в виду.",,,level::A1-A2 pos::verb,yF-~f~#hJE
+to get,получать; доставать; добираться,I get a lot of emails.,to give; to send; to lose,давать; отправлять; терять,"Очень частый глагол: get home — добраться домой, get tired — устать.",,,level::A1-A2 pos::verb,Ca^%Kb1WYN
+flexible,гибкий,I have a flexible schedule.,feasible; flammable; reliable,осуществимый; легковоспламеняющийся; надёжный,,,,level::B1-B2 pos::adj,L@xlP|Nq]x
+even,даже,It's cold here even in summer.,ever; every; evening,когда-либо; каждый; вечер,<b>even if</b> — даже если; <b>not even</b> — даже не.,,,level::A1-A2 pos::adv,j@i$AkLxjD
+to look forward to,ждать с нетерпением; с нетерпением ждать,I'm looking forward to the weekend.,to look after; to look up; to look into,заботиться; искать в словаре; изучать вопрос,После <b>to</b> — существительное или -ing: I look forward to <b>seeing</b> you.,,,level::B1-B2 pos::phrasal,
+to go through,переживать; просматривать; проходить через,Let's go through the plan again.,to get through; to go off; to go on,дозвониться; срабатывать; продолжаться,go through a hard time — переживать трудный период.,,,level::B2-C1 pos::phrasal,"I(X|a,%$[U"
+such,такой,It was such a good day!,much; touch; search,много; касание; поиск,<b>such a</b> + прил. + сущ.; <i>so</i> + прил.: <i>so good</i>.,,,level::B1-B2 pos::adj,y;4nwQN*?>
+to look after,заботиться; присматривать,Can you look after my cat?,to look for; to look up; to look forward to,искать; искать в словаре; ждать с нетерпением,,,,level::B1-B2 pos::phrasal,K|.5wE_z/{
+to turn out,оказываться; оказаться,It turned out to be a great idea.,to turn up; to turn down; to turn over,появляться; отклонять; переворачивать,,,,level::B2-C1 pos::phrasal,BA&T%C>Esw
+last,последний; прошлый,I saw him last week.,least; lost; late,наименьший; потерянный; поздний,<b>last week</b> — на прошлой неделе (без in/on).,,,level::A1-A2 pos::adj,OaTGW=z)zA
+to take,брать; взять,"Take an umbrella, it's raining.",to give; to bring; to put,давать; приносить; класть,"take a bus — поехать на автобусе, take a photo — сфотографировать.",,,level::A1-A2 pos::verb,FrG_z.Pe.4
+to find out,узнавать; выяснять; узнать,I need to find out the price.,to point out; to carry out; to hand out,указать; выполнить; раздавать,,,,level::B1-B2 pos::phrasal,P9<dwA-LVV
+really,действительно; правда,I really like this place.,rarely; nearly; early,редко; почти; рано,,,,level::A1-A2 pos::adv,yJPLBhhQpk
+to meet a deadline,уложиться в срок,We worked late to meet the deadline.,to miss a deadline; to set a deadline; to extend a deadline,сорвать срок; назначить срок; продлить срок,,,,level::Pro domain::work,O!Ade8s{N]
+to keep up with,не отставать от; поспевать за,It's hard to keep up with technology.,to put up with; to come up with; to make up for,терпеть; придумать; компенсировать,,,,level::B2-C1 pos::phrasal,Q[tl#e6r4m
+between,между,The shop is between the bank and the café.,among; behind; beyond,среди; позади; за пределами,<b>between</b> — между двумя; <i>among</i> — среди многих.,,,level::A1-A2 pos::linking,gvExMX!u3t
+to run out of,закончиться; заканчиваться,We've run out of milk.,to run into; to get out of; to run away,столкнуться; выбраться из; убежать,We've run out of milk — у нас закончилось молоко.,,,level::B1-B2 pos::phrasal,De.@sd9:LZ
+to make up for,компенсировать; возместить; наверстать,I'll make up for lost time.,to make up; to keep up with; to make out,мириться; не отставать; разобрать,,,,level::B2-C1 pos::phrasal,G_GJOS)IYg
+a lot of,много,We have a lot of work today.,a bit of; a couple of; a piece of,немного; пара; кусок,"Подходит и к исчисляемым, и к неисчисляемым: <i>a lot of people / money</i>.",,,level::A1-A2 pos::phrase,"/{$L,Z-$1"
+to give,давать; дарить,Can you give me your phone number?,to take; to send; to show,брать; отправлять; показывать,,,,level::A1-A2 pos::verb,hcN*8ET;Fv
+to get along with,ладить с; ладить,I get along with my colleagues.,to get over; to get rid of; to get back,оправиться от; избавиться от; вернуться,,,,level::B1-B2 pos::phrasal,HSa}U4F)~c
+own,собственный; свой,I want my own room.,only; whole; empty,единственный; целый; пустой,"<b>on my own</b> — сам, в одиночку.",,,level::A1-A2 pos::adj,xvj6#_K3=?
+to rule out,исключать; исключить,The doctor ruled out a serious illness.,to point out; to sort out; to carry out,указывать; уладить; выполнять,,,,level::B2-C1 pos::phrasal,A*{0;&bO1y
+draft,черновик; набросок,Here's the first draft of the email.,craft; drift; drought,ремесло; дрейф; засуха,,,,level::B1-B2 pos::noun,"oPeKe4<,w!"
+little,маленький; мало,We have very little time.,light; litter; lately,лёгкий; мусор; в последнее время,<b>a little</b> — немного (есть); <b>little</b> — мало (почти нет).,,,level::A1-A2 pos::adj,fLDbRQ=`R<
+to get over,оправиться; пережить; прийти в себя,It took her months to get over the illness.,to get along with; to get back; to get up,ладить с; вернуться; вставать,,,,level::B1-B2 pos::phrasal,A-n7KR[}a_
+to sort out,уладить; разобраться с; навести порядок,"Don't worry, I'll sort it out.",to rule out; to point out; to find out,исключать; указывать; узнавать,,,,level::B2-C1 pos::phrasal,dD=@%7g*Ye
+to know,знать,I don't know his name.,to think; to learn; to remember,думать; учить; помнить,,,,level::A1-A2 pos::verb,BH&pX+OlqV
+another,ещё один; другой,Can I have another cup of tea?,other; anyone; anything,другие; кто-нибудь; что-нибудь,"<b>another</b> = an + other, только с единственным числом.",,,level::A1-A2 pos::adj,Nd_BsJj]~`
+to set up,создавать; организовывать; настраивать,We set up a new company last year.,to set off; to make up; to put up,отправляться; выдумывать; повесить,,,,level::B1-B2 pos::phrasal,fN+]XPc_O*
+to take over,брать на себя управление; захватывать,A new manager will take over next month.,to take up; to take off; to take after,начинать заниматься; взлетать; быть похожим на,,,,level::B2-C1 pos::phrasal,QNI8;:nbj;
+to become,становиться; стать,She wants to become a doctor.,to come back; to be calm; to belong,вернуться; успокоиться; принадлежать,Формы: become — became — become.,,,level::A1-A2 pos::verb,ked3$];4DB
+to evaluate,оценить; дать оценку,We need to evaluate the results.,to evacuate; to elevate; to evolve,эвакуировать; поднимать; развиваться,"<b>evaluate</b> — оценить качество, результат; <i>estimate</i> — прикинуть цифру.",,,level::B1-B2 pos::verb,It2M5^=-]q
+to take up,начинать заниматься; занимать,I want to take up yoga.,to take off; to take over; to give up,взлетать; брать на себя управление; бросать,take up a hobby — начать заниматься; take up space — занимать место.,,,level::B1-B2 pos::phrasal,IJ6(Is8eST
+interest,интерес; проценты,I have no interest in politics.,instance; interview; entrance,случай; собеседование; вход,<b>interest in sth</b> — интерес к чему-то; <i>interest rate</i> — процентная ставка.,,,level::B1-B2 pos::noun,LtQ&rjeL7)
+to take after,быть похожим на; пойти в,She takes after her mother.,to take over; to look after; to take in,брать управление; заботиться; понимать,Только о сходстве с родственником.,,,level::B2-C1 pos::phrasal,t)asTXkpe-
+to think,думать; считать,I think it's a good idea.,to know; to feel; to hope,знать; чувствовать; надеяться,"I think so — думаю, да.",,,level::A1-A2 pos::verb,prW.~>1l/
+next,следующий,See you next week!,near; nest; text,близкий; гнездо; текст,<b>next week</b> — на следующей неделе (без on/in).,,,level::A1-A2 pos::adj,cSHu5A]0ah
+to take off,взлетать; снимать,The plane takes off at six.,to take up; to land; to set off,начинать заниматься; приземляться; отправляться,take off your coat — сними пальто.,,,level::B1-B2 pos::phrasal,BfJ|T=nh|w
+to wear off,проходить; ослабевать,The pain will wear off soon.,to wear out; to show off; to go off,изнашиваться; хвастаться; срабатывать,,,,level::B2-C1 pos::phrasal,hdDyg=.XH&
+while,пока; в то время как,He called while I was cooking.,meanwhile; whole; wild,тем временем; целый; дикий,<b>while</b> — пока (одновременно); <i>for a while</i> — какое-то время.,,,level::B1-B2 pos::linking,CQo(ED4y}*
+to bring up,воспитывать; поднимать тему,It's not easy to bring up children.,to grow up; to bring back; to come up,вырасти; возвращать; возникать,,,,level::B1-B2 pos::phrasal,ORX<H{Gkai
+to reach out,обратиться; выйти на связь,Feel free to reach out if you have questions.,to hang out; to work out; to check out,тусоваться; разобраться; выписаться,<b>reach out to sb</b> — написать / связаться с кем-то.,,,level::Pro domain::work,l3:iB2GD[<
+to include,включать,The price includes breakfast.,to conclude; to exclude; to involve,заключать; исключать; вовлекать,<b>including</b> — в том числе.,,,level::B1-B2 pos::verb,klBm]L;|fi
+to put forward,выдвигать; предлагать,She put forward an interesting idea.,to put off; to look forward to; to put away,откладывать; ждать с нетерпением; убирать,,,,level::B2-C1 pos::phrasal,cqm[vf/6}T
+to see,видеть,I can see the sea from my window.,to look; to hear; to show,смотреть; слышать; показывать,"<b>see</b> — видеть, <b>look at</b> — смотреть на, <b>watch</b> — смотреть (фильм, матч).",,,level::A1-A2 pos::verb,G&9(5k`.>X
+report,отчёт; доклад,I need to finish the report today.,record; resort; support,запись; курорт; поддержка,"<b>to report</b> — сообщать, докладывать.",,,level::B1-B2 pos::noun,c]YUvuc~MW
+to grow up,вырастать; взрослеть; вырасти,Kids grow up so fast.,to bring up; to give up; to show up,воспитывать; бросать; появляться,,,,level::B1-B2 pos::phrasal,mj;ald|[{R
+to give in,уступать; поддаваться,Don't give in to pressure.,to give away; to give out; to hand in,отдавать; раздавать; сдавать,<b>give in</b> — уступить давлению; <b>give up</b> — бросить попытки.,,,level::B2-C1 pos::phrasal,sa%&GFYz8$
+around,вокруг; около,We walked around the city.,round; abroad; aground,круглый; за границей; на мели,<b>around 5 o'clock</b> — около пяти.,,,level::A1-A2 pos::adv,FF3SupT6{h
+to show up,появляться; приходить; прийти,He didn't show up to the meeting.,to turn down; to give up; to show off,отклонять; бросать; хвастаться,,,,level::B1-B2 pos::phrasal,h;8}?[<>ya
+to hold on,подождать; держаться,"Hold on, I'll be right back.",to hold up; to carry on; to hang out,задерживать; продолжать; тусоваться,,,,level::B2-C1 pos::phrasal,s@K~6h{]s#
+to seem,казаться,You seem tired today.,to seek; to see; to stem,искать; видеть; происходить,"<b>It seems that…</b> — кажется, что…; <b>She seems to know</b> — она, кажется, знает.",,,level::B1-B2 pos::verb,I=3797AlyX
+accurate,точный; безошибочный,The numbers need to be accurate.,adequate; acute; accessible,приемлемый; острый; доступный,<b>accurate</b> — без ошибок; <i>exact</i> — ровно такой.,,,level::B1-B2 pos::adj,IS.@|oVMP!
+to look,смотреть; выглядеть,Look at this photo!,to listen; to show; to find,слушать; показывать; находить,look <b>at</b> sth — смотреть на что-то. You look tired — ты выглядишь уставшим.,,,level::A1-A2 pos::verb,O_R;yOb25^
+kind,добрый; вид; тип,What kind of music do you like?,kid; king; kin,ребёнок; король; родня,"<b>kind of</b> — вроде, как бы (разг.): <i>I'm kind of tired.</i>",,,level::A1-A2 pos::noun,"u]gl,*9^P2"
+to deal with,иметь дело с; справляться с; разбираться с,I'll deal with this problem tomorrow.,to come up with; to put up with; to catch up with,придумать; терпеть; догнать,,,,level::B1-B2 pos::phrasal,C+`-W4^[?!
+to hang out,тусоваться; проводить время,We usually hang out at the weekend.,to hang up; to hold on; to drop by,повесить трубку; подождать; заглянуть,,,,level::B2-C1 pos::phrasal,u?=Gz<9bn~
+every,каждый,I go running every morning.,ever; even; very,когда-либо; даже; очень,<b>every</b> + ед. ч.: <i>every day</i>.,,,level::A1-A2 pos::adj,PaLOfA~e~/
+to put up with,терпеть; мириться с,I can't put up with this noise anymore.,to come up with; to catch up with; to keep up with,придумать; догнать; не отставать от,,,,level::B1-B2 pos::phrasal,e}-Qop]QPY
+to drop by,заглянуть; заскочить,Drop by any time!,to drop off; to drop out; to hang out,подвезти; бросить учёбу; тусоваться,,,,level::B2-C1 pos::phrasal,bx;8=eBq%5
+during,во время; в течение,Don't talk during the film.,while; until; through,пока; до; через,<b>during</b> + сущ.; <i>while</i> + предложение.,,,level::B1-B2 pos::linking,N3S*tK5m;{
+to watch,смотреть; наблюдать,We watch a film every Friday.,to listen; to read; to play,слушать; читать; играть,"watch TV, watch a film, watch a match.",,,level::A1-A2 pos::verb,z$ly=yk&~A
+to get stuck,застрять,I got stuck on this task for an hour.,to get lost; to get started; to get sacked,заблудиться; начать; быть уволенным,<b>get stuck on sth</b> — застрять на чём-то.,,,level::B1-B2 pos::phrase,b-jXclW.m>
+to begin,начинать; начинаться,The lesson begins at nine.,to bring; to beg; to belong,приносить; умолять; принадлежать,Формы: begin — began — begun.,,,level::A1-A2 pos::verb,H}|G}/C&eC
+to carry on,продолжать,"Carry on, I'm listening.",to carry out; to hold on; to go off,выполнять; подождать; срабатывать,,,,level::B1-B2 pos::phrasal,C;:+t@%6b<
+to drop out,бросить учёбу; выбыть,Many students drop out in the first year.,to drop by; to drop off; to fall out,заглянуть; подвезти; поссориться,,,,level::B2-C1 pos::phrasal,D?e4Ei+B2-
+since,с тех пор как; так как,I've lived here since 2020.,for; till; once,в течение; до; однажды,<b>since</b> + точка во времени; <i>for</i> + период: <i>for 5 years</i>.,,,level::B1-B2 pos::linking,hNXcEkM.2k
+to work out,тренироваться; получаться; решить,I work out three times a week.,to find out; to wear out; to check out,узнать; изнашиваться; выписываться,It worked out — всё получилось.,,,level::B1-B2 pos::phrasal,ktF5@jhLh3
+to fall out,поссориться; разругаться,Brothers often fall out over small things.,to fall apart; to fall behind; to fall for,развалиться; отставать; влюбиться,,,,level::B2-C1 pos::phrasal,Mf2+{1vgE&
+few,мало; немного,Few people know about it.,fewer; new; view,меньше; новый; вид,<b>a few</b> — несколько (есть); <b>few</b> — мало (почти нет).,,,level::A1-A2 pos::adj,NysN_uOpR4
+to want,хотеть,I want a cup of coffee.,to need; to like; to try,нуждаться; нравиться; пытаться,Вежливее: <b>I'd like</b> a coffee.,,,level::A1-A2 pos::verb,M$HsBexMF`
+to point out,указывать; обращать внимание,She pointed out a mistake in my report.,to find out; to carry out; to make out,узнавать; выполнять; разобрать,,,,level::B1-B2 pos::phrasal,Mi7RPH%${)
+early,рано; ранний,I get up early on weekdays.,nearly; yearly; easily,почти; ежегодно; легко,,,,level::A1-A2 pos::adv,OJWU{>AxMO
+to resolve,решить проблему; разрешить спор,We resolved the problem quickly.,to revolve; to dissolve; to involve,вращаться; растворяться; вовлекать,,,,level::B1-B2 pos::verb,"C0~}6Z,^q7"
+state,состояние; штат; государство,The house is in a terrible state.,statement; status; stage,заявление; статус; этап,"<b>to state</b> — заявлять, утверждать.",,,level::B1-B2 pos::noun,seu];<`#X(
+to fall behind,отставать; отстать,Don't fall behind with your studies.,to fall out; to fall apart; to fall through,поссориться; развалиться; сорваться,,,,level::B2-C1 pos::phrasal,BiCbT+2?0.
+to look up,искать; посмотреть,Look up this word in the dictionary.,to look after; to look into; to look out,заботиться; изучать; остерегаться,look up a word — найти слово в словаре или интернете.,,,level::B1-B2 pos::phrasal,x*WBlOYWpx
+area,район; область; площадь,We live in a quiet area.,era; arena; aria,эпоха; арена; ария,,,,level::A1-A2 pos::noun,Qt]~5EEC}H
+to fall through,сорваться; не состояться,Sometimes plans fall through.,to fall behind; to fall apart; to fall out,отставать; развалиться; поссориться,,,,level::B2-C1 pos::phrasal,G6tM@2zn2{
+to need,нуждаться; нужно; надо,I need some help.,to want; to have; to use,хотеть; иметь; использовать,«Мне нужно…» = <b>I need…</b>,,,level::A1-A2 pos::verb,u9n?mzj#yd
+large,большой,Can I have a large coffee?,wide; long; huge,широкий; длинный; огромный,<b>large</b> — о размере и количестве; в разговоре чаще <i>big</i>.,,,level::A1-A2 pos::adj,r*N[{r:x#)
+to run into,случайно встретить; столкнуться,You never know who you'll run into.,to run out of; to run away; to run after,закончиться; убежать; гнаться за,,,,level::B1-B2 pos::phrasal,lH_sa4-]p/
+burnout,выгорание,Too much overtime leads to burnout.,breakout; turnout; blackout,прорыв; явка; отключение света,,,,level::B1-B2 pos::noun domain::work,jVx@Zlso]Z
+without,без,I can't work without coffee.,within; with; throughout,в пределах; с; повсюду,<b>without + -ing</b>: <i>He left without saying goodbye.</i>,,,level::A1-A2 pos::linking,CPIkhdh_Ik
+to put up,приютить; повесить,Can you put me up for the night?,to put off; to put away; to put forward,откладывать; убирать; выдвигать,,,,level::B2-C1 pos::phrasal,kM$yzC_MEb
+order,заказ; порядок; приказ,Your order is ready.,border; odour; offer,граница; запах; предложение,<b>in order to</b> — для того чтобы; <i>out of order</i> — не работает.,,,level::B1-B2 pos::noun,"F}-7f0+,DA"
+to catch up,наверстать; догнать; поболтать,Let's meet and catch up.,to make up; to give up; to set up,мириться; бросать; создавать,catch up with friends — встретиться и обменяться новостями.,,,level::B1-B2 pos::phrasal,h13%PA%>[1
+market,рынок,I buy vegetables at the market.,basket; marker; marble,корзина; маркер; мрамор,,,,level::A1-A2 pos::noun,cA[2]m7d5c
+to pick up,забирать; подбирать; нахвататься,I'll pick you up at seven.,to pick out; to pick on; to drop off,выбирать; придираться; высаживать,"pick up a language — выучить язык на слух, без учебника.",,,level::B2-C1 pos::phrasal,Bx5i+jOJ7Z
+to like,нравиться; любить,I like this song.,to want; to hate; to need,хотеть; ненавидеть; нуждаться,I like it — мне это нравится.,,,level::A1-A2 pos::verb,bqh1~xgP_O
+service,обслуживание; услуга; служба,The service in this hotel is great.,surface; servant; device,поверхность; слуга; устройство,,,,level::B1-B2 pos::noun,xp8?ED-vkr
+to address,заняться; обратиться к,We need to address this issue today.,to access; to assess; to express,получить доступ; оценивать; выразить,<b>address a problem</b> — заняться проблемой; <b>address sb</b> — обратиться к кому-то.,,,level::B2-C1 pos::verb,h^$FlV|JFX
+to check in,заселяться; регистрироваться на рейс,We need to check in two hours before the flight.,to check out; to fill in; to sign up,выписываться; заполнять; записываться,,,,level::B1-B2 pos::phrasal,MyNHP0k0Q^
+against,против,I'm against this idea.,again; across; among,снова; через; среди,"<b>against the wall</b> — у стены, прислонившись к стене.",,,level::B1-B2 pos::linking,q#7x7KG_9U
+to show off,хвастаться; выпендриваться,Stop showing off!,to show up; to show around; to stand out,появляться; показать окрестности; выделяться,,,,level::B2-C1 pos::phrasal,e>g:8H8W)Q
+second,второй; секунда,"Wait a second, please.",secondary; sacred; secret,вторичный; священный; секретный,,,,level::A1-A2 pos::adj,pS/rIgops1
+to sign up,записываться; подписываться,I signed up for a Spanish course.,to sign in; to check in; to give up,войти в аккаунт; заселиться; бросать,,,,level::B1-B2 pos::phrasal,g~<g|RGIDe
+to talk into,уговорить; уговаривать,She talked me into buying a new phone.,to talk out of; to talk over; to talk back,отговорить; обсудить; огрызаться,,,,level::B2-C1 pos::phrasal,I~(PCp^n2D
+though,хотя; однако,"It's late. I'm not tired, though.",through; thought; tough,через; мысль; жёсткий,"В конце фразы — «впрочем, однако»: <i>Nice place. Expensive, though.</i>",,,level::B1-B2 pos::linking,s8@bIxr`mY
+to love,любить; обожать,I love my family.,to hate; to miss; to help,ненавидеть; скучать; помогать,,,,level::A1-A2 pos::verb,x!T+K`)nY!
+downside,минус; недостаток,The only downside is the price.,upside; downtime; downfall,плюс; простой; крах,,,,level::B1-B2 pos::noun,OR_rUT&@<l
+result,результат,The results were better than we expected.,insult; resort; reward,оскорбление; курорт; награда,<b>as a result</b> — в результате.,,,level::B1-B2 pos::noun,PS~YxX|e]3
+to fill in,заполнять; заполнить,Please fill in this form.,to fill up; to check in; to hand in,наполнять; заселяться; сдавать работу,,,,level::B1-B2 pos::phrasal,q>wtM`i@;m
+to think over,обдумать; обдумывать,Let me think it over.,to think up; to think back; to think of,придумать; вспоминать; думать о,,,,level::B2-C1 pos::phrasal,"N^OROO/o,N"
+example,пример,Can you give me an example?,sample; exam; exercise,образец; экзамен; упражнение,<b>for example</b> — например.,,,level::A1-A2 pos::noun,jm<[/]CYw9
+to break down,ломаться; сломаться,My car always breaks down in winter.,to break up; to slow down; to turn down,расставаться; замедляться; отклонять,,,,level::B1-B2 pos::phrasal,mZw<]H6Op=
+to make out,разобрать; различить,I can't make out what he's saying.,to make up; to make up for; to make for,мириться; компенсировать; направляться,,,,level::B2-C1 pos::phrasal,l+v0&hv>4!
+to offer,предлагать,They offered me a job.,to order; to suffer; to afford,заказывать; страдать; позволить себе,<b>offer</b> — предложить что-то дать; <i>suggest</i> — предложить идею.,,,level::B1-B2 pos::verb,Myz$DzWS(2
+to say,сказать; говорить,What did you say?,to ask; to answer; to call,спрашивать; отвечать; звонить,<b>say</b> что-то; <b>tell</b> кому-то: He told me…,,,level::A1-A2 pos::verb,s^r#Ei1]UE
+to break up,расставаться; расстаться,Why do couples break up?,to break down; to make up; to give up,ломаться; мириться; бросать,,,,level::B1-B2 pos::phrasal,",%gELWSyO"
+to lead,вести; руководить,She leads a team of ten people.,to load; to lend; to leave,грузить; одалживать; уходить,Формы: lead — led — led. <i>lead to</i> — приводить к.,,,level::B1-B2 pos::verb,cHT.AA?Ej?
+to hand over,передать,I'll hand over the project to Max.,to hand out; to hand in; to take over,раздавать; сдавать; взять на себя,,,,level::B1-B2 pos::phrasal,IE]N+I0>mI
+to set off,отправиться; отправляться,We set off early in the morning.,to set up; to put off; to take off,создавать; откладывать; взлетать,,,,level::B2-C1 pos::phrasal,JK!/Jhh=fq
+far,далеко,Is it far from here?,fair; fast; fat,честный; быстрый; толстый,"<b>so far</b> — пока что, до сих пор.",,,level::A1-A2 pos::adv,Mh5iJ**mC(
+to achieve,достигать; добиться,She achieved all her goals.,to receive; to believe; to improve,получать; верить; улучшать,,,,level::B1-B2 pos::verb,
+to acknowledge,признавать; подтверждать,He acknowledged his mistake.,to accomplish; to acquire; to accompany,выполнять; приобретать; сопровождать,,,,level::B2-C1 pos::verb,F/gPeIg:+;
+face,лицо,Wash your face.,faith; fact; phase,вера; факт; фаза,<b>to face</b> — столкнуться с: <i>face a problem</i>.,,,level::A1-A2 pos::noun,em;zv0PNe_
+to tell,рассказывать; рассказать; сообщать,Tell me about your day.,to ask; to show; to answer,спрашивать; показывать; отвечать,"После <b>tell</b> — кому: tell me, tell him.",,,level::A1-A2 pos::verb,pQhcIjv2wS
+to accomplish,выполнить; осуществить,We accomplished a lot today.,to acknowledge; to accompany; to accumulate,признавать; сопровождать; накапливать,,,,level::B2-C1 pos::verb,fP?B}nLJ`l
+less,меньше,I want to spend less time online.,lest; lesson; loss,чтобы не; урок; потеря,<b>less</b> — с неисчисляемыми; <i>fewer</i> — с исчисляемыми.,,,level::A1-A2 pos::adv,jzY>&2qj04
+to avoid,избегать,Try to avoid sugar.,to allow; to afford; to delay,разрешать; позволить себе; откладывать,avoid + -ing: avoid eating late.,,,level::B1-B2 pos::verb,q:RShi{Oqq
+scope,объём работ; рамки,That's out of scope for this project.,score; slope; scoop,счёт; склон; совок,<b>out of scope</b> — за рамками задачи.,,,level::Pro domain::work,A0j~jV<Ev0
+until,до; пока не,Wait here until I come back.,since; during; unless,с тех пор как; во время; если не,После until — без not: <i>until he comes</i> = пока он не придёт.,,,level::B1-B2 pos::linking,"Cd-M^/kNZ,"
+to anticipate,предвидеть; предугадывать,We didn't anticipate any problems.,to appreciate; to participate; to accommodate,ценить; участвовать; размещать,,,,level::B2-C1 pos::verb,l)NS?KE1fh
+to speak,говорить; разговаривать,Do you speak English?,to read; to write; to understand,читать; писать; понимать,speak English — говорить по-английски.,,,level::A1-A2 pos::verb,gp}c%TIP%*
+form,бланк; форма,Please fill in this form.,farm; foam; firm,ферма; пена; фирма,,,,level::A1-A2 pos::noun,MiaZI`|0Pl
+to afford,позволить себе; позволять себе,We can't afford a new car.,to allow; to offer; to avoid,разрешать; предлагать; избегать,Обычно с can / can't: I can't afford it.,,,level::B1-B2 pos::verb,q>a]`7qo(;
+to assume,предполагать; считать само собой,I assume you've already eaten.,to resume; to consume; to ensure,возобновлять; потреблять; обеспечивать,,,,level::B2-C1 pos::verb,r`[w3paY.o
+level,уровень,What's your level of English?,label; lever; novel,ярлык; рычаг; роман,,,,level::A1-A2 pos::noun,PUt2v~Pz;C
+to allow,разрешать; позволять,Smoking is not allowed here.,to afford; to follow; to admit,позволить себе; следовать; признавать,,,,level::B1-B2 pos::verb,N/r-3TI:wz
+to ensure,гарантировать; обеспечивать,Please ensure that the door is locked.,to insure; to assure; to measure,страховать; заверять; измерять,<b>ensure</b> — обеспечить; <b>assure</b> — заверить кого-то; <b>insure</b> — застраховать.,,,level::B2-C1 pos::verb,pso#1j9t3i
+member,член; участник,He's a member of the club.,number; memory; membrane,номер; память; мембрана,<b>team member</b> — член команды.,,,level::B1-B2 pos::noun,ljS3f0vp.]
+to implement,внедрить; реализовать,We'll implement the new process next month.,to imply; to impress; to complement,подразумевать; впечатлять; дополнять,,,,level::B2-C1 pos::verb,H.y$lhXI3b
+to ask,спрашивать; просить,Can I ask a question?,to answer; to tell; to explain,отвечать; рассказывать; объяснять,ask for help — просить о помощи.,,,level::A1-A2 pos::verb,L{0w{OI>%r
+able,способный; в состоянии,I'm able to help you tomorrow.,stable; available; edible,стабильный; доступный; съедобный,"<b>be able to</b> — мочь, суметь (особенно в будущем и прошедшем).",,,level::B1-B2 pos::adj,D;RL9s:uc!
+to admit,признавать; признаться,I admit I was wrong.,to permit; to deny; to commit,разрешать; отрицать; совершать,,,,level::B1-B2 pos::verb,GHz>JSQi>`
+to emphasize,подчёркивать; акцентировать,I want to emphasize this point.,to empathize; to summarize; to criticize,сопереживать; подводить итог; критиковать,,,,level::B2-C1 pos::verb,G(>3{O}_6B
+support,поддержка,Thank you for your support.,report; sport; supply,отчёт; спорт; поставка,<b>to support</b> — поддерживать; <i>tech support</i> — техподдержка.,,,level::B1-B2 pos::noun,P$kgnk_t[
+to suggest,предлагать; советовать,I suggest we leave early.,to request; to insist; to expect,просить; настаивать; ожидать,"<b>suggest</b> — предложить идею; <b>offer</b> — предложить что-то (помощь, чай).",,,level::B1-B2 pos::verb,q.5FNHR3y}
+to hesitate,колебаться; сомневаться,Don't hesitate to call me.,to imitate; to estimate; to tolerate,подражать; оценивать; терпеть,,,,level::B2-C1 pos::verb,t3^=.>-0^)
+whether,ли,I don't know whether he's coming.,weather; either; whatever,погода; любой из двух; что угодно,<b>whether … or not</b> — … или нет.,,,level::B1-B2 pos::linking,B6+byN>sS+
+to answer,отвечать,Please answer the phone.,to ask; to call; to explain,спрашивать; звонить; объяснять,,,,level::A1-A2 pos::verb,Iy`&hyaxz%
+to maintain,поддерживать в порядке; обслуживать,It's hard to maintain this old code.,to obtain; to remain; to entertain,получить; оставаться; развлекать,,,,level::B1-B2 pos::verb,C>j`2wL[b?
+present,подарок; настоящее время,I bought a present for my mum.,pleasant; parent; prison,приятный; родитель; тюрьма,"<b>to present</b> — представлять, презентовать.",,,level::A1-A2 pos::noun,L)mG]5(_.8
+to expect,ожидать; рассчитывать,I didn't expect to see you here.,to accept; to respect; to inspect,принимать; уважать; проверять,,,,level::B1-B2 pos::verb,kDb)P?Yg(~
+to struggle,бороться; с трудом справляться,I struggle to wake up early.,to stumble; to suffer; to settle,спотыкаться; страдать; поселиться,,,,level::B2-C1 pos::verb,va[hps2-38
+quite,довольно; вполне,The film was quite good.,quiet; quit; quick,тихий; бросить; быстрый,"Не путать: <b>quite</b> [квайт] — довольно, <i>quiet</i> [квайэт] — тихий.",,,level::B1-B2 pos::adv,ph7u[91OfJ
+to accept,принимать; соглашаться,She accepted the invitation.,to expect; to refuse; to adopt,ожидать; отказываться; усыновлять,,,,level::B1-B2 pos::verb,NaxWCOD[;S
+to cope with,справляться с; справляться,She copes well with stress.,to come up with; to keep up with; to put up with,придумать; не отставать; терпеть,,,,level::B2-C1 pos::verb,skvX$]1]E_
+term,срок; термин; условие,What are the terms of the contract?,team; turn; theme,команда; поворот; тема,<b>in terms of</b> — с точки зрения; <i>long-term</i> — долгосрочный.,,,level::B1-B2 pos::noun,h9knRyg!G?
+to work,работать,I work in a bank.,to live; to study; to rest,жить; учиться; отдыхать,,,,level::A1-A2 pos::verb,Nj2Ur#Dd&8
+to refuse,отказываться; отказать,He refused to answer.,to accept; to reduce; to confuse,принимать; сокращать; путать,,,,level::B1-B2 pos::verb,o8|?%Qh:V!
+least,наименьший; меньше всего,At least we tried.,last; lease; lost,последний; аренда; потерянный,<b>at least</b> — по крайней мере.,,,level::B1-B2 pos::adj,v=#sQ[%Xo@
+to follow through,довести до конца,He always follows through on his promises.,to follow up; to go through; to fall through,вернуться к вопросу; пережить; сорваться,,,,level::Pro domain::work,N^$(lfq3rD
+to postpone,откладывать; переносить,The match was postponed.,to propose; to suppose; to cancel,предлагать; полагать; отменять,,,,level::B2-C1 pos::verb,QK(prwgRB^
+age,возраст,At your age I was already working.,edge; page; wage,край; страница; зарплата,,,,level::A1-A2 pos::noun,vqva_p:n9T
+to reduce,уменьшать; сокращать; снижать,We need to reduce costs.,to increase; to produce; to refuse,увеличивать; производить; отказываться,,,,level::B1-B2 pos::verb,o@*_w~P~||
+to overcome,преодолевать; преодолеть,You can overcome any problem.,to overtake; to overlook; to overhear,обгонять; упускать из виду; подслушать,,,,level::B2-C1 pos::verb,dazc.zhl8Z
+low,низкий,The prices are very low here.,slow; law; loud,медленный; закон; громкий,,,,level::A1-A2 pos::adj,"HYJ|(<X9,Y"
+to live,жить,We live in a small flat.,to stay; to work; to leave,оставаться; работать; уезжать,,,,level::A1-A2 pos::verb,K{q@Q:cd86
+to increase,увеличивать; увеличиваться; расти,Prices increase every year.,to reduce; to include; to improve,уменьшать; включать; улучшать,,,,level::B1-B2 pos::verb,vSC96Yy=hb
+within,в пределах; в течение,I'll reply within two days.,without; with; inside out,без; с; наизнанку,<b>within an hour</b> — не позже чем через час.,,,level::B1-B2 pos::linking,M{DW#T8O7M
+to overlook,не заметить; упустить из виду,It's easy to overlook small details.,to overcome; to oversee; to overhear,преодолевать; контролировать; подслушать,,,,level::B2-C1 pos::verb,vn6rD<Ads-
+to outline,обрисовать; изложить в общих чертах,Let me outline the main idea.,to outlive; to underline; to outrun,пережить; подчеркнуть; обогнать,"<b>an outline</b> — план, набросок.",,,level::B2-C1 pos::verb,OU1vE]pa9R
+public,общественный; открытый,Is there public transport here?,publish; republic; republican,публиковать; республика; республиканский,,,,level::B1-B2 pos::adj,Fw+3PsCx/J
+to require,требовать; требоваться,This job requires experience.,to acquire; to retire; to request,приобретать; выходить на пенсию; просить,,,,level::B1-B2 pos::verb,t-x:Fi<IOH
+to tend to,быть склонным; обычно,I tend to eat too much at night.,to intend to; to pretend to; to attend,намереваться; притворяться; посещать,,,,level::B2-C1 pos::verb,xqh3;qLakl
+possible,возможный,Is it possible to change the date?,possibly; impossible; passable,возможно; невозможный; проходимый,<b>as soon as possible</b> — как можно скорее (ASAP).,,,level::A1-A2 pos::adj,eCZK0c3?w~
+to eat,есть; кушать,I eat lunch at one o'clock.,to drink; to cook; to buy,пить; готовить; покупать,,,,level::A1-A2 pos::verb,kw9;ZD5K*m
+to manage,справляться; удаваться; руководить,Did you manage to finish?,to arrange; to imagine; to damage,организовывать; представлять; повреждать,"manage to do sth — суметь, справиться.",,,level::B1-B2 pos::verb,yr^.+GG&TA
+rather,скорее; довольно,I'd rather stay at home.,other; either; further,другой; любой из двух; дальше,"<b>I'd rather</b> + глагол — я бы лучше…; <b>rather than</b> — а не, вместо.",,,level::B1-B2 pos::adv,MmRc-G&Hw|
+to deserve,заслуживать,You deserve a break.,to preserve; to reserve; to observe,сохранять; бронировать; наблюдать,,,,level::B2-C1 pos::verb,D4gPS}33t6
+to mention,упоминать; упомянуть,He didn't mention the price.,to intend; to remind; to measure,намереваться; напоминать; измерять,Don't mention it — не за что.,,,level::B1-B2 pos::verb,ACY{1=v^zZ
+view,вид; взгляд; мнение,The room has a great view.,review; few; voice,отзыв; мало; голос,<b>in my view</b> — по-моему.,,,level::B1-B2 pos::noun,PXg|#=O)]n
+to provide,предоставить; предоставлять,We provide training for new employees.,to prove; to provoke; to divide,доказать; провоцировать; делить,<b>provide sb with sth</b> — снабдить кого-то чем-то.,,,level::B1-B2 pos::verb,GuK;}K1?LO
+parent,родитель,My parents live in another city.,patient; partner; present,пациент; партнёр; подарок,,,,level::A1-A2 pos::noun,qqk!1Iskfl
+to consider,рассматривать; учитывать; считать,Have you considered moving abroad?,to conclude; to confirm; to conquer,делать вывод; подтверждать; завоёвывать,,,,level::B2-C1 pos::verb,lKfENQ;d!t
+to drink,пить,Drink some water.,to eat; to cook; to wash,есть; готовить; мыть,,,,level::A1-A2 pos::verb,vKy`=rD6[^
+hard,трудный; твёрдый; усердно,I work hard every day.,hardly; heart; herd,едва; сердце; стадо,"<b>hard</b> — усердно; <i>hardly</i> — едва, почти не.",,,level::A1-A2 pos::adj,m`CAJ!WrS{
+to remind,напоминать; напомнить,Remind me to call Mum.,to remember; to mind; to remain,помнить; возражать; оставаться,<b>remind</b> sb — напомнить кому-то; <b>remember</b> — помнить самому.,,,level::B1-B2 pos::verb,Iy1l1Q/<E-
+to confirm,подтверждать; подтвердить,Can you confirm your booking?,to conform; to inform; to consider,соответствовать; сообщать; рассматривать,,,,level::B2-C1 pos::verb,BD<ubhuQ-G
+party,вечеринка; партия; сторона,We're having a party on Saturday.,pretty; part; patty,симпатичный; часть; котлета,,,,level::A1-A2 pos::noun,s#9=s+/&Q}
+to rely on,полагаться на; рассчитывать на,You can always rely on me.,to insist on; to focus on; to comment on,настаивать на; сосредоточиться на; комментировать,,,,level::B1-B2 pos::verb,t4&yAy]>#r
+stakeholder,заинтересованная сторона,We need to update the stakeholders.,shareholder; bystander; householder,акционер; сторонний наблюдатель; домовладелец,,,,level::Pro domain::work,cE34Hfl3Zr
+local,местный,Try the local food.,lonely; loyal; logical,одинокий; верный; логичный,,,,level::B1-B2 pos::adj,zq~C?oufsO
+to convince,убеждать; убедить,You've convinced me.,to confuse; to confess; to conclude,путать; признаваться; делать вывод,,,,level::B2-C1 pos::verb,v`Dc]rJ?Az
+to sleep,спать,I sleep eight hours a night.,to wake up; to rest; to dream,просыпаться; отдыхать; мечтать,,,,level::A1-A2 pos::verb,tT2)IM2Jp>
+story,история; рассказ,Tell me a story.,storey; store; storm,этаж; магазин; буря,,,,level::A1-A2 pos::noun,rj<s45x@6n
+to complain,жаловаться,He always complains about the weather.,to explain; to compare; to contain,объяснять; сравнивать; содержать,complain <b>about</b> sth.,,,level::B1-B2 pos::verb,JUZ.UI}nF[
+to blame,винить; обвинять,Don't blame yourself.,to claim; to shame; to praise,утверждать; стыдить; хвалить,,,,level::B2-C1 pos::verb,c`_AMrUWJ2
+almost,почти,I'm almost ready.,mostly; at most; also,в основном; самое большее; также,,,,level::A1-A2 pos::adv,xRX+W?+O$)
+to apologize,извиняться; извиниться,You should apologize to her.,to appreciate; to recognize; to emphasize,ценить; узнавать; подчёркивать,apologize <b>to</b> sb <b>for</b> sth.,,,level::B1-B2 pos::verb,cd.3o9?baZ
+to claim,утверждать; заявлять; требовать,He claims he's never been there.,to blame; to complain; to exclaim,винить; жаловаться; воскликнуть,,,,level::B2-C1 pos::verb,DhR-9(p)&h
+to continue,продолжать,Let's continue tomorrow.,to contain; to convince; to contribute,содержать; убеждать; вносить вклад,<b>continue + -ing / to do</b> — оба варианта верны.,,,level::B1-B2 pos::verb,H#|JS9=Enq
+feasible,осуществимый; выполнимый,Is this plan feasible?,flexible; visible; feeble,гибкий; видимый; слабый,,,,level::B2-C1 pos::adj,"Q^O,Kn!H7H"
+to buy,покупать; купить,I need to buy some bread.,to sell; to pay; to bring,продавать; платить; приносить,,,,level::A1-A2 pos::verb,mW<.~*s{<+
+whole,целый; весь,I spent the whole day at home.,hole; holy; wholesale,дыра; святой; оптовый,<b>the whole day</b> = all day.,,,level::B1-B2 pos::adj,"JA|,PJ+=#6"
+to appreciate,ценить; быть признательным,I really appreciate your help.,to apologize; to approve; to anticipate,извиняться; одобрять; предвидеть,,,,level::B1-B2 pos::verb,pXB>`OZ&/!
+to estimate,оценивать; прикидывать,It's hard to estimate the cost.,to hesitate; to eliminate; to imitate,колебаться; устранять; подражать,,,,level::B2-C1 pos::verb,DTB]x|}Er9
+yet,ещё; уже,Have you finished yet?,just; still; ever,только что; всё ещё; когда-либо,<b>not yet</b> — ещё нет; в вопросе — «уже?».,,,level::B1-B2 pos::adv,mWb9A<qV+I
+to commit,совершать; брать обязательство,Don't commit to anything yet.,to admit; to submit; to permit,признавать; подавать; разрешать,commit a crime — совершить преступление.,,,level::B2-C1 pos::verb,"q,7LY.5h2x"
+to pay,платить,Can I pay by card?,to buy; to cost; to spend,покупать; стоить; тратить,pay <b>for</b> sth — платить за что-то.,,,level::A1-A2 pos::verb,maeZbER|4v
+rate,ставка; темп; уровень,The interest rate is very high.,rat; date; rage,крыса; дата; ярость,<b>at any rate</b> — во всяком случае.,,,level::B1-B2 pos::noun,ClZ6%~l^Tz
+to prevent,предотвращать; мешать,We must prevent this from happening again.,to present; to pretend; to provide,представлять; притворяться; обеспечивать,prevent sth <b>from</b> happening.,,,level::B1-B2 pos::verb,F<h[Yawj)E
+to put together,собрать; составить,I'll put together a short presentation.,to put off; to put up with; to get together,отложить; терпеть; собраться,,,,level::B1-B2 pos::phrasal,oDZkO&(ak?
+to care,заботиться; волноваться,I don't care what they think.,to cure; to carry; to scare,лечить; нести; пугать,<b>care about</b> — переживать о; <b>take care of</b> — заботиться о.,,,level::B1-B2 pos::verb,exae2nD7nZ
+to encourage,поощрять; вдохновлять; поддерживать,My parents always encouraged me.,to discourage; to engage; to enrage,отговаривать; вовлекать; бесить,,,,level::B2-C1 pos::verb,"xeUl1y,`>v"
+to pretend,притворяться; делать вид,She pretended to be asleep.,to intend; to prevent; to extend,намереваться; предотвращать; продлевать,Ложный друг: pretend ≠ претендовать.,,,level::B1-B2 pos::verb,G+BGvL*5$Y
+effect,эффект; влияние,The medicine had no effect.,affect; defect; effort,влиять; дефект; усилие,<b>effect</b> — сущ. (результат); <i>affect</i> — глагол (влиять).,,,level::B1-B2 pos::noun,HJEb|QxW?8
+to settle,поселиться; обустроиться; урегулировать,They decided to settle in Canada.,to battle; to struggle; to stumble,сражаться; бороться; спотыкаться,settle down — остепениться.,,,level::B2-C1 pos::verb,A|7?ji@|$9
+to open,открывать,Can you open the window?,to close; to turn on; to break,закрывать; включать; ломать,,,,level::A1-A2 pos::verb,k<-elM}Fg`
+ever,когда-либо; когда-нибудь,Have you ever been to London?,every; even; never,каждый; даже; никогда,<b>Have you ever…?</b> — Ты когда-нибудь…?,,,level::A1-A2 pos::adv,r^SMrzWbKb
+to waste,тратить впустую; терять,Don't waste your time.,to save; to wash; to taste,экономить; мыть; пробовать на вкус,,,,level::B1-B2 pos::verb,MWWwk-9_d^
+experience,опыт; впечатление,Do you have any experience in sales?,experiment; expression; explanation,эксперимент; выражение; объяснение,,,,level::B1-B2 pos::noun,w0GzGE.c%?
+anything,что-нибудь; ничего,Do you need anything?,anyone; anyway; anywhere,кто-нибудь; в любом случае; где-нибудь,<b>I don't need anything</b> — мне ничего не нужно.,,,level::A1-A2 pos::noun,pqDDy()_Ac
+to streamline,упростить; оптимизировать,We streamlined the review process.,to strengthen; to straighten; to stream,укрепить; выпрямить; транслировать,,,,level::Pro domain::work,sBQ^y{m}{A
+to close,закрывать,Please close the door.,to open; to lock; to turn off,открывать; запирать; выключать,,,,level::A1-A2 pos::verb,mKv!tLJdp`
+cause,причина,What was the cause of the problem?,case; course; clause,случай; курс; пункт,"<b>to cause</b> — вызывать, причинять.",,,level::B1-B2 pos::noun,qxbnD`Yy(>
+opportunity,возможность,This is a great opportunity for you.,opinion; community; responsibility,мнение; сообщество; ответственность,,,,level::B1-B2 pos::noun,
+awareness,осведомлённость; понимание,We need to raise awareness of the problem.,awakening; carelessness; wariness,пробуждение; небрежность; настороженность,,,,level::B2-C1 pos::noun,"cAb:Um+[,V"
+past,прошлое; мимо,Don't think about the past.,pass; paste; post,пропуск; паста; почта,<b>half past five</b> — половина шестого; <b>walk past</b> — пройти мимо.,,,level::A1-A2 pos::noun,AoC9^b-oz`
+opinion,мнение,"In my opinion, it's too expensive.",option; decision; position,вариант; решение; позиция,,,,level::B1-B2 pos::noun,C0Cf?|3{r#
+benefit,польза; выгода,Exercise has many benefits.,disadvantage; deficit; feature,недостаток; дефицит; особенность,,,,level::B2-C1 pos::noun,c$v}|(r]DF
+power,сила; власть; электричество,The power went out last night.,tower; flower; powder,башня; цветок; порошок,,,,level::B1-B2 pos::noun,CVt<woS8u6
+to help,помогать,Can you help me?,to ask; to call; to wait,просить; звонить; ждать,,,,level::A1-A2 pos::verb,ed0-W*OeVE
+robust,прочный; устойчивый,We need a more robust solution.,abrupt; rusty; modest,резкий; ржавый; скромный,,,,level::B2-C1 pos::adj,lcB%N`f%6@
+nothing,ничего,There's nothing in the fridge.,something; anything; nowhere,что-то; что-нибудь; нигде,С nothing не нужно второе отрицание: <i>I know nothing</i> = <i>I don't know anything</i>.,,,level::A1-A2 pos::noun,D>>F}[$+I6
+decision,решение,It was a difficult decision.,division; discussion; definition,деление; обсуждение; определение,make a decision — принять решение.,,,level::B1-B2 pos::noun,mQ91REMMm)
+burden,бремя; груз,I don't want to be a burden.,border; garden; burglar,граница; сад; грабитель,,,,level::B2-C1 pos::noun,q!fUs5vrEG
+to return,возвращаться; вернуть,When will you return?,to retire; to remain; to reveal,выйти на пенсию; оставаться; раскрывать,,,,level::B1-B2 pos::verb,rc96As?;`|
+advice,совет,Can I give you some advice?,device; notice; advert,устройство; уведомление; реклама,"Неисчисляемое: some advice, a piece of advice (не an advice).",,,level::B1-B2 pos::noun,lrl64)}p[O
+concern,беспокойство; забота,Thank you for your concern.,concert; context; consent,концерт; контекст; согласие,,,,level::B2-C1 pos::noun,"sy3R}F,P2i"
+matter,дело; вопрос; значение,What's the matter?,meter; manner; master,счётчик; манера; мастер,<b>It doesn't matter</b> — неважно; <b>no matter what</b> — что бы ни.,,,level::B1-B2 pos::noun,QRFD&uqCvp
+to wait,ждать,Wait for me here.,to stay; to look for; to come,оставаться; искать; приходить,wait <b>for</b> sb — ждать кого-то.,,,level::A1-A2 pos::verb,ntG|x*(ir4
+knowledge,знание; знания,Knowledge is power.,college; package; challenge,колледж; посылка; вызов,,,,level::B1-B2 pos::noun,P-Y#oT&Zi@
+value,ценность; стоимость,This ring has great value for me.,valley; venue; volume,долина; место проведения; объём,,,,level::B1-B2 pos::noun,k`|+iXW6rq
+willing,согласный; не против,I'm willing to help.,thrilling; chilling; witty,захватывающий; леденящий; остроумный,<b>be willing to do sth</b> — быть готовым что-то сделать.,,,level::B1-B2 pos::adj,ozro61ocW+
+contribution,вклад,Thanks for your contribution.,distribution; constitution; contradiction,распределение; конституция; противоречие,,,,level::B2-C1 pos::noun,wZt8(U:g_k
+to record,записывать,Can I record our call?,to recall; to recover; to reward,вспоминать; выздоравливать; награждать,"Ударение: <b>to reCORD</b> (глагол), <i>a REcord</i> (запись, рекорд).",,,level::B1-B2 pos::verb,o[{NYVA1N+
+skill,навык; умение,Communication is an important skill.,skin; scale; tool,кожа; масштаб; инструмент,,,,level::B1-B2 pos::noun,y%O^ogY5uj
+to stay,оставаться; останавливаться,We stayed at a small hotel.,to stray; to stare; to stay up,сбиться с пути; пристально смотреть; не ложиться спать,,,,level::A1-A2 pos::verb,fz(o+JLh9%
+evidence,доказательство; доказательства,There's no evidence of that.,residence; audience; existence,место жительства; аудитория; существование,"Неисчисляемое: some evidence, a piece of evidence.",,,level::B2-C1 pos::noun,g]nsH>l2l(
+to find,находить; найти,I can't find my keys.,to lose; to look for; to keep,терять; искать; хранить,"<b>look for</b> — искать (процесс), <b>find</b> — найти (результат).",,,level::A1-A2 pos::verb,hy|Z&zd9-;
+several,несколько,I've been there several times.,severe; separate; seven,суровый; отдельный; семь,"<b>several</b> — больше двух, но немного.",,,level::B1-B2 pos::adj,b.klQ_9*Z1
+goal,цель,My goal is to speak English fluently.,result; reason; method,результат; причина; метод,,,,level::B1-B2 pos::noun,J;z@;h#27;
+to be swamped,быть заваленным работой,I'm swamped this week.,to be stumped; to be spoiled; to be soaked,быть в тупике; быть избалованным; промокнуть,,,,level::Pro domain::work,K<`rKrfC3g
+light,свет; лёгкий; светлый,"Turn on the light, please.",night; flight; lid,ночь; полёт; крышка,,,,level::A1-A2 pos::noun,B5d/`Qt`;Q
+feature,особенность; черта; функция,The phone has some great features.,future; creature; figure,будущее; существо; фигура,,,,level::B2-C1 pos::noun,mS!E1p})z_
+to develop,развивать; разрабатывать,We're developing a new app.,to envelop; to deliver; to depend,окутывать; доставлять; зависеть,"<b>development</b> — развитие, разработка.",,,level::B1-B2 pos::verb,o>Q*|$Kru^
+reason,причина,What's the reason for the delay?,result; season; purpose,результат; сезон; цель,,,,level::B1-B2 pos::noun,g1Bhe2V?*;
+to share,делиться; разделять,Can you share your screen?,to shave; to shake; to scare,бриться; трясти; пугать,"<b>share</b> — также доля, акция.",,,level::B1-B2 pos::verb,dCK*`;g[sl
+impact,влияние; воздействие,The internet has a huge impact on our lives.,impulse; import; impression,импульс; импорт; впечатление,,,,level::B2-C1 pos::noun,pB/+|a`g&4
+to lose,терять; проигрывать,Don't lose your ticket.,to find; to forget; to win,находить; забывать; выигрывать,,,,level::A1-A2 pos::verb,g/#)7(Ut*j
+real,настоящий; реальный,Is this a real diamond?,ready; rear; royal,готовый; задний; королевский,,,,level::A1-A2 pos::adj,"f{|e,<,*y="
+redundant,избыточный; лишний,This step is redundant.,reluctant; abundant; relevant,неохотный; обильный; уместный,<b>be made redundant</b> (брит.) — попасть под сокращение.,,,level::B2-C1 pos::adj,s9uY-zOeM)
+challenge,вызов; испытание; трудная задача,Learning a language is a real challenge.,change; chance; channel,изменение; шанс; канал,,,,level::B1-B2 pos::noun,
+letter,письмо; буква,I got a letter from my bank.,later; litter; ladder,позже; мусор; лестница,,,,level::A1-A2 pos::noun,sukoHg!iZK
+insight,понимание; озарение,Thanks for the insight.,inside; incident; instinct,внутренняя часть; инцидент; инстинкт,,,,level::B2-C1 pos::noun,"D4,DZ,{Rqy"
+attitude,отношение,I like her positive attitude.,altitude; aptitude; behaviour,высота; способность; поведение,attitude <b>to</b>/<b>towards</b> sth.,,,level::B1-B2 pos::noun,zGD.&LbhUR
+subject,предмет; тема,Let's change the subject.,object; project; sub-title,объект; проект; подзаголовок,<b>subject line</b> — тема письма.,,,level::B1-B2 pos::noun,Fy}]3q!<jn
+to remember,помнить; вспомнить,I remember his face.,to forget; to know; to learn,забывать; знать; учить,,,,level::A1-A2 pos::verb,
+behaviour,поведение,His behaviour was strange.,attitude; habit; character,отношение; привычка; характер,,,,level::B1-B2 pos::noun,yIZ$y/wQsX
+half,половина,I'll be there in half an hour.,halt; hall; calf,остановка; зал; телёнок,<b>half an hour</b> — полчаса (артикль после half).,,,level::A1-A2 pos::noun,5gc1E#l@G
+to bring sb up to speed,ввести в курс дела,Can you bring me up to speed?,to bring up; to speed up; to catch up,поднять тему; ускорить; наверстать,,,,level::Pro domain::work,L4%i.$yl1-
+clear,ясный; понятный,Is everything clear?,clean; close; clever,чистый; близкий; умный,"<b>to clear</b> — очищать, убирать.",,,level::B1-B2 pos::adj,jt:TK59L~C
+priority,приоритет,Your health should be your priority.,property; majority; authority,собственность; большинство; власть,,,,level::B2-C1 pos::noun,"vga#,$R4w&"
+habit,привычка,Smoking is a bad habit.,hobby; skill; rule,хобби; навык; правило,,,,level::B1-B2 pos::noun,hd]/Xmn!Va
+future,будущее,Nobody knows the future.,feature; failure; furniture,особенность; неудача; мебель,<b>in the future</b> — в будущем.,,,level::A1-A2 pos::noun,Jhx0CdS:K]
+to forget,забывать; забыть,Don't forget your passport.,to remember; to lose; to leave,помнить; терять; оставлять,,,,level::A1-A2 pos::verb,i=2)dm8}jq
+ago,назад,I met her two years ago.,before; again; later,до этого; снова; позже,"<b>ago</b> — назад от сейчас, только с прошедшим временем.",,,level::A1-A2 pos::adv,"w;y3H,~Z21"
+relationship,отношения,We have a good relationship.,relative; friendship; membership,родственник; дружба; членство,,,,level::B1-B2 pos::noun,"O,%~]W!/G2"
+to remain,оставаться,Please remain seated.,to remind; to remove; to retain,напоминать; удалять; удерживать,"<b>remain</b> — более официально, чем <i>stay</i>.",,,level::B1-B2 pos::verb,xV6T;pfmGi
+to reassure,успокоить; заверить,The doctor reassured me it was nothing serious.,to ensure; to measure; to treasure,обеспечить; измерить; дорожить,,,,level::B2-C1 pos::verb,l`GRe2;G+H
+range,диапазон; ассортимент,We offer a wide range of products.,rank; rage; change,ранг; ярость; изменение,,,,level::B2-C1 pos::noun,r}}>4C>8^g
+among,среди,She's popular among students.,along; amount; between,вдоль; количество; между,<b>among</b> — среди многих; <i>between</i> — между двумя.,,,level::B1-B2 pos::linking,Q:pycdsuF#
+environment,окружающая среда; обстановка,We must protect the environment.,equipment; entertainment; government,оборудование; развлечение; правительство,,,,level::B1-B2 pos::noun,O[v4L?~pQ]
+to win,выигрывать; побеждать,Who will win the game?,to earn; to beat; to wind,зарабатывать; обыграть; заводить,<b>win a game / prize</b>; <b>beat a person / team</b>.,,,level::A1-A2 pos::verb,Cl5r3>CCu@
+to understand,понимать,I don't understand this word.,to know; to explain; to hear,знать; объяснять; слышать,,,,level::A1-A2 pos::verb,yOjgGw.HmL
+advantage,преимущество,One advantage of living here is the quiet.,disadvantage; adventure; average,недостаток; приключение; среднее,,,,level::B1-B2 pos::noun,ehf!5qeDoE
+to involve,включать; вовлекать,The job involves a lot of travel.,to evolve; to revolve; to invite,развиваться; вращаться; приглашать,<b>be involved in</b> — участвовать в.,,,level::B1-B2 pos::verb,POmG0U{SMC
+shortage,нехватка; дефицит,There's a shortage of doctors.,storage; shortcut; shortcoming,хранилище; короткий путь; недостаток,,,,level::B2-C1 pos::noun,oRX5>Se/Pj
+bottom line,суть; главное,The bottom line is we need more time.,deadline; headline; guideline,срок; заголовок; рекомендация,,,,level::Pro domain::work,p<7`6e0M7v
+period,период; срок,It was a difficult period in my life.,perfume; pillow; pirate,духи; подушка; пират,,,,level::B1-B2 pos::noun,jxeU}D;t=3
+salary,зарплата,He earns a good salary.,bonus; tax; budget,бонус; налог; бюджет,,,,level::B1-B2 pos::noun,hqR49b3Z0T
+type,тип; вид,What type of car do you drive?,tape; tip; tide,лента; чаевые; прилив,<b>to type</b> — печатать.,,,level::A1-A2 pos::noun,r`8/-B22^k
+threat,угроза,Climate change is a serious threat.,thread; treat; throat,нить; угощение; горло,,,,level::B2-C1 pos::noun,oC;Kkyy?l/
+to learn,учить; изучать; узнавать,I want to learn Spanish.,to teach; to read; to forget,преподавать; читать; забывать,"<b>learn</b> — учить самому, <b>teach</b> — учить кого-то.",,,level::A1-A2 pos::verb,skj*0W]eh`
+sound,звук,I love the sound of the rain.,sand; soul; south,песок; душа; юг,<b>It sounds good</b> — звучит хорошо.,,,level::A1-A2 pos::noun,MxtCW5$Z$p
+deadline,крайний срок,The deadline is next Friday.,headline; timeline; delay,заголовок; график; задержка,,,,level::B1-B2 pos::noun,h>A/l6~$c&
+moment,момент; миг,"Just a moment, please.",monument; movement; memento,памятник; движение; сувенир,,,,level::A1-A2 pos::noun,B`wW:nmw4u
+to procrastinate,откладывать на потом; тянуть время,Stop procrastinating and start the report.,to proclaim; to prosper; to process,провозглашать; процветать; обрабатывать,,,,level::B2-C1 pos::verb,J}G<G=c)U%
+trend,тенденция,It's the latest trend.,trade; trait; trail,торговля; черта; тропа,,,,level::B2-C1 pos::noun,r1zoLp{qr)
+sale,продажа; распродажа,These shoes are on sale.,sail; salt; scale,парус; соль; масштаб,<b>on sale</b> — со скидкой; <b>for sale</b> — продаётся.,,,level::B1-B2 pos::noun,nbF&O1Th1?
+effort,усилие; усилия,It takes a lot of effort.,effect; affair; offer,эффект; дело; предложение,make an effort — постараться.,,,level::B1-B2 pos::noun,C)+zdp55u0
+wealth,богатство,Health is more important than wealth.,health; weather; worth,здоровье; погода; ценность,,,,level::B2-C1 pos::noun,cmGw^G::py
+further,дальше; дополнительный,Do you have any further questions?,father; feather; fur,отец; перо; мех,,,,level::B1-B2 pos::adj,lpvz4`<&0(
+to teach,учить; преподавать,My mother teaches maths.,to learn; to study; to explain,изучать; учиться; объяснять,teach sb sth — учить кого-то чему-то.,,,level::A1-A2 pos::verb,"mAj@YS%b!,"
+consequence,последствие; последствия,Think about the consequences.,conference; sequence; coincidence,конференция; последовательность; совпадение,,,,level::B1-B2 pos::noun,wW|@YHqU2v
+general,общий,I have a general idea of the plan.,generous; genuine; gentle,щедрый; подлинный; нежный,"<b>in general</b> — в общем, вообще.",,,level::B1-B2 pos::adj,w`DId.*Zib
+hands-on,практический,I prefer a hands-on approach.,hands-free; second-hand; handy,без помощи рук; подержанный; удобный,<b>hands-on experience</b> — практический опыт.,,,level::Pro domain::work,rx<+|n@BxR
+to appear,появляться; казаться,A message appeared on the screen.,to appeal; to apply; to disappear,обращаться с просьбой; подавать заявление; исчезать,,,,level::B1-B2 pos::verb,Ey8gi@){|`
+mood,настроение,I'm in a good mood today.,mode; food; mind,режим; еда; ум,,,,level::B2-C1 pos::noun,AF1QQstIaH
+available,доступный; свободный; в наличии,Is this room available?,valuable; suitable; reliable,ценный; подходящий; надёжный,,,,level::B1-B2 pos::adj,gO@yb`.(sr
+full,полный; сытый,The bus was full.,fool; fall; fuel,дурак; падение; топливо,<b>I'm full</b> — я наелся.,,,level::A1-A2 pos::adj,QEGYr4Q:`0
+guilt,вина; чувство вины,He felt a lot of guilt.,gift; quilt; guild,подарок; одеяло; гильдия,,,,level::B2-C1 pos::noun,DhFrF$+AWg
+to study,учиться; заниматься,I study at university.,to work; to teach; to read,работать; преподавать; читать,,,,level::A1-A2 pos::verb,C^K8|?hYQ3
+perhaps,возможно; может быть,Perhaps he's right.,perfect; per; purpose,идеальный; за каждый; цель,,,,level::B1-B2 pos::adv,lEwe)$SZ4Y
+reliable,надёжный,He's a very reliable friend.,available; responsible; reasonable,доступный; ответственный; разумный,,,,level::B1-B2 pos::adj,
+pressure,давление,I work well under pressure.,pleasure; treasure; measure,удовольствие; сокровище; мера,,,,level::B2-C1 pos::noun,Na+5jA7-&X
+to add,добавлять,Add some salt.,to aid; to adapt; to adore,помогать; приспосабливать; обожать,,,,level::A1-A2 pos::verb,v<2Apnfo:K
+accountable,подотчётный; отвечающий за,Who is accountable for this decision?,countable; acceptable; accessible,исчисляемый; приемлемый; доступный,<b>be accountable for sth</b> — отвечать за что-то.,,,level::B2-C1 pos::adj,ht%B#NN761
+responsible,ответственный,Who is responsible for this project?,reliable; reasonable; possible,надёжный; разумный; возможный,be responsible <b>for</b> sth.,,,level::B1-B2 pos::adj,G]lg!Dob?J
+to pass,проходить; передавать; сдать,Can you pass the salt?,to pause; to pace; to post,делать паузу; шагать; отправить почтой,<b>pass an exam</b> — сдать экзамен; <i>take an exam</i> — сдавать.,,,level::A1-A2 pos::verb,OtY^>O0e*t
+patience,терпение,Thank you for your patience.,passion; practice; presence,страсть; практика; присутствие,,,,level::B2-C1 pos::noun,IN%!=aswsb
+to read,читать,I read before bed.,to write; to watch; to listen,писать; смотреть; слушать,,,,level::A1-A2 pos::verb,k{&>X&4xIw
+to produce,производить,The factory produces cars.,to reduce; to provide; to proceed,сокращать; предоставлять; продолжать,,,,level::B1-B2 pos::verb,bI5@mUc(3K
+reasonable,разумный; приемлемый,The price is reasonable.,responsible; seasonal; remarkable,ответственный; сезонный; замечательный,,,,level::B1-B2 pos::adj,vt!={n@@BH
+significant,значительный; важный,There's been a significant increase in prices.,sufficient; magnificent; insignificant,достаточный; великолепный; незначительный,,,,level::B2-C1 pos::adj,nD![7&LVe`
+to sell,продавать,They sell fresh bread here.,to tell; to smell; to spell,рассказывать; пахнуть; писать по буквам,Формы: sell — sold — sold.,,,level::A1-A2 pos::verb,Q}FNo00N%F
+suitable,подходящий,This film isn't suitable for children.,stable; available; capable,стабильный; доступный; способный,,,,level::B1-B2 pos::adj,M9W|f7.R5Z
+to fine-tune,точно настроить; довести до ума,We need to fine-tune the details.,to tone down; to tune in; to fine,смягчить; настроиться на волну; оштрафовать,,,,level::Pro domain::work,zkBN?!47*e
+law,закон; право,It's against the law.,low; raw; lawn,низкий; сырой; газон,,,,level::B1-B2 pos::noun,"i!,114,&{_"
+sufficient,достаточный,We don't have sufficient time.,significant; efficient; deficient,значительный; эффективный; недостаточный,,,,level::B2-C1 pos::adj,zMJZGb/6xb
+to write,писать,Write your name here.,to read; to draw; to sign,читать; рисовать; подписывать,,,,level::A1-A2 pos::verb,GML`/LwN/N
+everything,всё,Everything is fine.,everywhere; every time; anything,везде; каждый раз; что-нибудь,Глагол в единственном числе: <i>everything <b>is</b></i>.,,,level::A1-A2 pos::noun,oE0TV-l>%
+aware,осведомлённый; знающий,Are you aware of the risks?,afraid; awake; careful,боящийся; бодрствующий; осторожный,"be aware <b>of</b> sth — знать, осознавать что-то.",,,level::B1-B2 pos::adj,I2#z|!J%Jx
+efficient,эффективный; продуктивный,This is a more efficient way to work.,sufficient; proficient; deficient,достаточный; умелый; недостаточный,,,,level::B2-C1 pos::adj,E*q$x+Cgb)
+to cover,покрывать; освещать,Cover the pan with a lid.,to recover; to discover; to hover,выздоравливать; открывать; парить,,,,level::B1-B2 pos::verb,z2jqfgTs$Q
+confident,уверенный в себе; уверенный,She's a confident speaker.,confidential; comfortable; convenient,конфиденциальный; удобный; подходящий по времени,,,,level::B1-B2 pos::adj,D3AXOE*6~/
+relevant,уместный; относящийся к делу,That's not relevant to our discussion.,reluctant; relative; relieved,неохотный; относительный; испытывающий облегчение,,,,level::B2-C1 pos::adj,u*VPl+sUmQ
+paper,бумага; газета,I need a piece of paper.,pepper; pager; diaper,перец; пейджер; подгузник,,,,level::A1-A2 pos::noun,GVg&a8SxX3
+to overthink,слишком много думать; накручивать себя,Don't overthink it.,to overlook; to overtake; to overreact,не заметить; обогнать; слишком бурно реагировать,,,,level::B2-C1 pos::verb,Ki{4xhcCmO
+to listen,слушать,"Listen to me, please.",to hear; to watch; to speak,слышать; смотреть; говорить,listen <b>to</b> sth — слушать что-то.,,,level::A1-A2 pos::verb,D_(%ImAuIp
+position,позиция; должность; положение,She applied for the position of manager.,possession; potion; portion,владение; зелье; порция,,,,level::B1-B2 pos::noun,F$NZ(8yfAB
+comfortable,удобный,These shoes are very comfortable.,confident; considerable; compatible,уверенный; значительный; совместимый,"<b>comfortable</b> — удобный физически (обувь, кресло).",,,level::B1-B2 pos::adj,t2{7=61uBR
+relieved,испытывающий облегчение; с облегчением,I was relieved to hear the news.,relaxed; relevant; retired,расслабленный; уместный; на пенсии,,,,level::B2-C1 pos::adj,K6>[}_Uj}l
+near,рядом; близко,Is there a bank near here?,nearly; neatly; clearly,почти; аккуратно; ясно,,,,level::A1-A2 pos::adv,q&bT-F>$*K
+convenient,удобный,Is Monday convenient for you?,confident; consistent; competent,уверенный; последовательный; компетентный,<b>convenient</b> — удобный по времени или месту.,,,level::B1-B2 pos::adj,Jk{<o)UAdA
+grateful,благодарный; признательный,I'm really grateful for your help.,graceful; great; greedy,изящный; великий; жадный,,,,level::B2-C1 pos::adj,qdS}G3]aeX
+human,человеческий; человек,It's a human mistake.,humane; humid; humble,гуманный; влажный; скромный,,,,level::B1-B2 pos::adj,kH.@SsmezW
+to hear,слышать,I can't hear you.,to listen; to see; to understand,слушать; видеть; понимать,"<b>hear</b> — слышать (само собой), <b>listen</b> — слушать (специально).",,,level::A1-A2 pos::verb,eMw+Cegg[E
+to sign off on,утвердить; одобрить,The manager signed off on the budget.,to sign up for; to sign in; to sign out,записаться на; войти в систему; выйти из системы,,,,level::Pro domain::work,hQR?qE]<%V
+situation,ситуация; положение,It's a difficult situation.,station; saturation; sanitation,станция; насыщенность; санитария,,,,level::B1-B2 pos::noun,sva6s</UnZ
+obvious,очевидный,The answer is obvious.,previous; curious; serious,предыдущий; любопытный; серьёзный,,,,level::B1-B2 pos::adj,w?u4y?Nt$r
+anxious,тревожный; беспокоящийся,I feel anxious before exams.,ambitious; cautious; curious,амбициозный; осторожный; любопытный,,,,level::B2-C1 pos::adj,RB2$qc:dA
+staff,персонал; сотрудники,The staff are very friendly.,stuff; stuffing; stack,вещи; начинка; стопка,"<b>staff</b> — персонал; <i>stuff</i> — вещи, штуки.",,,level::B1-B2 pos::noun,Es1~j%Y1e_
+curious,любопытный,Kids are naturally curious.,furious; serious; cautious,разъярённый; серьёзный; осторожный,,,,level::B1-B2 pos::adj,Pc~ttAXwJ*
+activity,занятие; деятельность,Swimming is my favourite activity.,actuality; acidity; activation,актуальность; кислотность; активация,,,,level::B1-B2 pos::noun,x]Cw=`7r|C
+cautious,осторожный,Be cautious when you drive at night.,curious; anxious; conscious,любопытный; тревожный; в сознании,,,,level::B2-C1 pos::adj,Pc|(&bFTB;
+to call,звонить; называть,I'll call you tonight.,to text; to answer; to visit,писать сообщение; отвечать; навещать,,,,level::A1-A2 pos::verb,B?u?4c^_|T
+event,событие; мероприятие,The event starts at seven.,evening; even; vent,вечер; даже; вентиляция,<b>in any event</b> — в любом случае.,,,level::B1-B2 pos::noun,oD5hCcqJbo
+self-conscious,стеснительный; неуверенный в себе,I feel self-conscious when I speak English.,self-confident; conscientious; self-centred,уверенный в себе; добросовестный; эгоцентричный,,,,level::B2-C1 pos::adj,ikH9)q-vQ5
+likely,вероятный; вероятно,It's likely to rain tomorrow.,lovely; lonely; lively,прекрасный; одинокий; живой,,,,level::B1-B2 pos::adj,mEOCkl/K}<
+special,особенный; специальный,Today is a special day.,spatial; spacious; specific,пространственный; просторный; конкретный,,,,level::A1-A2 pos::adj,mBs7%m.Q~1
+challenging,сложный; требующий усилий,It's a challenging job.,changing; charming; chilling,меняющийся; очаровательный; леденящий,,,,level::B2-C1 pos::adj,j;ZPI7Bu`L
+average,средний,The average age here is thirty.,general; equal; total,общий; равный; итоговый,on average — в среднем.,,,level::B1-B2 pos::adj,f9u!|QY_7A
+demanding,требовательный; трудный,My boss is very demanding.,damaging; defending; commanding,вредный; защищающий; властный,,,,level::B2-C1 pos::adj,"H&_,aaNFZx"
+to send,отправлять; посылать,Send me a message.,to get; to bring; to give,получать; приносить; давать,,,,level::A1-A2 pos::verb,sn:48CIzv^
+to pitch,предложить идею; представить идею,She pitched her idea to the team.,to patch; to pinch; to ditch,залатать; щипать; бросить,<b>a pitch</b> — короткая презентация идеи.,,,level::Pro domain::work,"wxK7qDY,N]"
+essential,необходимый; существенный,Water is essential for life.,potential; additional; optional,потенциальный; дополнительный; необязательный,,,,level::B1-B2 pos::adj,"IW[::U,5mv"
+overwhelmed,ошеломлённый; перегруженный,I feel overwhelmed with work.,overjoyed; overrated; overdressed,вне себя от радости; переоценённый; слишком нарядный,,,,level::B2-C1 pos::adj,u8-)Cd7fcK
+disappointed,разочарованный,I was disappointed with the film.,disappointing; embarrassed; surprised,разочаровывающий; смущённый; удивлённый,"<b>-ed</b> — о чувствах (I'm disappointed), <b>-ing</b> — о том, что их вызывает (a disappointing film).",,,level::B1-B2 pos::adj,x6{dKf8R<`
+straightforward,простой; понятный; прямолинейный,The instructions are straightforward.,stressful; strict; sophisticated,стрессовый; строгий; утончённый,,,,level::B2-C1 pos::adj,
+to bring,приносить; привозить,Bring your friends.,to take; to send; to buy,брать; отправлять; покупать,"<b>bring</b> — сюда, ко мне; <b>take</b> — туда, с собой.",,,level::A1-A2 pos::verb,fWJ~cIx0[t
+embarrassed,смущённый; неловко,I felt so embarrassed.,embarrassing; disappointed; excited,неловкий о ситуации; разочарованный; взволнованный,,,,level::B1-B2 pos::adj,B0bsaz9LBV
+versatile,разносторонний; универсальный,She's a versatile artist.,volatile; virtual; vertical,непостоянный; виртуальный; вертикальный,,,,level::B2-C1 pos::adj,D9%o&{(*_8
+sophisticated,сложный; изощрённый; утончённый,It's a sophisticated system.,straightforward; satisfied; specific,простой; довольный; конкретный,,,,level::B2-C1 pos::adj,"C!jM.xX,AG"
+exhausted,измотанный; очень уставший,I'm exhausted after work.,excited; exhausting; extended,взволнованный; изматывающий; продлённый,,,,level::B1-B2 pos::adj,"P]Z],/_Tm}"
+specific,конкретный; определённый,Can you be more specific?,spectacular; scientific; pacific,впечатляющий; научный; мирный,,,,level::B2-C1 pos::adj,z+bck9mK5`
+to put,класть; ставить,Put your bag on the chair.,to take; to keep; to hold,брать; хранить; держать,,,,level::A1-A2 pos::verb,nYKI>L4fbU
+upset,расстроенный,She was upset about the news.,excited; relaxed; surprised,взволнованный; расслабленный; удивлённый,,,,level::B1-B2 pos::adj,"E,rBQF#LbH"
+vague,расплывчатый; смутный,His answer was very vague.,vain; valid; vast,тщеславный; действительный; огромный,,,,level::B2-C1 pos::adj,N2RT=vawL&
+to justify,обосновать; оправдать,Can you justify this decision?,to clarify; to qualify; to notify,уточнить; получить квалификацию; уведомить,,,,level::B2-C1 pos::verb,"r+R62,s::s"
+rude,грубый; невежливый,Don't be rude to the waiter.,polite; proud; strict,вежливый; гордый; строгий,,,,level::B1-B2 pos::adj,zf%IFohG-W
+valid,действительный; обоснованный,Is your passport still valid?,vivid; valuable; vague,яркий; ценный; расплывчатый,,,,level::B2-C1 pos::adj,e&clC7El&C
+to start,начинать; начинаться,The film starts at eight.,to finish; to stop; to continue,заканчивать; останавливать; продолжать,,,,level::A1-A2 pos::verb,zc:rutG^2[
+polite,вежливый,He's always very polite.,rude; quiet; patient,грубый; тихий; терпеливый,,,,level::B1-B2 pos::adj,Jf;77a-A)b
+vivid,яркий; живой,I have vivid memories of that day.,valid; vital; vague,действительный; жизненно важный; расплывчатый,,,,level::B2-C1 pos::adj,JFg.;iV_{H
+tedious,утомительный; нудный,Fixing these bugs one by one is tedious.,studious; tremendous; hideous,прилежный; огромный; отвратительный,,,,level::B2-C1 pos::adj,pxr+=7a:U#
+patient,терпеливый,"Be patient, it takes time.",passionate; polite; persistent,страстный; вежливый; настойчивый,Как существительное: a patient — пациент.,,,level::B1-B2 pos::adj,IiEG(~TGA:
+workload,нагрузка; объём работы,My workload is crazy this week.,workflow; workplace; workshop,рабочий процесс; рабочее место; мастерская,,,,level::Pro domain::work,iq]K1@J!}_
+tough,трудный; жёсткий; крепкий,It was a tough decision.,rough; though; touchy,грубый; хотя; обидчивый,,,,level::B2-C1 pos::adj,"CV,Z@#fvJ`"
+to finish,заканчивать; закончить,I finish work at six.,to start; to wait; to leave,начинать; ждать; уходить,,,,level::A1-A2 pos::verb,Ocg5v[W{]l
+however,однако; тем не менее,"It's cheap. However, it's not very good.",therefore; otherwise; moreover,поэтому; иначе; более того,,,,level::B1-B2 pos::linking,
+to sync up,созвониться; свериться,Let's sync up after lunch.,to sign up; to set up; to back up,записаться; создать; сделать бэкап,,,,level::Pro domain::work,tRQ69A-MJa
+to proceed,продолжить; приступить,Let's proceed with the plan.,to precede; to succeed; to process,предшествовать; преуспеть; обрабатывать,"<b>proceed with sth</b> — приступить к чему-то, продолжить.",,,level::B2-C1 pos::verb,F8cF`KQ2u*
+genuine,настоящий; искренний,She showed genuine interest.,generous; gentle; general,щедрый; нежный; общий,,,,level::B2-C1 pos::adj,neZ$D/wM}>
+therefore,поэтому; следовательно,"He was ill; therefore, he stayed at home.",however; moreover; otherwise,однако; более того; иначе,,,,level::B1-B2 pos::linking,"rx;t{A>g,U"
+to follow up,вернуться к вопросу; уточнить позже,I'll follow up with an email.,to follow along; to look up; to show up,следить; искать; появляться,,,,level::Pro domain::work,gq3exiQ2$?
+generous,щедрый,"Thank you, that's very generous of you.",gorgeous; genuine; dangerous,великолепный; настоящий; опасный,,,,level::B2-C1 pos::adj,q5Vhh$uCk$
+to stop,останавливаться; останавливать; прекращать; перестать,"Stop the car, please.",to start; to wait; to turn,начинать; ждать; поворачивать,stop doing sth — перестать что-то делать.,,,level::A1-A2 pos::verb,IAqZRn@E`K
+otherwise,иначе; в противном случае,"Hurry up, otherwise we'll be late.",likewise; however; meanwhile,также; однако; тем временем,,,,level::B1-B2 pos::linking,f-FEuy0R#0
+to touch base,связаться; ненадолго созвониться,Let's touch base next week.,to touch up; to cut corners; to break the ice,подправить; халтурить; растопить лёд,,,,level::Pro domain::work,"ykFsg,U-+v"
+inevitable,неизбежный,Change is inevitable.,invisible; incredible; invaluable,невидимый; невероятный; бесценный,,,,level::B2-C1 pos::adj,kwqmTO]kFM
+although,хотя,"Although it was raining, we went out.",unless; whereas; because,если не; тогда как; потому что,,,,level::B1-B2 pos::linking,rrEM+5mvP>
+to loop in,подключить к обсуждению; добавить в переписку,Can you loop in the art director?,to log in; to opt in; to break in,войти в аккаунт; согласиться; вломиться,,,,level::Pro domain::work,r4ld(:ug}{
+to try,пытаться; пробовать,Try this cake!,to want; to start; to check,хотеть; начинать; проверять,,,,level::A1-A2 pos::verb,bFo*-DDpp*
+unless,если не,I won't go unless you come with me.,until; unlike; although,пока не; в отличие от; хотя,,,,level::B1-B2 pos::linking,oEF*[tE:&A
+to push back,возражать; переносить на позже,We had to push back the deadline.,to push forward; to step back; to hold back,продвигать; отступить; сдерживать,push back on sth — возразить против чего-то.,,,level::Pro domain::work,E;=1F{tOmt
+eager,стремящийся; полный энтузиазма,He's eager to learn.,meager; early; anxious,скудный; ранний; тревожный,,,,level::B2-C1 pos::adj,u:!e28HbhH
+actually,на самом деле; вообще-то,"Actually, I don't like coffee.",currently; eventually; accurately,в данный момент; в конце концов; точно,"Ложный друг: actually ≠ «актуально». «Сейчас, в данный момент» — <b>currently</b>.",,,level::B1-B2 pos::linking,m$u!xSeipQ
+to wrap up,подводить итоги; завершать,Let's wrap up the meeting.,to warm up; to mix up; to set up,разогреваться; перепутать; создавать,,,,level::Pro domain::work,"k=N8U_C,ri"
+fluent,беглый; свободный,I want to be fluent in English.,fluid; frequent; affluent,текучий; частый; состоятельный,fluent English — свободный английский. Твоя цель 🙂,,,level::B2-C1 pos::adj,Pn[Oy85b#v
+to use,использовать; пользоваться,Can I use your phone?,to take; to need; to fix,брать; нуждаться; чинить,,,,level::A1-A2 pos::verb,LA#)[U~U5)
+probably,вероятно; наверное,It will probably rain later.,properly; previously; personally,правильно; ранее; лично,,,,level::B1-B2 pos::linking,i~-7.In66M
+to walk sb through,провести по шагам; объяснить пошагово,Can you walk me through the setup?,to walk away; to talk into; to get through,уйти; уговорить; дозвониться,,,,level::Pro domain::work,pP.[9^6JHE
+awkward,неловкий; неудобный,There was an awkward silence.,awful; backward; awake,ужасный; отсталый; бодрствующий,,,,level::B2-C1 pos::adj,L$3_s0>]PE
+nearly,почти,I nearly missed the bus.,nearby; clearly; newly,поблизости; ясно; недавно,,,,level::B1-B2 pos::linking,c5e6_~n8As
+to run late,опаздывать; задерживаться,"If you run late, text me.",to run out of; to run into; to run away,закончиться; столкнуться; убежать,I'm running late — я опаздываю.,,,level::Pro domain::work,e?lZ#I%~[U
+complicated,сложный; запутанный,It's complicated.,competitive; complete; compatible,конкурентный; полный; совместимый,,,,level::B2-C1 pos::adj,r|~2:}+0Eh
+to feel,чувствовать; чувствовать себя,I feel tired.,to look; to seem; to think,выглядеть; казаться; думать,How do you feel? — Как ты себя чувствуешь?,,,level::A1-A2 pos::verb,uOk|><Ipb6
+hardly,едва; почти не,I can hardly hear you.,hard; highly; lately,усердно; высоко; в последнее время,<b>hardly</b> ≠ hard: I work <b>hard</b> — я усердно работаю.,,,level::B1-B2 pos::linking,AY;a0pHwVN
+to be on track,идти по плану; укладываться в сроки,We're on track to finish by Friday.,to be on hold; to be on the way; to be on board,быть на паузе; быть в пути; быть в деле,,,,level::Pro domain::work,BBbz-K=T$p
+lately,в последнее время,Have you been busy lately?,later; finally; lastly,позже; наконец; в заключение,,,,level::B1-B2 pos::linking,D0GK;?pQS>
+to be on hold,на паузе; приостановлен,The project is on hold.,to be on track; to be on call; to be on leave,идти по плану; быть на дежурстве; быть в отпуске,,,,level::Pro domain::work,yr3QCp]$E0
+moreover,более того; кроме того,"It's cheap; moreover, it's very good.",however; therefore; otherwise,однако; поэтому; иначе,,,,level::B2-C1 pos::linking,onWQyHx&Y*
+to leave,уходить; уезжать; оставлять,I leave home at eight.,to arrive; to stay; to return,прибывать; оставаться; возвращаться,,,,level::A1-A2 pos::verb,p9:Brf*bPg
+instead,вместо этого,Let's walk instead.,inside; indeed; anyway,внутри; действительно; так или иначе,instead <b>of</b> + сущ./-ing: instead of waiting.,,,level::B1-B2 pos::linking,IVDXyq1oDo
+heads-up,предупреждение; предупредить заранее,Thanks for the heads-up!,follow-up; check-up; wake-up call,продолжение; осмотр; тревожный звонок,give sb a heads-up — предупредить заранее.,,,level::Pro domain::work,p6t+e]qGN1
+whereas,тогда как; в то время как,"He loves coffee, whereas I prefer tea.",whereby; wherever; although,посредством чего; где бы ни; хотя,,,,level::B2-C1 pos::linking,"n=<,3V%a5,"
+anyway,в любом случае; так или иначе; всё равно,"It's raining, but let's go anyway.",anywhere; anymore; already,где угодно; больше не; уже,,,,level::B1-B2 pos::linking,GZ8m`PW1js
+ASAP,как можно скорее; срочно,Please send it ASAP.,FYI; ETA; TBD,к сведению; ожидаемое время; уточняется,as soon as possible.,,,level::Pro domain::work,r3wUEle0s1
+despite,несмотря на,We went out despite the rain.,besides; due to; instead of,кроме того; из-за; вместо,despite + сущ./-ing (без of!): despite <b>the rain</b>.,,,level::B2-C1 pos::linking,HhnYv22AC!
+to arrive,прибывать; приезжать,The train arrives at ten.,to leave; to stay; to wait,уезжать; оставаться; ждать,"arrive <b>in</b> a city, arrive <b>at</b> a station.",,,level::A1-A2 pos::verb,
+according to,согласно; по словам; по данным,"According to the forecast, it will be sunny.",due to; thanks to; next to,из-за; благодаря; рядом с,,,,level::B1-B2 pos::linking,gTw?+x7O7q
+FYI,к сведению; для информации,"FYI, the meeting moved to three.",ASAP; ETA; BTW,как можно скорее; ожидаемое время; кстати,for your information.,,,level::Pro domain::work,Ln9.`xrJ*[
+meanwhile,тем временем; между тем,"Meanwhile, the kids were playing outside.",otherwise; whereas; nevertheless,иначе; тогда как; тем не менее,,,,level::B2-C1 pos::linking,oD)/L#QL7t
+to make a decision,принять решение; принимать решение,It's time to make a decision.,to make a mistake; to make an effort; to take a risk,совершить ошибку; приложить усилие; рискнуть,,,,level::B1-B2 pos::phrase,P?an>Z8*bn
+ETA,ожидаемое время; срок,What's the ETA on the new build?,ASAP; FYI; TBD,как можно скорее; к сведению; уточняется,estimated time of arrival / completion.,,,level::Pro domain::work,Gm5YQzi=xq
+apparently,судя по всему; по-видимому,"Apparently, the meeting was cancelled.",frequently; accidentally; approximately,часто; случайно; приблизительно,,,,level::B2-C1 pos::linking,G|vcvyco<(
+to meet,встречать; встречаться; познакомиться,Nice to meet you.,to see; to visit; to know,видеть; навещать; знать,Nice to meet you — приятно познакомиться.,,,level::A1-A2 pos::verb,xk_S;Q0{YF
+to pay attention,обращать внимание; обратить внимание,Please pay attention to the details.,to pay a visit; to take care; to make sense,навестить; заботиться; иметь смысл,pay attention <b>to</b> sth.,,,level::B1-B2 pos::phrase,GHz&rfn!Y
+bandwidth,ресурс; возможность взяться,I don't have the bandwidth for another task.,broadband; bandage; headcount,широкополосный интернет; бинт; численность штата,О людях — время и силы; о сети — пропускная способность.,,,level::Pro domain::work,"MS>i,H,+/w"
+approximately,приблизительно; примерно,It takes approximately two hours.,appropriately; apparently; accurately,уместно; по-видимому; точно,,,,level::B2-C1 pos::linking,IiDjn;Yn@6
+to take part in,участвовать в; принимать участие,Would you like to take part in the project?,to take place; to take care of; to take advantage of,состояться; заботиться о; воспользоваться,,,,level::B1-B2 pos::phrase,C;]vRJ&!~1
+to take ownership,взять на себя ответственность,I'll take ownership of this bug.,to take over; to take part in; to take care of,брать управление; участвовать; заботиться,,,,level::Pro domain::work,"M|=G&%qf,D"
+gradually,постепенно,My English is gradually improving.,generally; gratefully; casually,в целом; с благодарностью; небрежно,,,,level::B2-C1 pos::linking,Qi{2Ep|{~V
+to visit,навещать; посещать,I visit my grandma on Sundays.,to meet; to call; to stay,встречать; звонить; оставаться,,,,level::A1-A2 pos::verb,qyeV6qe-bQ
+to take place,происходить; проходить; состояться,The meeting will take place on Monday.,to take part; to take time; to take a seat,участвовать; занимать время; садиться,,,,level::B1-B2 pos::phrase,rW3->i]gn!
+to raise a concern,высказать опасение,I'd like to raise a concern about the deadline.,to raise awareness; to raise money; to raise a hand,повышать осведомлённость; собирать деньги; поднять руку,,,,level::Pro domain::work,li&AaAN7EU
+thoroughly,тщательно; полностью,Read the contract thoroughly.,thoughtfully; throughout; roughly,вдумчиво; повсюду; грубо,,,,level::B2-C1 pos::linking,L1kxNGz04I
+to keep in touch,поддерживать связь; не пропадать,Let's keep in touch!,to keep an eye on; to keep calm; to lose touch,присматривать за; сохранять спокойствие; терять связь,,,,level::B1-B2 pos::phrase,rNUa8&iGGH
+to get back to sb,вернуться с ответом; ответить позже,I'll get back to you tomorrow.,to get back at sb; to get along with; to get through to,отомстить; ладить с; достучаться до,,,,level::Pro domain::work,m5r__nFbri
+definitely,определённо; точно,I'll definitely be there.,deliberately; desperately; defiantly,намеренно; отчаянно; вызывающе,,,,level::B2-C1 pos::linking,Qbu1YlyDG?
+to travel,путешествовать; ездить,I love to travel by train.,to drive; to walk; to fly,водить машину; ходить пешком; летать,,,,level::A1-A2 pos::verb,mid=@!x4bs
+to be about to,вот-вот; собираться,I was about to call you.,to be able to; to be used to; to be supposed to,мочь; привыкнуть; быть должным,I was about to… — я как раз собирался…,,,level::B1-B2 pos::phrase,cpSe:7Y&bF
+to be up for,быть не против; быть готовым,Are you up for a quick call?,to be up to; to be fed up with; to be keen on,заниматься; надоесть; увлекаться,,,,level::Pro domain::work,Q`zJsx^g6*
+deliberately,намеренно; умышленно,He deliberately ignored me.,definitely; delicately; desperately,определённо; деликатно; отчаянно,,,,level::B2-C1 pos::linking,"NQ>,ntF[ri"
+to be used to,привыкнуть к; быть привыкшим,I'm used to getting up early.,to be about to; to be able to; to be supposed to,собираться; мочь; быть должным,<b>be used to</b> + -ing — привык; <b>used to</b> + глагол — раньше (делал): I used to smoke.,,,level::B1-B2 pos::phrase,e*4nCwJY7h
+on my end,с моей стороны; у меня,Everything works on my end.,in the end; at the end; on my own,в конце концов; в конце; сам,,,,level::Pro domain::work,A/pkibrX9?
+regardless,несмотря ни на что; независимо,"It might rain, but we're going regardless.",regarding; regularly; relatively,относительно; регулярно; сравнительно,regardless <b>of</b> sth — независимо от чего-то.,,,level::B2-C1 pos::linking,m|EwPYg$s$
+to walk,ходить пешком; гулять; идти,I walk to work.,to run; to drive; to ride,бегать; водить машину; ездить верхом,,,,level::A1-A2 pos::verb,?02d~$1c0
+worth it,того стоит; это того стоит,"It's expensive, but it's worth it.",never mind; no wonder; it depends,ничего страшного; неудивительно; зависит от обстоятельств,,,,level::B1-B2 pos::phrase,oS|5XFIct/
+it's a known issue,это известная проблема,"Don't worry, it's a known issue.",it's a deal; it's a long shot; it's on me,договорились; маловероятно; я угощаю,,,,level::Pro domain::work,Lc|4$Y*42P
+as long as,при условии что; пока,You can go out as long as you're back by ten.,as soon as; as well as; as far as,как только; а также; насколько,,,,level::B2-C1 pos::linking,M8]([aS7ur
+it depends,смотря как; зависит от обстоятельств; по-разному,— Will you come? — It depends.,no wonder; never mind; worth it,неудивительно; ничего страшного; того стоит,it depends <b>on</b> sth — зависит от чего-то.,,,level::B1-B2 pos::phrase,hC}/9cXHXp
+good catch,хорошо подмечено; отличная находка,— There's a typo here. — Good catch!,good call; good job; good luck,правильное решение; хорошая работа; удачи,,,,level::Pro domain::work,N?YtN&ZamQ
+as soon as,как только,Call me as soon as you arrive.,as long as; as well as; as far as,при условии что; а также; насколько,,,,level::B2-C1 pos::linking,tVeS/n})z7
+to run,бегать; бежать,I run in the park every morning.,to walk; to swim; to jump,гулять; плавать; прыгать,,,,level::A1-A2 pos::verb,g6QdEI_UfC
+no wonder,неудивительно,No wonder you're tired — you worked all day.,no way; it depends; no doubt,ни за что; зависит от обстоятельств; несомненно,,,,level::B1-B2 pos::phrase,j1jbR|W>hp
+good call,правильное решение; верное решение,Using Git for the art files was a good call.,good catch; good luck; close call,хорошо подмечено; удачи; на волоске,,,,level::Pro domain::work,ejnh~N6EWd
+to make ends meet,сводить концы с концами,It's hard to make ends meet on one salary.,to make sense; to make up for; to make a fuss,иметь смысл; компенсировать; поднимать шум,,,,level::B2-C1 pos::idiom,EpYRyJ0JrV
+by the way,кстати,"By the way, I saw your brother yesterday.",on the way; in a way; no way,по пути; в каком-то смысле; ни за что,,,,level::B1-B2 pos::phrase,y5t0&K*zT!
+to make a point,донести мысль; высказать аргумент,You make a good point.,to make sense; to make a decision; to point out,иметь смысл; принять решение; указывать,,,,level::Pro domain::work,uSKtq&<!*Y
+to keep an eye on,присматривать за; следить за,Can you keep an eye on my bag?,to keep in touch; to keep calm; to catch someone's eye,поддерживать связь; сохранять спокойствие; привлечь внимание,,,,level::B2-C1 pos::idiom,9WAWiO<{4
+to drive,водить машину; водить; ехать на машине,Can you drive?,to ride; to walk; to fly,ездить на велосипеде; ходить пешком; летать,,,,level::A1-A2 pos::verb,"E<>auh,+Kh"
+on purpose,нарочно; специально,"Sorry, I didn't do it on purpose.",by accident; on time; in advance,случайно; вовремя; заранее,,,,level::B1-B2 pos::phrase,bOr90d-0-h
+to get the hang of,освоить; приноровиться,"It's hard at first, but you'll get the hang of it.",to get rid of; to get away with; to get hold of,избавиться от; сойти с рук; раздобыть,,,,level::B2-C1 pos::idiom,
+in advance,заранее,Book your tickets in advance.,in time; on purpose; in general,вовремя; нарочно; в общем,,,,level::B1-B2 pos::phrase,lV4t))r[n
+to prioritize,расставлять приоритеты,We need to prioritize the bugs.,to privatize; to emphasize; to apologize,приватизировать; подчёркивать; извиняться,,,,level::Pro domain::work,i/}YWBS:P;
+to break the ice,растопить лёд; начать разговор,A joke can help break the ice.,to break the rules; to break the news; to break even,нарушать правила; сообщить новость; выйти в ноль,,,,level::B2-C1 pos::idiom,z=oO#=W*lB
+to play,играть,The kids play in the garden.,to work; to sing; to watch,работать; петь; смотреть,"play football, play the guitar.",,,level::A1-A2 pos::verb,w>52lm$^Mu
+to delegate,делегировать; поручать,Learn to delegate small tasks.,to negotiate; to dedicate; to relegate,вести переговоры; посвящать; понижать,,,,level::Pro domain::work,LS~PnP>=BG
+to be on the same page,понимать друг друга; быть на одной волне,Let's make sure we're on the same page.,to be on the safe side; to be on the way; to be on time,на всякий случай; быть в пути; быть вовремя,,,,level::B2-C1 pos::idiom,tYs{mt|]P<
+to negotiate,вести переговоры; договариваться,We negotiated a better salary.,to delegate; to navigate; to nominate,делегировать; ориентироваться; номинировать,,,,level::Pro domain::work,dMWe5EJtpX
+to be on the safe side,на всякий случай; для подстраховки,"Take an umbrella, just to be on the safe side.",to be on the same page; to be on the way; to be on time,на одной волне; быть в пути; быть вовремя,,,,level::B2-C1 pos::idiom,r~4Pg8.W]7
+to cook,готовить,I cook dinner every evening.,to eat; to wash; to clean,есть; мыть; убирать,,,,level::A1-A2 pos::verb,nNF=M}_84H
+to keep sb posted,держать в курсе,Keep me posted on the progress.,to keep sb waiting; to keep an eye on; to keep it simple,заставлять ждать; присматривать за; не усложнять,,,,level::Pro domain::work,dHq|^Oi0.^
+to cut corners,экономить на качестве; халтурить,Don't cut corners with safety.,to cut costs; to turn the corner; to cut ties,сокращать расходы; пойти на поправку; разорвать отношения,,,,level::B2-C1 pos::idiom,EMiMCnpu.p
+no worries,не беспокойся; без проблем,— Sorry for the delay. — No worries!,no wonder; no way; no doubt,неудивительно; ни за что; несомненно,,,,level::Pro domain::work,q+-k*R*d1j
+to call it a day,на сегодня хватит; закончить работу,"I'm tired, let's call it a day.",to save the day; to call the shots; to make someone's day,спасти положение; командовать; порадовать кого-то,,,,level::B2-C1 pos::idiom,E/5Ku{towd
+to clean,убирать; чистить,I clean my room on Saturdays.,to wash; to cook; to fix,мыть; готовить; чинить,,,,level::A1-A2 pos::verb,D)KLT[r:_c
+to brainstorm,устраивать мозговой штурм; накидать идей,Let's brainstorm some ideas.,to brainwash; to storm off; to break down,промывать мозги; уйти в гневе; ломаться,,,,level::Pro domain::work,vHO3zlOb[O
+under the weather,неважно себя чувствовать; приболел,I'm feeling a bit under the weather.,over the moon; under pressure; out of the blue,на седьмом небе; под давлением; как гром среди ясного неба,,,,level::B2-C1 pos::idiom,iIxBVh)u_Q
+deliverable,"результат работы; то, что сдаём",The main deliverable is a working prototype.,delivery; milestone; prototype,доставка; веха; прототип,,,,level::Pro domain::work,h0A%me~Iw|
+over the moon,на седьмом небе; очень счастлив,She was over the moon about the news.,under the weather; out of the blue; down to earth,приболевший; неожиданно; приземлённый,,,,level::B2-C1 pos::idiom,s?=_K`;kRD
+to wash,мыть; стирать,Wash your hands before dinner.,to clean; to dry; to cook,убирать; сушить; готовить,,,,level::A1-A2 pos::verb,M}+yMD!{[_
+milestone,веха; ключевой этап,We reached an important milestone.,deadline; deliverable; landmark,дедлайн; результат работы; ориентир,,,,level::Pro domain::work,n[t_^DG3wi
+out of the blue,неожиданно; как гром среди ясного неба,He called me out of the blue.,once in a blue moon; over the moon; on the spot,очень редко; на седьмом небе; на месте,,,,level::B2-C1 pos::idiom,y@A`lUe2-0
+once in a blue moon,очень редко; раз в сто лет,I eat fast food once in a blue moon.,out of the blue; every now and then; over the moon,неожиданно; время от времени; на седьмом небе,,,,level::B2-C1 pos::idiom,v0160]feM
+to sit,сидеть; садиться,Please sit down.,to stand; to lie; to stay,стоять; лежать; оставаться,sit down — сесть.,,,level::A1-A2 pos::verb,q;:.K!Y}6~
+to ship,выпустить; выкатить,We ship the game in March.,to shop; to skip; to sip,ходить по магазинам; пропускать; потягивать,,,,level::Pro domain::work,n`v|<H1!#X
+a piece of cake,проще простого; пустяк,The exam was a piece of cake.,a pain in the neck; a big deal; a long shot,заноза; важное дело; маловероятно,,,,level::B2-C1 pos::idiom,^=tC)jWx8
+a pain in the neck,заноза; головная боль,This printer is a pain in the neck.,a piece of cake; a big deal; a long shot,проще простого; важное дело; маловероятно,,,,level::B2-C1 pos::idiom,nQ[)S%sO=f
+to stand,стоять; вставать,We stand at the bus stop.,to sit; to wait; to walk,сидеть; ждать; гулять,stand up — встать.,,,level::A1-A2 pos::verb,"n({,3Mje~X"
+no big deal,ничего особенного; ерунда,— Sorry I'm late. — No big deal.,no wonder; no way; no doubt,неудивительно; ни за что; несомненно,,,,level::B2-C1 pos::idiom,cZ!cRYYg*W
+to be up to,заниматься; замышлять; решать,What are you up to this weekend?,to be about to; to be used to; to be fed up with,собираться; привыкнуть; надоесть,It's up to you — решай сам.,,,level::B2-C1 pos::idiom,duDF^-@TT2
+to wake up,просыпаться; проснуться,I wake up at seven.,to get up; to fall asleep; to go out,вставать; засыпать; выходить,"<b>wake up</b> — проснуться, <b>get up</b> — встать с кровати.",,,level::A1-A2 pos::verb,D/nu+9~*2j
+to be fed up with,надоесть; быть сытым по горло,I'm fed up with this weather.,to be used to; to be up to; to be keen on,привыкнуть; заниматься; увлекаться,,,,level::B2-C1 pos::idiom,bk$T-hsO#.
+to be keen on,увлекаться; очень хотеть,I'm not very keen on horror films.,to be fed up with; to be aware of; to be afraid of,надоесть; осознавать; бояться,,,,level::B2-C1 pos::idiom,M<t53tj+/6
+to get up,вставать; подниматься,I get up early on weekdays.,to wake up; to sit down; to go to bed,просыпаться; садиться; ложиться спать,,,,level::A1-A2 pos::verb,rQY*I?C9_P
+it's on me,я угощаю; за мой счёт,"Put your wallet away, it's on me.",it's up to you; it's your call; it's a deal,решай сам; тебе решать; договорились,,,,level::B2-C1 pos::idiom,q#>ytXn+BA
+fair enough,справедливо; резонно; ладно,"— I can't come, I'm working. — Fair enough.",good enough; sure enough; enough is enough,сойдёт; и правда; хватит,,,,level::B2-C1 pos::idiom,w!>unE1T?j
+to turn on,включать; включить,"Turn on the light, please.",to turn off; to open; to close,выключать; открывать; закрывать,,,,level::A1-A2 pos::verb,"xH,,.DY3J%"
+that makes two of us,я тоже; аналогично,— I'm exhausted. — That makes two of us.,that's the spirit; that's the point; that's beside the point,вот это настрой; в этом суть; это к делу не относится,,,,level::B2-C1 pos::idiom,e-|Z`)Fz6I
+not my cup of tea,не в моём вкусе; не моё,Opera isn't really my cup of tea.,not my business; not my fault; not my problem,не моё дело; не моя вина; не моя проблема,,,,level::B2-C1 pos::idiom,I/K:4nuuyT
+to turn off,выключать; выключить,Turn off your phone.,to turn on; to close; to stop,включать; закрывать; останавливать,,,,level::A1-A2 pos::verb,tp61z=v:gg
+to look for,искать,I'm looking for my glasses.,to find; to look at; to wait for,находить; смотреть на; ждать,,,,level::A1-A2 pos::verb,pb?hADW&AF
+to show,показывать,Show me your new phone.,to tell; to give; to see,рассказывать; давать; видеть,,,,level::A1-A2 pos::verb,"w,i#v+X}qv"
+to change,менять; изменить; поменять,I want to change my job.,to keep; to move; to choose,сохранять; переезжать; выбирать,,,,level::A1-A2 pos::verb,EMe91^(7eA
+to choose,выбирать; выбрать,Choose a colour you like.,to change; to decide; to find,менять; решать; находить,,,,level::A1-A2 pos::verb,LEbaQcmBio
+to decide,решать; решить,I can't decide what to wear.,to choose; to think; to plan,выбирать; думать; планировать,,,,level::A1-A2 pos::verb,w==WT6x}I1
+to move,переезжать; двигаться; двигать,We're moving to a new flat next month.,to stay; to travel; to change,оставаться; путешествовать; менять,,,,level::A1-A2 pos::verb,tfM/UAg?bL
+to cost,стоить,How much does it cost?,to pay; to buy; to spend,платить; покупать; тратить,,,,level::A1-A2 pos::verb,t49s5ft5Xa
+to spend,тратить; проводить,I spend a lot of time online.,to pay; to save; to lose,платить; экономить; терять,"spend money — тратить деньги, spend time — проводить время.",,,level::A1-A2 pos::verb,ulo5xy<APm
+to rest,отдыхать,You need to rest.,to sleep; to work; to wait,спать; работать; ждать,,,,level::A1-A2 pos::verb,bL/ih=b;v|
+to hope,надеяться,I hope you feel better soon.,to think; to want; to believe,думать; хотеть; верить,,,,level::A1-A2 pos::verb,Kq@}j()>c$
+to believe,верить,I don't believe him.,to think; to hope; to know,думать; надеяться; знать,,,,level::A1-A2 pos::verb,N|e~Z1AN:p
+to happen,случаться; происходить,What happened?,to change; to start; to finish,меняться; начинаться; заканчиваться,,,,level::A1-A2 pos::verb,cs%M`SSSZR
+to agree,соглашаться; согласиться,I agree with you.,to argue; to answer; to decide,спорить; отвечать; решать,agree <b>with</b> sb — соглашаться с кем-то.,,,level::A1-A2 pos::verb,M*a^}0]XLZ
+time,время,I don't have time today.,day; hour; year,день; час; год,What time is it? — Который час?,,,level::A1-A2 pos::noun,CS$<&HGSn$
+day,день,Have a nice day!,night; week; morning,ночь; неделя; утро,,,,level::A1-A2 pos::noun,"GbsJ^>f,2J"
+week,неделя,See you next week.,month; day; year,месяц; день; год,,,,level::A1-A2 pos::noun,C.G)e/WO9Y
+year,год,I started this job a year ago.,month; week; age,месяц; неделя; возраст,,,,level::A1-A2 pos::noun,De`w<&Q>to
+morning,утро,I drink coffee every morning.,evening; night; afternoon,вечер; ночь; день,in the morning — утром.,,,level::A1-A2 pos::noun,h!rX&;0N1b
+evening,вечер,What are you doing this evening?,morning; night; weekend,утро; ночь; выходные,in the evening — вечером.,,,level::A1-A2 pos::noun,"Dk+Ov,T2YF"
+weekend,выходные,Have a good weekend!,holiday; week; evening,отпуск; неделя; вечер,at the weekend — на выходных.,,,level::A1-A2 pos::noun,"Kdo49,{>A7"
+people,люди,Many people work from home now.,friends; children; family,друзья; дети; семья,"one <b>person</b> — один человек, many <b>people</b> — много людей.",,,level::A1-A2 pos::noun,"L=KP,^7KOs"
+man,мужчина,Who is that man?,woman; boy; husband,женщина; мальчик; муж,мн. ч. <b>men</b>.,,,level::A1-A2 pos::noun,"h,n]q(C?[J"
+woman,женщина,She is a strong woman.,man; girl; wife,мужчина; девочка; жена,мн. ч. <b>women</b>.,,,level::A1-A2 pos::noun,e&zv6ARyt<
+child,ребёнок,They have one child.,parent; adult; friend,родитель; взрослый; друг,мн. ч. <b>children</b>.,,,level::A1-A2 pos::noun,P}MTCQ]*%<
+friend,друг; подруга,She is my best friend.,neighbour; brother; guest,сосед; брат; гость,,,,level::A1-A2 pos::noun,M|N#q?Zxmc
+family,семья,I have a big family.,home; parents; team,дом; родители; команда,,,,level::A1-A2 pos::noun,J7S&14cnVM
+mother,мать; мама,My mother is a teacher.,father; sister; aunt,отец; сестра; тётя,Разговорное: mum.,,,level::A1-A2 pos::noun,p#7]gU)F@a
+father,отец; папа,My father works in a hospital.,mother; brother; uncle,мать; брат; дядя,Разговорное: dad.,,,level::A1-A2 pos::noun,s!eUE4bZK
+home,дом; домой,I'm going home.,work; school; city,работа; школа; город,go home — идти домой (без <b>to</b>). at home — дома.,,,level::A1-A2 pos::noun,I?{Fe-23#G
+house,дом,They live in a big house.,flat; garden; street,квартира; сад; улица,"<b>house</b> — здание, <b>home</b> — твой дом, где ты живёшь.",,,level::A1-A2 pos::noun,Ky6q&LJ8a6
+room,комната,This room is too cold.,kitchen; floor; door,кухня; этаж; дверь,,,,level::A1-A2 pos::noun,O7%&+^Chb~
+kitchen,кухня,We have breakfast in the kitchen.,bathroom; bedroom; garden,ванная; спальня; сад,,,,level::A1-A2 pos::noun,
+door,дверь,"Close the door, please.",window; wall; floor,окно; стена; пол,,,,level::A1-A2 pos::noun,G0`~mJex#@
+window,окно,"Open the window, it's hot.",door; wall; roof,дверь; стена; крыша,,,,level::A1-A2 pos::noun,z|)hJa~?=1
+table,стол,The keys are on the table.,chair; bed; shelf,стул; кровать; полка,,,,level::A1-A2 pos::noun,cfq@9w[pF|
+car,машина; автомобиль,My car is very old.,bus; bike; train,автобус; велосипед; поезд,,,,level::A1-A2 pos::noun,m?8<Hu}Feu
+bus,автобус,I take the bus to work.,train; car; taxi,поезд; машина; такси,,,,level::A1-A2 pos::noun,M.1(^M+;c+
+train,поезд,The train is late again.,bus; plane; ship,автобус; самолёт; корабль,,,,level::A1-A2 pos::noun,Df/RSQYh#<
+street,улица,I live on this street.,road; city; square,дорога; город; площадь,,,,level::A1-A2 pos::noun,bd^fjjbcrR
+city,город,London is a big city.,village; country; street,деревня; страна; улица,,,,level::A1-A2 pos::noun,ICjsQz!EmN
+country,страна,Spain is a beautiful country.,city; world; village,город; мир; деревня,,,,level::A1-A2 pos::noun,K:e=U#r?LH
+money,деньги,I don't have much money.,price; time; card,цена; время; карта,"money — неисчисляемое: much money, не many.",,,level::A1-A2 pos::noun,HmktuvJxM_
+price,цена,The price is too high.,money; size; number,деньги; размер; номер,,,,level::A1-A2 pos::noun,CC6G;~K&:<
+shop,магазин,Is there a shop near here?,market; office; bank,рынок; офис; банк,,,,level::A1-A2 pos::noun,lMB&/T0#JB
+job,работа; должность,She has a new job.,hobby; boss; office,хобби; начальник; офис,"<b>a job</b> — конкретная работа, должность. <b>work</b> — работа вообще: go to work.",,,level::A1-A2 pos::noun,BcPk=>l]y#
+food,еда,The food here is great.,drink; water; menu,напиток; вода; меню,,,,level::A1-A2 pos::noun,MtjnkX*L0}
+water,вода,Can I have a glass of water?,juice; milk; tea,сок; молоко; чай,,,,level::A1-A2 pos::noun,DHz_ahUlGP
+breakfast,завтрак,What do you have for breakfast?,lunch; dinner; snack,обед; ужин; перекус,have breakfast — завтракать.,,,level::A1-A2 pos::noun,e*Z$V&jvYr
+dinner,ужин,Dinner is ready!,lunch; breakfast; party,обед; завтрак; вечеринка,have dinner — ужинать.,,,level::A1-A2 pos::noun,ze/Fy>Ep-4
+question,вопрос,Can I ask you a question?,answer; problem; idea,ответ; проблема; идея,,,,level::A1-A2 pos::noun,E@XrA;`;ZZ
+problem,проблема,No problem!,question; mistake; reason,вопрос; ошибка; причина,No problem! — Без проблем!,,,level::A1-A2 pos::noun,"Dvei%,i9e:"
+idea,идея; мысль,That's a great idea!,plan; question; dream,план; вопрос; мечта,,,,level::A1-A2 pos::noun,D)N>!pn7;=
+phone,телефон,Where is my phone?,computer; camera; message,компьютер; фотоаппарат; сообщение,,,,level::A1-A2 pos::noun,i.tF1{2w|o
+name,имя; название,What's your name?,age; address; number,возраст; адрес; номер,,,,level::A1-A2 pos::noun,kT9$U@A@k?
+weather,погода,The weather is nice today.,season; temperature; sky,время года; температура; небо,,,,level::A1-A2 pos::noun,
+holiday,отпуск; каникулы; праздник,We're on holiday in Italy.,weekend; trip; party,выходные; поездка; вечеринка,on holiday — в отпуске.,,,level::A1-A2 pos::noun,"GsJGW20E,9"
+trip,поездка; путешествие,How was your trip?,ticket; flight; visit,билет; рейс; визит,,,,level::A1-A2 pos::noun,AKmV?8<#l!
+ticket,билет,"I need two tickets, please.",passport; map; seat,паспорт; карта; место,,,,level::A1-A2 pos::noun,Q2uGG<@A-~
+place,место,This is my favourite place.,city; room; street,город; комната; улица,,,,level::A1-A2 pos::noun,N^T@+h|D>`
+way,путь; дорога; способ,Is this the way to the station?,map; side; door,карта; сторона; дверь,by the way — кстати.,,,level::A1-A2 pos::noun,tu?#.q6AL~
+thing,вещь,I need to buy a few things.,place; idea; person,место; идея; человек,,,,level::A1-A2 pos::noun,vk-.j&qk&a
+life,жизнь,Life is short.,time; world; health,время; мир; здоровье,,,,level::A1-A2 pos::noun,pOo7Gb{0rG
+world,мир,It's the biggest city in the world.,country; city; life,страна; город; жизнь,,,,level::A1-A2 pos::noun,iPNP04]l1g
+health,здоровье,Sport is good for your health.,life; body; weight,жизнь; тело; вес,,,,level::A1-A2 pos::noun,uIN-]}Cf+V
+good,хороший,It's a good film.,bad; new; easy,плохой; новый; лёгкий,,,,level::A1-A2 pos::adj,z`*b}`OVt[
+bad,плохой,I have a bad cold.,good; sad; ill,хороший; грустный; больной,,,,level::A1-A2 pos::adj,F6Hli5z+9/
+big,большой,They have a big house.,small; long; tall,маленький; длинный; высокий,,,,level::A1-A2 pos::adj,qytQz[C:~O
+small,маленький,It's a small town.,big; short; young,большой; короткий; молодой,,,,level::A1-A2 pos::adj,PPI@c;]{4!
+new,новый,I like your new shoes.,old; young; next,старый; молодой; следующий,,,,level::A1-A2 pos::adj,poqYMJJ2#p
+old,старый; пожилой,This is an old photo.,new; young; ill,новый; молодой; больной,How old are you? — Сколько тебе лет?,,,level::A1-A2 pos::adj,h==;+NJZSH
+young,молодой,He is too young to drive.,old; new; small,старый; новый; маленький,,,,level::A1-A2 pos::adj,9mxENC}b:
+long,длинный; долгий,It was a long day.,short; tall; big,короткий; высокий; большой,,,,level::A1-A2 pos::adj,f2K&sCiVT;
+short,короткий; невысокий,I have short hair.,long; small; tall,длинный; маленький; высокий,,,,level::A1-A2 pos::adj,Lgm$JI)md(
+easy,лёгкий; простой,The test was easy.,difficult; fast; cheap,трудный; быстрый; дешёвый,,,,level::A1-A2 pos::adj,"zK;3D,zied"
+difficult,трудный; сложный,This question is difficult.,easy; boring; heavy,лёгкий; скучный; тяжёлый,,,,level::A1-A2 pos::adj,sFE-!Fz5o$
+hot,горячий; жаркий,"Be careful, the soup is hot.",cold; warm; wet,холодный; тёплый; мокрый,,,,level::A1-A2 pos::adj,N59V?-K`^U
+cold,холодный,It's cold outside.,hot; dry; dark,жаркий; сухой; тёмный,,,,level::A1-A2 pos::adj,nYgtt4dEMZ
+warm,тёплый,Wear a warm coat.,hot; cold; soft,горячий; холодный; мягкий,,,,level::A1-A2 pos::adj,xU$(JTM8+p
+cheap,дешёвый,This phone is quite cheap.,expensive; free; poor,дорогой; бесплатный; бедный,,,,level::A1-A2 pos::adj,idK:qm;r):
+expensive,дорогой,London is very expensive.,cheap; rich; free,дешёвый; богатый; бесплатный,,,,level::A1-A2 pos::adj,
+free,свободный; бесплатный,Are you free tonight?,busy; cheap; open,занятой; дешёвый; открытый,,,,level::A1-A2 pos::adj,qS8=/c>Y#@
+busy,занятой; занят; оживлённый,I'm very busy this week.,free; tired; lazy,свободный; уставший; ленивый,,,,level::A1-A2 pos::adj,mOShcr>WH*
+tired,уставший; устал,I'm too tired to go out.,bored; hungry; ill,скучающий; голодный; больной,I'm tired — я устал.,,,level::A1-A2 pos::adj,J<]`ueNES&
+hungry,голодный; голоден,I'm hungry. Let's eat!,tired; angry; full,уставший; злой; сытый,I'm hungry — я голоден / хочу есть.,,,level::A1-A2 pos::adj,sGv|4oJHPW
+happy,счастливый; довольный,You look happy today.,sad; angry; tired,грустный; злой; уставший,,,,level::A1-A2 pos::adj,"k,bk1Rq>7M"
+sad,грустный; печальный,Why are you sad?,happy; angry; bored,счастливый; злой; скучающий,,,,level::A1-A2 pos::adj,naelJSh#x<
+beautiful,красивый,What a beautiful day!,ugly; strange; boring,уродливый; странный; скучный,,,,level::A1-A2 pos::adj,x:TtNlW53B
+interesting,интересный,It's a very interesting book.,boring; funny; important,скучный; смешной; важный,,,,level::A1-A2 pos::adj,wdEU$B&Jvu
+important,важный,This is an important meeting.,interesting; difficult; funny,интересный; трудный; смешной,,,,level::A1-A2 pos::adj,qhgoSGl%vv
+ready,готовый; готов,Are you ready? Let's go!,busy; sure; free,занятой; уверенный; свободный,,,,level::A1-A2 pos::adj,hfaSK/ZQr1
+sure,уверенный; уверен,Are you sure?,ready; right; happy,готовый; правый; счастливый,I'm not sure — я не уверен.,,,level::A1-A2 pos::adj,n.y)?IOr3i
+right,правильный; правый,That's the right answer.,wrong; left; last,неправильный; левый; последний,You're right — ты прав.,,,level::A1-A2 pos::adj,t+F=s&giTv
+wrong,неправильный; ошибочный,"Sorry, wrong number.",right; bad; strange,правильный; плохой; странный,,,,level::A1-A2 pos::adj,orY(oo)/4h
+different,другой; разный,My sister and I are very different.,same; special; usual,одинаковый; особенный; обычный,,,,level::A1-A2 pos::adj,AQ*GsH>L9d
+same,одинаковый; тот же,We have the same phone.,different; next; last,разный; следующий; последний,the same — всегда с <b>the</b>.,,,level::A1-A2 pos::adj,gWn~0$<%nc
+always,всегда,I always drink tea in the morning.,never; often; usually,никогда; часто; обычно,,,,level::A1-A2 pos::adv,D%MCPH5:b=
+never,никогда,I never eat meat.,always; sometimes; often,всегда; иногда; часто,,,,level::A1-A2 pos::adv,B!7|w]@eF`
+often,часто,Do you often go to the gym?,sometimes; always; rarely,иногда; всегда; редко,,,,level::A1-A2 pos::adv,"i.LHL`,-n5"
+sometimes,иногда,Sometimes I work from home.,often; never; usually,часто; никогда; обычно,,,,level::A1-A2 pos::adv,v<agx$U<k+
+usually,обычно,I usually get up at seven.,always; often; really,всегда; часто; действительно,,,,level::A1-A2 pos::adv,
+already,уже,I've already seen this film.,still; again; soon,всё ещё; снова; скоро,,,,level::A1-A2 pos::adv,rwnD}O>}v?
+still,всё ещё; до сих пор,Are you still at work?,already; again; soon,уже; снова; скоро,,,,level::A1-A2 pos::adv,q%U5O[FpsZ
+again,снова; опять,Can you say that again?,already; still; later,уже; всё ещё; позже,,,,level::A1-A2 pos::adv,oSsy/]k/@+
+soon,скоро,See you soon!,later; early; now,позже; рано; сейчас,,,,level::A1-A2 pos::adv,wE{K<&N]x@
+now,сейчас; теперь,I'm busy now.,then; soon; today,тогда; скоро; сегодня,,,,level::A1-A2 pos::adv,GpFBOhIQ3`
+today,сегодня,What's the date today?,tomorrow; yesterday; tonight,завтра; вчера; сегодня вечером,,,,level::A1-A2 pos::adv,e}_t!~F##*
+tomorrow,завтра,See you tomorrow!,yesterday; today; later,вчера; сегодня; позже,,,,level::A1-A2 pos::adv,"F1js%,5dA7"
+yesterday,вчера,I was at home yesterday.,tomorrow; today; before,завтра; сегодня; раньше,,,,level::A1-A2 pos::adv,ED9kMtPC$q
+here,здесь; сюда,"Come here, please.",there; near; inside,там; рядом; внутри,,,,level::A1-A2 pos::adv,DV:;2a<)u>
+there,там; туда,I've never been there.,here; near; outside,здесь; рядом; снаружи,,,,level::A1-A2 pos::adv,lVT<(wHZ7q
+very,очень,It's very cold today.,too; quite; enough,слишком; довольно; достаточно,,,,level::A1-A2 pos::adv,uU:=<io5[N
+too,слишком; тоже,This coffee is too hot.,very; enough; quite,очень; достаточно; довольно,<b>too</b> — слишком (too hot) и тоже (Me too!).,,,level::A1-A2 pos::adv,I`r:4B]ewT
+maybe,может быть; возможно,Maybe we can meet tomorrow.,of course; sometimes; together,конечно; иногда; вместе,,,,level::A1-A2 pos::adv,"rq$_D,+JFb"
+together,вместе,Let's go together.,alone; again; also,один; снова; тоже,,,,level::A1-A2 pos::adv,b<Y5L1]h?|
+thank you,спасибо,Thank you for your help.,excuse me; please; you're welcome,извините; пожалуйста; не за что,Короче: thanks.,,,level::A1-A2 pos::phrase,Fq<3Xrq1bX
+please,пожалуйста,"Two coffees, please.",thank you; sorry; excuse me,спасибо; простите; извините,please — в просьбе. В ответ на «спасибо» — you're welcome.,,,level::A1-A2 pos::phrase,ItPu-gUEt:
+you're welcome,не за что; пожалуйста,— Thank you! — You're welcome.,excuse me; see you; good luck,извините; увидимся; удачи,Ответ на «спасибо».,,,level::A1-A2 pos::phrase,PqqhFUDlV[
+excuse me,извините,"Excuse me, where is the station?",thank you; see you; good luck,спасибо; увидимся; удачи,<b>excuse me</b> — чтобы обратиться к кому-то. <b>sorry</b> — чтобы извиниться.,,,level::A1-A2 pos::phrase,FFR#Jt:m&8
+sorry,простите; извините; мне жаль,"Sorry, I'm late.",never mind; thank you; well done,ничего страшного; спасибо; молодец,,,,level::A1-A2 pos::phrase,uS@^.?Vdiu
+of course,конечно,— Can you help me? — Of course!,maybe; never mind; not yet,может быть; ничего страшного; ещё нет,,,,level::A1-A2 pos::phrase,b=b>efSeto
+see you,увидимся; пока,See you on Monday!,good luck; good morning; thank you,удачи; доброе утро; спасибо,,,,level::A1-A2 pos::phrase,L/@F`P$0f:
+good luck,удачи,Good luck with your exam!,see you; well done; take care,увидимся; молодец; береги себя,,,,level::A1-A2 pos::phrase,e::h/ET6YQ
+never mind,ничего страшного; неважно,— I forgot your book. — Never mind.,of course; good luck; sorry,конечно; удачи; простите,,,,level::A1-A2 pos::phrase,Ah0LJgCk`5
+How are you?,Как дела?; Как ты?,"— How are you? — Fine, thanks.",How old are you?; Where are you?; Who are you?,Сколько тебе лет?; Где ты?; Кто ты?,"Ответ: Fine, thanks. / I'm OK.",,,level::A1-A2 pos::phrase,gb!TMh!c`v
+What time is it?,Который час?; Сколько времени?,"Excuse me, what time is it?",What day is it?; What is it?; How long is it?,Какой сегодня день?; Что это?; Сколько это длится?,,,,level::A1-A2 pos::phrase,dh^Jw]h6hP

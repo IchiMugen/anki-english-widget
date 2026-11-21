@@ -8,6 +8,10 @@
 
 ## Что умеет
 
+- **Словарь ~700 слов и растёт** — к цели 2500–3000 слов до уровня C1: самые нужные слова английского
+  по частотному списку [NGSL](https://www.newgeneralservicelist.com/), разговорные связки, фразовые глаголы,
+  идиомы и рабочий английский (созвоны, переписка). У каждого слова — перевод, живой пример, пояснение
+  и три похожих неправильных варианта. Новые слова приходят с обновлениями колоды, прогресс сохраняется.
 - **Три режима карточки** — «Выбор» (4 варианта), «Ввод» (напечатать слово) и «Вспомнить»;
   три направления: RU → EN, EN → RU и пропуск в примере.
 - **Режим «Авто»** (по умолчанию) усложняет упражнение по мере запоминания: новое или забытое слово —
@@ -90,7 +94,7 @@
 ## Для разработчиков
 
 ```
-deck/words.csv        стартовый набор слов (24 слова)
+deck/words.csv        словарь (~700 слов, пополняется)
 deck/src/             шаблоны карточек: HTML/CSS/JS (ES5, работает в AnkiDroid)
 deck/build.py         words.csv -> English_Trainer.apkg   (pip install genanki)
 deck/tests/           check_deck.py (качество слов), test_core.js (node)
@@ -98,6 +102,7 @@ addon/english_widget/ дополнение: виджет (trainer.py), голо�
                       темп сложных слов (pacing.py)
 install.cmd/.ps1/.sh  установщики
 tools/make_release.py собирает .ankiaddon и English-Trainer-Setup.zip
+tools/import_words.py обновляет deck/words.csv из большого списка того же формата
 ```
 
 Оценки ставит только сам Anki (штатные кнопки / AnkiDroid JS API) — интервалы дополнение не трогает.
@@ -117,5 +122,8 @@ Install: download `English-Trainer-Setup.zip` from Releases and run `install.cmd
 
 ## Лицензия
 
-MIT — см. [LICENSE](LICENSE). Голос: [Piper](https://github.com/rhasspy/piper) (MIT),
+Код — MIT, см. [LICENSE](LICENSE). Словарь (`deck/words.csv`, `English_Trainer.apkg`) —
+[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/): основа — New General Service List
+(Browne, C., Culligan, B., Phillips, J., [newgeneralservicelist.com](https://www.newgeneralservicelist.com/), CC BY-SA).
+Голос: [Piper](https://github.com/rhasspy/piper) (MIT),
 модели голосов — [piper-voices](https://huggingface.co/rhasspy/piper-voices) (у каждой своя лицензия).
