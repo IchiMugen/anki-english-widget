@@ -73,12 +73,43 @@
   function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
   function lsSet(k, v) { try { window.localStorage.setItem(k, v); } catch (e) {} }
 
-  var MODES = ['choice', 'type', 'recall'];
-  function getMode() {
-    var m = lsGet('et-mode') || (ssGet('et-mode') || {}).m || CFG.defaultMode || 'choice';
-    return MODES.indexOf(m) >= 0 ? m : 'choice';
+  var MODES = ['choice', 'type', 'recall'];        // exercises
+  var SETTINGS = ['auto'].concat(MODES);            // what the switch can be set to
+  // 'et-mode2': the switch got "auto" (default); old manual choices under 'et-mode' are not carried over.
+  function getSetting() {
+    var m = lsGet('et-mode2') || (ssGet('et-mode2') || {}).m || CFG.defaultMode || 'auto';
+    return SETTINGS.indexOf(m) >= 0 ? m : 'auto';
   }
-  function setMode(m) { lsSet('et-mode', m); ssSet('et-mode', { m: m }); }
+  function setMode(m) { lsSet('et-mode2', m); ssSet('et-mode2', { m: m }); }
+  function getMode() { var m = getSetting(); return m === 'auto' ? (window.__etAutoMode || 'choice') : m; }
+
+  /* ---------- auto mode: the exercise gets harder as the card settles in memory ----------
+   * new / learning / relearning (just forgotten) -> choice
+   * review, interval >= AUTO.type days          -> typing the English word (ru-en, ctx)
+   * review, interval >= AUTO.typeRu days        -> typing the Russian translation too (en-ru)
+   * A mistake sends the card to relearning, so it drops back to choice by itself. */
+  var AUTO = { type: 4, typeRu: 21 };
+  function autoMode(info) {
+    if (!info || info.type !== 2) return 'choice';
+    return info.ivl >= (TO_EN ? AUTO.type : AUTO.typeRu) ? 'type' : 'choice';
+  }
+  // Desktop: the add-on puts window.ET_CARD into the card HTML. AnkiDroid: JS API (async).
+  // Anything else (AnkiMobile, preview): no info -> choice.
+  function cardInfo(cb) {
+    if (window.ET_CARD) { cb(window.ET_CARD); return; }
+    var api = host() === 'ankidroid' ? ankiDroid() : null;
+    if (!api || typeof api.ankiGetCardType !== 'function' || typeof api.ankiGetCardInterval !== 'function') { cb(null); return; }
+    var done = false;
+    function once(v) { if (!done) { done = true; cb(v); } }
+    function val(r) { return r && typeof r === 'object' && 'value' in r ? r.value : r; }
+    setTimeout(function () { once(null); }, 600);
+    try {
+      var t = api.ankiGetCardType(), i = api.ankiGetCardInterval();
+      if (t && typeof t.then === 'function') {
+        Promise.all([t, i]).then(function (r) { once({ type: +val(r[0]), ivl: +val(r[1]) }); }, function () { once(null); });
+      } else once({ type: +val(t), ivl: +val(i) });
+    } catch (e) { once(null); }
+  }
   function saveResult(st) { st.t = st.t || Date.now(); ssSet(KEY, st); }
   function loadResult() {
     var st = ssGet(KEY);
@@ -157,7 +188,8 @@
     skip: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
     warn: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 7v6M12 17h.01"/></svg>'
   };
-  var MODE_LABEL = { choice: 'Выбор', type: 'Ввод', recall: 'Вспомнить' };
+  IC.auto = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18l5-6 4 3 7-9"/><path d="M15 6h5v5"/></svg>';
+  var MODE_LABEL = { auto: 'Авто', choice: 'Выбор', type: 'Ввод', recall: 'Вспомнить' };
 
   function altsHtml(list) {
     return list.map(function (s) { return '<span class="et-alt">' + esc(s) + '</span>'; })
@@ -188,10 +220,12 @@
   function each(sel, fn) { Array.prototype.forEach.call(root.querySelectorAll(sel), fn); }
 
   /* ---------- shared view: the same on both sides ---------- */
+  // auto: "Авто" is on and the exercise it picked is marked softly (is-auto)
   function segHtml(mode) {
-    var h = '';
-    MODES.forEach(function (m) {
-      h += '<button type="button" data-mode="' + m + '" class="' + (m === mode ? 'is-on' : '') + '">' +
+    var h = '', setting = getSetting();
+    SETTINGS.forEach(function (m) {
+      var cls = m === setting ? 'is-on' : (setting === 'auto' && m === mode ? 'is-auto' : '');
+      h += '<button type="button" data-mode="' + m + '" class="' + cls + '">' +
         IC[m] + '<span>' + MODE_LABEL[m] + '</span></button>';
     });
     return '<div class="et-seg" role="tablist">' + h + '</div>';
@@ -277,7 +311,16 @@
   var answered = false;
 
   function renderFront() {
-    var mode = getMode();
+    if (getSetting() !== 'auto') { drawFront(getSetting()); return; }
+    var tok = window.__etTok;
+    cardInfo(function (info) {
+      if (window.__etTok !== tok) return;   // Desktop already moved to another card
+      window.__etAutoMode = autoMode(info);
+      drawFront(window.__etAutoMode);
+    });
+  }
+
+  function drawFront(mode) {
     root.innerHTML = segHtml(mode) + promptHtml() +
       '<section id="et-ex" class="et-ex"></section><section id="et-fb" class="et-fb" aria-live="polite"></section>';
     mountAudio('et-audio-q');
@@ -287,6 +330,7 @@
         if (answered) return;
         var m = b.getAttribute('data-mode');
         setMode(m);
+        if (m === 'auto') { renderFront(); return; }
         each('.et-seg button', function (x) { x.className = x === b ? 'is-on' : ''; });
         renderExercise(m);
       });

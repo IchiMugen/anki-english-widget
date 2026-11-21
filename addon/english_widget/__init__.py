@@ -169,6 +169,22 @@ class PiperPlayer(TTSProcessPlayer):
         av_player.insert_file(self._path)
 
 
+# ---------------------------------------------------------------- card state for the "auto" mode
+def _card_state(text: str, card, kind: str) -> str:
+    """Give the card template the card's state (window.ET_CARD): the auto mode picks
+    choice / typing from it. Read-only: nothing about scheduling changes."""
+    try:
+        if card.note_type()["name"] == NOTETYPE:
+            state = json.dumps({"type": card.type, "ivl": card.ivl, "lapses": card.lapses})
+            return f"<script>window.ET_CARD={state};</script>" + text
+    except Exception as e:
+        print("English Trainer card state:", e)
+    return text
+
+
+gui_hooks.card_will_show.append(_card_state)
+
+
 # ---------------------------------------------------------------- prefetch / pre-generation
 def _prefetch_card(card) -> None:
     """Card on screen: get its audio ready while the question is being answered."""

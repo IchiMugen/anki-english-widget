@@ -10,6 +10,9 @@ from __future__ import annotations
 import html
 
 from aqt import gui_hooks, mw
+from aqt.qt import QTimer
+
+from . import pacing
 
 NOTETYPE = "English Trainer"
 MATURE_DAYS = 21
@@ -116,6 +119,16 @@ def fsrs_hint(col, deck_id) -> str:
             "Повторяй раз в месяц.</div>")
 
 
+def render_pacing(p) -> str:
+    if not p or not p["order"]:
+        return ""
+    text = (f"Сложные слова (B2-C1): примерно каждое {p['every']}-е новое. "
+            "Будет чаще по мере того, как выучишь базу" if not p["braked"] else
+            f"Сложные слова (B2-C1) сейчас даются тяжело — новых меньше: примерно каждое {p['every']}-е. "
+            "Вернётся, когда повторения пойдут легче")
+    return f"<div style='opacity:.6;font-size:12px;margin-top:6px'>{text}.</div>"
+
+
 def render_hard(words) -> str:
     if not words:
         return ""
@@ -132,7 +145,8 @@ def _on_overview(overview, content) -> None:
         if not mw.col.find_cards(f'did:{deck["id"]} "note:{NOTETYPE}"'):
             return
         block = render(level_stats(mw.col))
-        extra = render_hard(hard_words(mw.col)) + fsrs_hint(mw.col, deck["id"])
+        extra = (render_pacing(pacing.plan(mw.col)) + render_hard(hard_words(mw.col))
+                 + fsrs_hint(mw.col, deck["id"]))
         if extra:
             block = block[: -len("</div>")] + extra + "</div>"
         content.table += block
@@ -148,6 +162,20 @@ def _tag_all() -> None:
         print("English Trainer hard words:", e)
 
 
+def _pace() -> None:
+    """Re-balance the order of new cards (only when not in the middle of a review)."""
+    try:
+        if mw.col and mw.state != "review":
+            pacing.apply(mw.col)
+    except Exception as e:
+        print("English Trainer pacing:", e)
+
+
+_pace_timer = QTimer(mw)
+_pace_timer.timeout.connect(_pace)
+_pace_timer.start(60 * 60 * 1000)
+
+
 def _on_answer(reviewer, card, ease) -> None:
     try:
         if card.lapses >= HARD_LAPSES and card.note_type()["name"] == NOTETYPE:
@@ -161,4 +189,6 @@ def _on_answer(reviewer, card, ease) -> None:
 gui_hooks.overview_will_render_content.append(_on_overview)
 gui_hooks.profile_did_open.append(_tag_all)
 gui_hooks.sync_did_finish.append(_tag_all)
+gui_hooks.profile_did_open.append(_pace)
+gui_hooks.sync_did_finish.append(_pace)
 gui_hooks.reviewer_did_answer_card.append(_on_answer)

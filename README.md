@@ -10,6 +10,9 @@
 
 - **Три режима карточки** — «Выбор» (4 варианта), «Ввод» (напечатать слово) и «Вспомнить»;
   три направления: RU → EN, EN → RU и пропуск в примере.
+- **Режим «Авто»** (по умолчанию) усложняет упражнение по мере запоминания: новое или забытое слово —
+  выбор из вариантов; интервал от 4 дней — печатаешь английское слово сам; от 21 дня — и русский перевод.
+  Ошибка возвращает слово на выбор. Интервалы по-прежнему считает Anki.
 - **Сама ставит оценку**: верно — «Хорошо», ошибка — «Снова» и сразу попытка напечатать правильно.
   Опечатку можно засчитать одной кнопкой.
 - **Виджет поверх всех окон**: компактное окно в углу экрана. Когда подходят карточки, урок начинается
@@ -18,10 +21,13 @@
 - **Офлайн-голос Piper**: слова и примеры произносит нейросетевой голос прямо на компьютере, без
   интернета и задержек.
 - **Прогресс по уровням** (A1-A2, B1-B2, B2-C1) на экране колоды.
+- **Сложные слова — по нарастающей**: новые слова B2-C1 сначала идут примерно каждым 7-м новым, по мере
+  того как база выучена — до каждого 2-го; если они даются тяжело (больше 20% «Снова» за 2 недели), их
+  становится вдвое меньше. Меняется только порядок ещё не показанных карточек.
 - **Свои слова** добавляются прямо в Anki: достаточно английского и русского — неправильные варианты
   для режима «Выбор» дополнение подберёт само из ваших слов.
 - **Телефон**: колода работает в AnkiDroid (Android) и AnkiMobile (iPhone) — карточки те же,
-  голос — системный голос телефона.
+  голос — системный голос телефона. Режим «Авто» работает и в AnkiDroid; на iPhone — ручной выбор режима.
 
 ## Установка — три способа на выбор
 
@@ -74,6 +80,7 @@
 | Hint | подсказка-ассоциация для трудных слов | нет |
 
 Уровень можно отметить тегом: `level::A1-A2`, `level::B1-B2`, `level::B2-C1` — он появится в прогрессе.
+Слова с `level::B2-C1` дополнение подмешивает к остальным постепенно (см. «Что умеет»).
 
 ## Настройки
 
@@ -87,18 +94,22 @@ deck/words.csv        стартовый набор слов (24 слова)
 deck/src/             шаблоны карточек: HTML/CSS/JS (ES5, работает в AnkiDroid)
 deck/build.py         words.csv -> English_Trainer.apkg   (pip install genanki)
 deck/tests/           check_deck.py (качество слов), test_core.js (node)
-addon/english_widget/ дополнение: виджет (trainer.py), голос (__init__.py), статистика, автоподбор
+addon/english_widget/ дополнение: виджет (trainer.py), голос (__init__.py), статистика, автоподбор,
+                      темп сложных слов (pacing.py)
 install.cmd/.ps1/.sh  установщики
 tools/make_release.py собирает .ankiaddon и English-Trainer-Setup.zip
 ```
 
 Оценки ставит только сам Anki (штатные кнопки / AnkiDroid JS API) — интервалы дополнение не трогает.
+Режим «Авто» читает состояние карточки (`window.ET_CARD` от дополнения или JS API AnkiDroid), пороги — `AUTO`
+в `deck/src/ui.js`.
 
 ---
 
 ## English (short)
 
-An English vocabulary trainer on top of Anki: three-mode cards (choice / typing / recall), a floating
+An English vocabulary trainer on top of Anki: cards with an auto mode (multiple choice for new words,
+typing once a word is remembered), adaptive pacing of advanced words, a floating
 always-on-top study widget that starts lessons by itself, and an offline neural voice (Piper).
 The UI is in Russian (cards are for Russian speakers learning English).
 Install: download `English-Trainer-Setup.zip` from Releases and run `install.cmd` (Windows) or
