@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+dist/
+deck/dist/
+addon/english_widget/user_files/
+addon/english_widget/meta.json

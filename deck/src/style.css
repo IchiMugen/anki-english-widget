@@ -1,0 +1,593 @@
+/* English Trainer — card styling (Anki Desktop + AnkiDroid, light & dark) */
+
+.card {
+  --bg: #f1f1f2;
+  --glow1: rgba(255, 255, 255, .7);
+  --glow2: rgba(0, 0, 0, .025);
+  --text: #141625;
+  --muted: #676c8a;
+  --surface: rgba(255, 255, 255, .72);
+  --surface-strong: rgba(255, 255, 255, .95);
+  --border: rgba(255, 255, 255, .9);
+  --hair: rgba(0, 0, 0, .10);
+  --shadow: 0 14px 34px -14px rgba(0, 0, 0, .22), 0 2px 6px rgba(0, 0, 0, .05);
+  --accent: #4f5056;
+  --accent2: #6c6d73;
+  --on-accent: #ffffff;
+  --accent-soft: rgba(60, 60, 67, .08);
+  --ok: #0e9a60;
+  --ok-soft: rgba(14, 154, 96, .12);
+  --bad: #e0464c;
+  --bad-soft: rgba(224, 70, 76, .11);
+  --warn: #b7700a;
+  --warn-soft: rgba(245, 166, 35, .15);
+  --gloss: linear-gradient(180deg, rgba(255, 255, 255, .75) 0%, rgba(255, 255, 255, 0) 55%);
+
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(70% 40% at 0% 0%, var(--glow1), transparent 70%),
+    radial-gradient(60% 35% at 100% 15%, var(--glow2), transparent 70%);
+  background-repeat: no-repeat;
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.45;
+  text-align: left;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.card.nightMode, .card.night_mode, .nightMode .card, .night_mode .card {
+  --bg: #1a1a1c;
+  --glow1: rgba(255, 255, 255, .05);
+  --glow2: rgba(255, 255, 255, .025);
+  --text: #eceefe;
+  --muted: #959bbd;
+  --surface: rgba(46, 46, 50, .72);
+  --surface-strong: rgba(62, 62, 67, .95);
+  --border: rgba(255, 255, 255, .08);
+  --hair: rgba(255, 255, 255, .12);
+  --shadow: 0 18px 40px -18px rgba(0, 0, 0, .8), 0 2px 8px rgba(0, 0, 0, .35);
+  --accent: #c4c5ca;
+  --accent2: #a3a4aa;
+  --on-accent: #1a1a1c;
+  --accent-soft: rgba(255, 255, 255, .08);
+  --ok: #3ddc97;
+  --ok-soft: rgba(61, 220, 151, .14);
+  --bad: #ff6b70;
+  --bad-soft: rgba(255, 107, 112, .15);
+  --warn: #fbbf24;
+  --warn-soft: rgba(251, 191, 36, .14);
+  --gloss: linear-gradient(180deg, rgba(255, 255, 255, .07) 0%, rgba(255, 255, 255, 0) 55%);
+}
+
+.et {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 14px 16px 32px;
+  box-sizing: border-box;
+}
+.et *, .et *::before, .et *::after { box-sizing: border-box; }
+
+/* ---------- direction chip + mode switch ---------- */
+.et-chip {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: .06em;
+  padding: 4px 9px;
+  margin-right: 8px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  white-space: nowrap;
+  vertical-align: 1px;
+}
+.et-chip i { font-style: normal; opacity: .7; }
+.et-seg {
+  display: flex;
+  margin-bottom: 14px;
+  padding: 3px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+.et-seg button {
+  -webkit-appearance: none;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 650;
+  flex: 1;
+  padding: 9px 6px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease, box-shadow .2s ease;
+}
+.et-seg button svg { width: 15px; height: 15px; flex: none; }
+.et-seg button.is-on {
+  background: var(--surface-strong);
+  color: var(--text);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .14);
+}
+@media (max-width: 300px) {
+  .et-seg button span { display: none; }
+}
+
+/* ---------- glass surfaces ---------- */
+.et-glass {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  overflow: hidden;
+}
+.et-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--gloss);
+  pointer-events: none;
+  border-radius: inherit;
+}
+.et-glass > * { position: relative; }
+
+.et-prompt {
+  padding: 22px 20px 20px;
+  text-align: center;
+  margin-bottom: 14px;
+}
+.et-label {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 650;
+  letter-spacing: .02em;
+  margin-bottom: 8px;
+}
+.et-word {
+  font-size: clamp(26px, 7.5vw, 36px);
+  font-weight: 750;
+  letter-spacing: -.02em;
+  line-height: 1.15;
+  word-break: break-word;
+}
+.et-qline {
+  font-size: 15px;
+  color: var(--muted);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.et-hint {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--hair);
+  font-size: 15px;
+  color: var(--muted);
+  font-style: italic;
+}
+.et-mask {
+  display: inline-block;
+  width: 2.4em;
+  height: .9em;
+  vertical-align: -1px;
+  border-bottom: 2px solid var(--accent);
+}
+mark {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-radius: 6px;
+  padding: 0 3px;
+  font-style: normal;
+  font-weight: 650;
+}
+
+/* ---------- audio (Anki replay buttons) ---------- */
+.et-audio-slot {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+.et-audio-slot:empty { display: none; }
+.et-audio-slot .replay-button { display: inline-flex; text-decoration: none; transition: transform .15s ease; }
+.et-audio-slot .replay-button:active { transform: scale(.92); }
+.et-audio-slot .replay-button svg { width: 44px; height: 44px; filter: drop-shadow(0 6px 12px rgba(0, 0, 0, .25)); }
+.et-audio-slot .replay-button svg circle { fill: var(--accent) !important; stroke: none !important; }
+.et-audio-slot .replay-button svg path { fill: var(--on-accent) !important; stroke: none !important; }
+
+/* ---------- multiple choice ---------- */
+.et-options { display: grid; gap: 10px; }
+.et-opt {
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 17px;
+  font-weight: 620;
+  box-shadow: var(--shadow);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  cursor: pointer;
+  transition: transform .15s ease, background .25s ease, border-color .25s ease, opacity .3s ease;
+  animation: et-rise .38s cubic-bezier(.2, .8, .2, 1) both;
+}
+.et-opt::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--gloss);
+  pointer-events: none;
+}
+.et-opt > * { position: relative; }
+.et-opt:active { transform: scale(.975); }
+.et-opt:disabled { cursor: default; color: var(--text); opacity: 1; }
+.et-opt-key {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 750;
+  background: var(--accent-soft);
+  color: var(--accent);
+  transition: background .25s ease, color .25s ease;
+}
+.et-opt-key svg { width: 17px; height: 17px; }
+.et-opt.is-correct {
+  background: var(--ok-soft);
+  border-color: var(--ok);
+  animation: et-pop .4s ease;
+}
+.et-opt.is-correct .et-opt-key { background: var(--ok); color: #fff; }
+.et-opt.is-wrong {
+  background: var(--bad-soft);
+  border-color: var(--bad);
+  animation: et-shake .42s ease;
+}
+.et-opt.is-wrong .et-opt-key { background: var(--bad); color: #fff; }
+.et-opt.is-dim { opacity: .42; animation: none; }
+
+/* ---------- typing ---------- */
+.et-type { padding: 16px; }
+.et-input {
+  width: 100%;
+  font: inherit;
+  font-size: 20px;
+  font-weight: 620;
+  padding: 14px 16px;
+  border-radius: 15px;
+  border: 1.5px solid var(--hair);
+  background: var(--surface-strong);
+  color: var(--text);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.et-input::placeholder { color: var(--muted); opacity: .7; font-weight: 500; }
+.et-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+.et-input.is-correct { border-color: var(--ok); box-shadow: 0 0 0 4px var(--ok-soft); }
+.et-input.is-wrong { border-color: var(--bad); box-shadow: 0 0 0 4px var(--bad-soft); }
+.et-input.is-shake { animation: et-shake .42s ease; }
+
+.et-row { display: flex; gap: 10px; margin-top: 12px; }
+
+/* ---------- buttons ---------- */
+.et-btn {
+  -webkit-appearance: none;
+  appearance: none;
+  border: 0;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 720;
+  padding: 13px 18px;
+  min-height: 50px;
+  border-radius: 15px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform .15s ease, opacity .2s ease;
+}
+.et-btn:active { transform: scale(.97); }
+.et-btn:disabled { opacity: .45; cursor: default; }
+.et-btn-primary {
+  flex: 1;
+  color: var(--on-accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  box-shadow: 0 10px 22px -10px rgba(0, 0, 0, .45);
+}
+.et-btn-primary::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 50% 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .28), rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+.et-btn-ghost { background: var(--accent-soft); color: var(--accent); }
+.et-btn-block { display: flex; width: 100%; margin-top: 12px; }
+.et-kbd {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, .22);
+}
+@media (pointer: coarse) { .et-kbd { display: none; } }
+.et-flip-hint {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* ---------- recall ---------- */
+.et-recall { padding: 22px 18px 18px; text-align: center; }
+.et-recall-ico {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 6px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.et-recall-ico svg { width: 26px; height: 26px; }
+.et-recall p { color: var(--muted); margin: 8px 0 0; font-size: 15px; }
+
+/* ---------- feedback / result ---------- */
+.et-fb { margin-top: 14px; }
+.et-fb:empty { display: none; }
+.et-fb-card {
+  padding: 15px 17px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+.et-fb-ok { background: var(--ok-soft); }
+.et-fb-bad { background: var(--bad-soft); }
+.et-fb-skip { background: var(--warn-soft); }
+.et-fb-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 800;
+  font-size: 17px;
+}
+.et-fb-ok .et-fb-head { color: var(--ok); }
+.et-fb-bad .et-fb-head { color: var(--bad); }
+.et-fb-skip .et-fb-head { color: var(--warn); }
+.et-fb-ico {
+  width: 26px;
+  height: 26px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  flex: none;
+}
+.et-fb-ok .et-fb-ico { background: var(--ok); }
+.et-fb-bad .et-fb-ico { background: var(--bad); }
+.et-fb-skip .et-fb-ico { background: var(--warn); }
+.et-fb-ico svg { width: 15px; height: 15px; }
+.et-fb-line { margin-top: 8px; font-size: 16px; }
+.et-fb-note { margin-top: 8px; font-size: 13px; color: var(--muted); }
+.et-fb + .et-btn, .et-fb .et-btn-block { margin-top: 0; }
+
+.et-diff { margin-top: 10px; display: grid; gap: 4px; }
+.et-diff-row { display: flex; gap: 10px; align-items: baseline; }
+.et-diff-tag { flex: none; width: 48px; font-size: 12px; color: var(--muted); font-weight: 650; }
+.et-diff-txt {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Roboto Mono", monospace;
+  font-size: 17px;
+  word-break: break-word;
+}
+.d-bad { color: var(--bad); text-decoration: line-through; background: var(--bad-soft); border-radius: 3px; }
+.d-miss { color: var(--ok); background: var(--ok-soft); border-radius: 3px; font-weight: 800; text-decoration: underline; }
+
+.et-notice {
+  margin-bottom: 10px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: var(--warn-soft);
+  color: var(--text);
+  font-size: 14px;
+}
+
+/* ---------- back side ---------- */
+.et-answer .et-word { color: var(--text); }
+.et-section { padding: 15px 18px; margin-bottom: 12px; }
+.et-section h4 {
+  margin: 0 0 6px;
+  font-size: 11px;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: var(--muted);
+}
+.et-example { font-size: 17px; }
+.et-expl { font-size: 15px; }
+.et-grade {
+  margin-top: 4px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--accent-soft);
+  font-size: 14px;
+  text-align: center;
+}
+.et-grade b { color: var(--accent); }
+.et-error { padding: 16px; color: var(--bad); }
+
+/* ---------- motion ---------- */
+.et-in { animation: et-rise .38s cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes et-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes et-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+@keyframes et-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-7px); }
+  40% { transform: translateX(7px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .et *, .et *::before { animation: none !important; transition: none !important; }
+}
+
+.et-alt { display: inline-block; }
+.et-dot { color: var(--muted); font-weight: 400; }
+
+/* ---------- answer side: same picture, no re-animation ---------- */
+.et-static .et-seg, .et-static .et-prompt, .et-static .et-opt, .et-static .et-type,
+.et-static .et-opt.is-correct, .et-static .et-opt.is-wrong { animation: none; }
+.et-seg button:disabled { cursor: default; }
+.et-static .et-seg button:not(.is-on) { opacity: .55; }
+.et.is-leaving { opacity: .6; transition: opacity .25s ease; }
+
+/* ---------- result card ---------- */
+.et-res {
+  padding: 14px 16px;
+  border-radius: 20px;
+  margin: 2px 0 12px;
+}
+.et-res-ok { background: var(--ok-soft); }
+.et-res-bad { background: var(--bad-soft); }
+.et-res-skip { background: var(--accent-soft); }
+.et-res-warn { background: var(--warn-soft); }
+.et-res-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 700;
+}
+.et-res-title { flex: 1; min-width: 0; word-break: break-word; }
+.et-res-ok .et-res-head { color: var(--ok); }
+.et-res-bad .et-res-head .et-res-title b { color: var(--text); }
+.et-res-ico {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+.et-res-ok .et-res-ico { background: var(--ok); }
+.et-res-bad .et-res-ico { background: var(--bad); }
+.et-res-skip .et-res-ico { background: var(--accent); color: var(--on-accent); }
+.et-res-warn .et-res-ico { background: var(--warn); }
+.et-res-ico svg { width: 16px; height: 16px; }
+.et-audio-inline { margin: 0; flex: none; }
+.et-audio-inline .replay-button svg { width: 36px; height: 36px; }
+
+.et-actions { display: flex; gap: 10px; margin: 0 0 14px; }
+.et-actions .et-btn { flex: 1; }
+.et-actions .et-btn-ghost { flex: 1; }
+.et-input.is-near { border-color: var(--warn); box-shadow: 0 0 0 4px var(--warn-soft); }
+.et-input[readonly] { cursor: default; }
+
+/* desktop keyboard focus holder (invisible) */
+.et-keytrap {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  border: 0;
+  padding: 0;
+}
+
+/* ---------- retry after error, example audio ---------- */
+.et-retry { margin-bottom: 12px; }
+.et-retry-label { font-size: 13px; font-weight: 650; color: var(--muted); margin: 0 2px 8px; }
+.et-example-row { display: flex; align-items: center; gap: 10px; }
+.et-example-row .et-example { flex: 1; min-width: 0; }
+.et-audio-small .replay-button svg { width: 30px; height: 30px; }
+
+/* ---------- context card, hard words, reveal-on-demand ---------- */
+.et-word-ctx {
+  font-size: clamp(19px, 5.4vw, 24px);
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.45;
+}
+.et-word-ctx mark { font-weight: 750; }
+.et-chip-hard {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+.et-reveals {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+.et-reveal {
+  -webkit-appearance: none;
+  appearance: none;
+  border: 1px solid var(--hair);
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 650;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.et-reveal:disabled { opacity: .45; cursor: default; }
+.et-hidden { display: none; margin-top: 10px; font-size: 15px; color: var(--text); }
+.et-hidden.is-open { display: block; animation: et-rise .3s ease both; }
+
+/* Anki Desktop's reviewer styles every <button> (margin: 1em .5em; .isWin button { font-size: 12px }),
+   which beats single-class rules — restore our sizes with higher specificity. */
+.et button { margin: 0; }
+.et .et-opt { font-size: 17px; }
+.et .et-seg button { font-size: 13px; }
+.et .et-btn { font-size: 16px; }
+.et .et-reveal { font-size: 13px; }
