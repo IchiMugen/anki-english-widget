@@ -548,6 +548,7 @@ mark {
 /* ---------- retry after error, example audio ---------- */
 .et-retry { margin-bottom: 12px; }
 .et-retry-label { font-size: 13px; font-weight: 650; color: var(--muted); margin: 0 2px 8px; }
+.et-retry-label.is-warn { color: #f59e0b; }
 .et-example-row { display: flex; align-items: center; gap: 10px; }
 .et-example-row .et-example { flex: 1; min-width: 0; }
 .et-audio-small .replay-button svg { width: 30px; height: 30px; }

@@ -492,7 +492,8 @@
   // Wrong answer: write the correct word once — active recall instead of just reading it.
   function retryHtml() {
     return '<div class="et-glass et-type et-retry et-in">' +
-      '<div class="et-retry-label">Напиши правильно, чтобы запомнить</div>' +
+      '<div class="et-retry-label">' + (TO_EN ? 'Напиши слово по-английски, чтобы запомнить'
+        : 'Напиши перевод по-русски, чтобы запомнить') + '</div>' +
       '<input id="et-retry" class="et-input" type="text" lang="' + D.lang + '" autocomplete="off" autocorrect="off"' +
       ' autocapitalize="none" spellcheck="false" enterkeyhint="done" placeholder="' + esc(TO_EN ? 'по-английски…' : 'по-русски…') + '">' +
       '<div class="et-row">' +
@@ -597,6 +598,12 @@
           void inp.offsetWidth;
           inp.classList.add('is-shake');
           if (r.status !== 'empty') inp.select();
+          // EN → RU: typed the English word (or forgot to switch the keyboard) — say what is expected
+          var lbl = root.querySelector('.et-retry-label');
+          if (lbl && !TO_EN && /[a-z]/i.test(inp.value) && !/[а-яё]/i.test(inp.value)) {
+            lbl.textContent = 'Нужен перевод по-русски — переключи раскладку';
+            lbl.classList.add('is-warn');
+          }
         }
       };
       root.querySelector('[data-act="retry"]').addEventListener('click', check);
