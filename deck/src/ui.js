@@ -163,9 +163,10 @@
     if (h === 'desktop') window.pycmd('ans');
     else if (h === 'ankidroid') adCall('ankiShowAnswer', 'show_answer');
   }
-  function sendGrade(ease) {
+  // auto: the add-on (it set window.ET_CARD) answers only after the word and example audio finished
+  function sendGrade(ease, auto) {
     var h = host();
-    if (h === 'desktop') window.pycmd('ease' + ease);
+    if (h === 'desktop') window.pycmd((auto && window.ET_CARD ? 'et_auto_ease' : 'ease') + ease);
     else if (h === 'ankidroid') adCall('ankiAnswerEase' + ease, 'answer_ease' + ease);
   }
 
@@ -451,12 +452,14 @@
   /* =================== BACK =================== */
   var graded = false;
 
-  function grade(st, ease) {
-    if (graded) return;
+  var autoPending = false;   // auto answer sent, the add-on is waiting for the audio
+  function grade(st, ease, auto) {
+    if (graded && !(autoPending && !auto)) return;   // a click while waiting answers at once
     graded = true;
+    autoPending = !!auto;
     if (st) { st.graded = true; saveResult(st); }
-    root.classList.add('is-leaving');
-    sendGrade(ease);
+    if (!auto) root.classList.add('is-leaving');
+    sendGrade(ease, auto);
   }
 
   // Desktop only: on views where Anki's own Space/Enter would mean "Good",
@@ -607,8 +610,10 @@
       // Correct: let the result and the audio (word, then example) play, then Good in the background.
       var exWords = D.example && document.getElementById('et-audio-exslot') &&
         document.getElementById('et-audio-exslot').firstChild ? D.example.split(/\s+/).length : 0;
-      var delay = Math.max(CORRECT_DELAY, exWords ? 1500 + exWords * 380 : 0);
-      later(function () { grade(st, 3); }, delay);
+      // Desktop with the add-on: it waits for the audio itself, so only the minimum pause here.
+      var waitsForAudio = host() === 'desktop' && !!window.ET_CARD;
+      var delay = waitsForAudio ? CORRECT_DELAY : Math.max(CORRECT_DELAY, exWords ? 1500 + exWords * 380 : 0);
+      later(function () { grade(st, 3, waitsForAudio); }, delay);
       root.addEventListener('click', function (e) {
         if (!e.target.closest || !e.target.closest('.replay-button')) grade(st, 3);
       });

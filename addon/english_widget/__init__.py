@@ -18,6 +18,7 @@ import queue
 import re
 import subprocess
 import threading
+import time
 from concurrent.futures import Future
 
 from anki.sound import AVTag, TTSTag
@@ -167,6 +168,47 @@ class PiperPlayer(TTSProcessPlayer):
             return
         av_player.current_player = None
         av_player.insert_file(self._path)
+
+
+# ---------------------------------------------------------------- auto-advance waits for the audio
+# After a correct answer the card sends "et_auto_easeN" instead of "easeN": the answer is given
+# only when Anki's audio queue (word, then example) has finished, so nothing is cut off.
+# A click / key press still answers at once (the card sends plain "easeN" then).
+AUTO_PREFIX = "et_auto_ease"
+AUTO_MAX_WAIT = 20.0   # seconds: never wait forever (e.g. a broken voice)
+
+
+def _audio_busy() -> bool:
+    return av_player.current_player is not None or bool(getattr(av_player, "_enqueued", None))
+
+
+def _auto_answer(card_id: int, ease: int, started: float, idle: int = 0) -> None:
+    from aqt.reviewer import Reviewer  # noqa: F401  (only to be sure the reviewer exists)
+    r = mw.reviewer
+    if mw.state != "review" or not r.card or r.card.id != card_id:
+        return                                  # the user already moved on
+    busy = _audio_busy() and time.time() - started < AUTO_MAX_WAIT
+    idle = 0 if busy else idle + 1
+    if idle < 2:                                # idle twice in a row: no gap between two sounds
+        QTimer.singleShot(150, lambda: _auto_answer(card_id, ease, started, idle))
+        return
+    r._answerCard(ease)
+
+
+def _on_js_message(handled, message: str, context):
+    if not message.startswith(AUTO_PREFIX):
+        return handled
+    from aqt.reviewer import Reviewer
+    if isinstance(context, Reviewer) and context.card:
+        try:
+            ease = int(message[len(AUTO_PREFIX):])
+            _auto_answer(context.card.id, ease, time.time())
+        except Exception as e:
+            print("English Trainer auto-advance:", e)
+    return (True, None)
+
+
+gui_hooks.webview_did_receive_js_message.append(_on_js_message)
 
 
 # ---------------------------------------------------------------- card state for the "auto" mode
