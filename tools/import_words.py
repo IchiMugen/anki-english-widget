@@ -6,9 +6,11 @@
 * words already in deck/words.csv keep their GUID (so people who imported the deck keep their progress),
   new words keep the GUID from the source list;
 * words that are only in deck/words.csv stay, at the front of the queue;
+* deck/units.jsonl (meanings, examples, forms…) is copied from the units.jsonl next to the source list;
 * run deck/tests/check_deck.py and deck/build.py afterwards.
 """
 import csv
+import json
 import sys
 from pathlib import Path
 
@@ -55,6 +57,34 @@ def main(src):
         w.writeheader()
         w.writerows(out)
     print(f"deck/words.csv: {len(out)} words (was {len(current)}), left out {skipped} narrow-domain words")
+    write_units(Path(src).with_name("units.jsonl"), out)
+
+
+def write_units(src_units, rows):
+    """deck/units.jsonl: the rich data of the same words (by English text), with this deck's GUIDs."""
+    sys.path.insert(0, str(ROOT / "deck"))
+    import build as deck_build
+    import units as deck_units
+    private = {}
+    if src_units.exists():
+        for line in src_units.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                u = json.loads(line)
+                private[key(u["en"])] = u
+    out, order, rich = {}, [], 0
+    for r in rows:
+        r = {k: (v or "").strip() for k, v in r.items()}
+        guid = deck_build.note_guid(r)
+        order.append(guid)
+        u = private.get(key(r["English"]))
+        if u:
+            u = dict(u, guid=guid)
+            rich += u.get("status") == "rich"
+        else:
+            u = deck_units.migrate(r, guid)
+        out[guid] = u
+    deck_units.save(out, order)
+    print(f"deck/units.jsonl: {len(out)} units, {rich} enriched")
 
 
 if __name__ == "__main__":

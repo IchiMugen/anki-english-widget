@@ -98,5 +98,7 @@ say "Открываю колоду в Anki - подтвердите импорт
 if [ "$OS" = "Darwin" ]; then open "$HERE/English_Trainer.apkg"; else xdg-open "$HERE/English_Trainer.apkg" >/dev/null 2>&1 || anki "$HERE/English_Trainer.apkg" & fi
 
 say "Готово!"
+echo "Если колода у вас уже была: в Anki «Инструменты → English Trainer: обновить колоду…» и выберите"
+echo "English_Trainer.apkg из этой папки — так обновятся слова, а прогресс сохранится."
 echo "Anki откроется виджетом. Значок в трее / строке меню: меню тренера."
 echo "Совет: в меню значка включите «Запускать вместе с системой»."

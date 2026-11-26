@@ -28,6 +28,8 @@ from aqt.qt import QTimer
 from aqt.sound import OnDoneCallback, av_player
 from aqt.tts import TTSProcessPlayer, TTSVoice
 
+from . import mastery
+
 ADDON_DIR = os.path.dirname(os.path.abspath(__file__))
 USER = os.path.join(ADDON_DIR, "user_files")
 CACHE = os.path.join(USER, "cache")
@@ -195,10 +197,36 @@ def _auto_answer(card_id: int, ease: int, started: float, idle: int = 0) -> None
     r._answerCard(ease)
 
 
+def say(text: str) -> None:
+    """Any English sentence aloud, after whatever is playing (the word first, then the sentence)."""
+    text = (text or "").strip()[:400]
+    if text:
+        av_player.append_tags([TTSTag(field_text=text, lang="en_US", voices=[], speed=1.0, other_args=[])])
+
+
+def prefetch(text: str) -> None:
+    if _ready() and text:
+        ENGINE.request(text.strip()[:400], NEXT)
+
+
 def _on_js_message(handled, message: str, context):
+    """Card → add-on: et_say:<text>, et_prefetch:<text>, et_log:<json>, et_auto_easeN."""
+    from aqt.reviewer import Reviewer
+    if message.startswith("et_say:"):
+        say(message[7:])
+        return (True, None)
+    if message.startswith("et_prefetch:"):
+        prefetch(message[12:])
+        return (True, None)
+    if message.startswith("et_log:"):
+        if isinstance(context, Reviewer) and context.card:
+            try:
+                mastery.log_add(mw.col, context.card.note().guid, json.loads(message[7:]), "s")
+            except Exception as e:
+                print("English Trainer log:", e)
+        return (True, None)
     if not message.startswith(AUTO_PREFIX):
         return handled
-    from aqt.reviewer import Reviewer
     if isinstance(context, Reviewer) and context.card:
         try:
             ease = int(message[len(AUTO_PREFIX):])
@@ -216,8 +244,8 @@ def _card_state(text: str, card, kind: str) -> str:
     """Give the card template the card's state (window.ET_CARD): the auto mode picks
     choice / typing from it. Read-only: nothing about scheduling changes."""
     try:
-        if card.note_type()["name"] == NOTETYPE:
-            state = json.dumps({"type": card.type, "ivl": card.ivl, "lapses": card.lapses})
+        if card.note_type()["name"] == NOTETYPE and not kind.startswith("clayout"):
+            state = json.dumps(mastery.card_info(mw.col, card), ensure_ascii=False)
             return f"<script>window.ET_CARD={state};</script>" + text
     except Exception as e:
         print("English Trainer card state:", e)
@@ -290,3 +318,5 @@ from . import voice_setup  # noqa: E402,F401  (Tools → download the voice)
 from . import autofill  # noqa: E402,F401  (wrong options for notes added in Anki)
 from . import stats  # noqa: E402,F401  (progress by level on the deck screen)
 from . import trainer  # noqa: E402,F401  (floating widget, tray, lessons)
+from . import practice  # noqa: E402,F401  (Reinforcement: extra practice outside the schedule)
+from . import deck_update  # noqa: E402,F401  (Tools → update the deck with the right import options)

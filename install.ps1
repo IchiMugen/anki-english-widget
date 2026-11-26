@@ -108,5 +108,7 @@ if (-not (Test-Path $AnkiBase)) {
 if (-not $SkipDeck) { Start-Process (Join-Path $Here "English_Trainer.apkg") }
 
 Say "Готово!"
+Write-Host "Если колода у вас уже была: в Anki 'Инструменты -> English Trainer: обновить колоду...' и выберите"
+Write-Host "English_Trainer.apkg из этой папки - так обновятся слова, а прогресс сохранится."
 Write-Host "Anki откроется виджетом. Значок в трее (у часов): правый клик - меню."
 Write-Host "Совет: в меню значка включите 'Запускать вместе с системой'."

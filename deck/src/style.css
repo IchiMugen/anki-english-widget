@@ -595,3 +595,15 @@ mark {
 .et .et-seg button { font-size: 13px; }
 .et .et-btn { font-size: 16px; }
 .et .et-reveal { font-size: 13px; }
+
+/* ---------- v2 exercises ---------- */
+.et-situation { font-size: 15px; line-height: 1.45; color: var(--muted); margin: 2px 0 10px; }
+.et-example-ru { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.et-muted { color: var(--muted); font-size: 13px; }
+.et-ok-note { color: var(--ok); font-size: 13px; margin-top: 6px; }
+.et-warn-note { color: #f59e0b; font-size: 13px; margin-top: 6px; }
+.et-input-multi { resize: none; min-height: 64px; line-height: 1.4; font-family: inherit; }
+.et-listen-note { color: var(--muted); font-size: 14px; margin: 4px 0 10px; }
+.et-audio-big .replay-button svg { width: 56px; height: 56px; }
+.et-chip-practice { background: rgba(245, 158, 11, .18); color: #f59e0b; }
+.et-section .et-example-row + .et-example-row { margin-top: 10px; }

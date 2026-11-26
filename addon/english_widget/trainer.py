@@ -469,7 +469,8 @@ class Trainer(QObject):
         self.autostart_act.setCheckable(True)
         self.autostart_act.setChecked(os.path.exists(AUTOSTART))
         self.autostart_act.toggled.connect(_set_autostart)
-        for item in (("Занятие сейчас", self.lesson_now), ("Показать", self.show_ui), self.toggle_act,
+        for item in (("Занятие сейчас", self.lesson_now), ("Закрепить сегодняшнее", self.practice_now),
+                     ("Показать", self.show_ui), self.toggle_act,
                      ("Синхронизировать", self.sync_now), self.autostart_act, None, ("Выход", self.quit)):
             if item is None:
                 menu.addSeparator()
@@ -487,6 +488,13 @@ class Trainer(QObject):
         act.triggered.connect(lambda: self.set_mode("widget"))
         mw.form.menuTools.addAction(act)
         self.update_toggle_text()
+
+    @_safe
+    def practice_now(self) -> None:
+        """Reinforcement: extra practice on today's material (does not touch the schedule)."""
+        from . import practice
+        self.present(activate=True)
+        practice.start()
 
     def on_tray_click(self, reason) -> None:
         if reason == QSystemTrayIcon.ActivationReason.Trigger:

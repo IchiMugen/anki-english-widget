@@ -5,6 +5,16 @@
  *   Desktop:   pycmd('ans') / pycmd('easeN')        -> Reviewer._answerCard (V3 + FSRS)
  *   AnkiDroid: JS API 0.0.3 ankiShowAnswer() / ankiAnswerEaseN() -> flipOrAnswerCard(Rating)
  * Intervals are never computed or written here.
+ *
+ * Each card of a word trains one skill and picks its exercise ("auto" mode, ETCore.pickKind):
+ *   RU → EN   retrieval:   choice → type the word → fill a gap with the Russian situation →
+ *                          translate a sentence → own sentence (self-checked)
+ *   EN → RU   meaning:     choice → "what does it mean here" (a new sentence) → type the meaning
+ *   Контекст  recognition: gap in a sentence (a different example every time) → contrast with
+ *                          similar expressions → listening (desktop)
+ * Grades stay Anki's own: right = Good, wrong = Again, typo = Hard/Again, self-checked = the user's choice.
+ * Practice mode (window.ET_PRACTICE, the add-on's "Закрепление") renders the same exercises but sends
+ * the result to the add-on instead of Anki — the schedule is not touched.
  */
 (function () {
   'use strict';
@@ -17,11 +27,12 @@
   var SIDE = root.getAttribute('data-side');
   var DIR = root.getAttribute('data-dir');
   var CTX = DIR === 'ctx';          // context card: sentence with a gap -> English word
-  var TO_EN = DIR !== 'en-ru';      // the answer is English (ru-en and ctx)
+  var TO_EN = DIR !== 'en-ru';      // the card's own answer is English (ru-en and ctx)
   var esc = C.esc;
   var AUTO = CFG.autoGrade !== false;
   var CORRECT_DELAY = typeof CFG.correctDelay === 'number' ? CFG.correctDelay : 3000;
   var RETRY = CFG.retryAfterError !== false;
+  var PRACTICE = window.ET_PRACTICE || null;
 
   /* ---------- fields ---------- */
   function fhtml(name) {
@@ -37,30 +48,28 @@
   function flist(name) { return C.splitText(htmlToText(C.brToSep(fhtml(name)))); }
 
   var EN = flist('en'), RU = flist('ru');
+  if (!EN.length) EN = ['—'];
+  if (!RU.length) RU = ['—'];
+  var DATA = C.parseData(htmlToText(fhtml('data')));
+  var LEGACY_EX = ftext('ex');
+  // examples: the unit's set, or the single old example
+  var XS = DATA && DATA.x.length ? DATA.x : (LEGACY_EX ? [{ id: 'e1', en: LEGACY_EX, ru: '', t: '', m: 'm1' }] : []);
+  var WEN = flist('wen'), WRU = flist('wru');
   var D = {
-    q: TO_EN ? RU : EN,
-    a: TO_EN ? EN : RU,
     lang: TO_EN ? 'en' : 'ru',
-    wrong: flist(TO_EN ? 'wen' : 'wru'),
-    example: ftext('ex'),
+    a: TO_EN ? EN : RU,
+    wrong: TO_EN ? WEN : WRU,
     expl: C.clean(fhtml('expl')),
     hint: C.clean(fhtml('hint'))
   };
-  if (!D.q.length) D.q = ['—'];
-  if (!D.a.length) D.a = ['—'];
-  // accepted typed answers; on the context card also the exact form used in the sentence
-  D.accept = D.a.slice();
-  if (CTX && D.example) {
-    var rx = C.targetRegex(EN), m = D.example.match(rx || /$^/);
-    if (m && m.length) D.accept.push(m.join(' '));
-  }
   var TAGS = ' ' + htmlToText(fhtml('tags')).toLowerCase() + ' ';
   var HARD = / (et::hard|leech) /.test(TAGS);
+  var NOTE = C.norm(EN.join(';'), 'en');
 
   /* ---------- storage (front -> back) ----------
    * Desktop keeps one page for both sides (window object survives);
    * AnkiDroid reloads the page for the answer (sessionStorage survives). */
-  var KEY = 'et:' + DIR + ':' + C.norm(EN.join(';'), 'en');
+  var KEY = 'et:' + DIR + ':' + NOTE;
   window.__et = window.__et || {};
   function ssGet(k) {
     try { var v = window.sessionStorage.getItem(k); if (v) return JSON.parse(v); } catch (e) {}
@@ -73,7 +82,7 @@
   function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
   function lsSet(k, v) { try { window.localStorage.setItem(k, v); } catch (e) {} }
 
-  var MODES = ['choice', 'type', 'recall'];        // exercises
+  var MODES = ['choice', 'type', 'recall'];        // the switch's manual exercises
   var SETTINGS = ['auto'].concat(MODES);            // what the switch can be set to
   // 'et-mode2': the switch got "auto" (default); old manual choices under 'et-mode' are not carried over.
   function getSetting() {
@@ -81,20 +90,20 @@
     return SETTINGS.indexOf(m) >= 0 ? m : 'auto';
   }
   function setMode(m) { lsSet('et-mode2', m); ssSet('et-mode2', { m: m }); }
-  function getMode() { var m = getSetting(); return m === 'auto' ? (window.__etAutoMode || 'choice') : m; }
+  // which switch button an exercise belongs to
+  var BASE = { choice: 'choice', meaning: 'choice', contrast: 'choice', type: 'type', situation: 'type',
+    listen: 'type', produce: 'recall', sentence: 'recall', recall: 'recall' };
 
-  /* ---------- auto mode: the exercise gets harder as the card settles in memory ----------
-   * new / learning / relearning (just forgotten) -> choice
-   * review, interval >= AUTO.type days          -> typing the English word (ru-en, ctx)
-   * review, interval >= AUTO.typeRu days        -> typing the Russian translation too (en-ru)
-   * A mistake sends the card to relearning, so it drops back to choice by itself. */
-  var AUTO = { type: 4, typeRu: 21 };
-  function autoMode(info) {
-    if (!info || info.type !== 2) return 'choice';
-    return info.ivl >= (TO_EN ? AUTO.type : AUTO.typeRu) ? 'type' : 'choice';
+  // examples shown lately for this word (all its cards): the next showing picks another one
+  function recentEx() { try { return JSON.parse(lsGet('et-x:' + NOTE) || '[]'); } catch (e) { return []; } }
+  function rememberEx(id) {
+    var r = recentEx().filter(function (x) { return x !== id; });
+    r.unshift(id);
+    lsSet('et-x:' + NOTE, JSON.stringify(r.slice(0, 2)));
   }
+
   // Desktop: the add-on puts window.ET_CARD into the card HTML. AnkiDroid: JS API (async).
-  // Anything else (AnkiMobile, preview): no info -> choice.
+  // Anything else (AnkiMobile, preview): no info -> the easiest exercise.
   function cardInfo(cb) {
     if (window.ET_CARD) { cb(window.ET_CARD); return; }
     var api = host() === 'ankidroid' ? ankiDroid() : null;
@@ -141,6 +150,7 @@
     if (isAndroid()) return 'ankidroid';
     return null;
   }
+  var ADDON = host() === 'desktop' && !!(window.ET_CARD || PRACTICE);   // our add-on is there
   // AnkiDroid also understands "signal:" links (AbstractFlashcardViewer.filterUrl):
   // signal:show_answer, signal:answer_ease1..4 -> flipOrAnswerCard(Rating). Used only
   // when the JS API is missing or reports failure, so a card is never answered twice.
@@ -163,12 +173,36 @@
     if (h === 'desktop') window.pycmd('ans');
     else if (h === 'ankidroid') adCall('ankiShowAnswer', 'show_answer');
   }
-  // auto: the add-on (it set window.ET_CARD) answers only after the word and example audio finished
-  function sendGrade(ease, auto) {
+  // auto: the add-on answers only after the word and example audio finished.
+  // Practice: the result goes to the add-on, never to Anki's scheduler.
+  function sendGrade(ease, auto, st, noLog) {
     var h = host();
-    if (h === 'desktop') window.pycmd((auto && window.ET_CARD ? 'et_auto_ease' : 'ease') + ease);
+    if (h === 'desktop' && ADDON && !noLog) {
+      window.pycmd((PRACTICE ? 'et_practice:' : 'et_log:') + JSON.stringify(logEntry(st, ease)));
+      if (PRACTICE) return;
+    }
+    if (h === 'desktop') window.pycmd((auto && ADDON ? 'et_auto_ease' : 'ease') + ease);
     else if (h === 'ankidroid') adCall('ankiAnswerEase' + ease, 'answer_ease' + ease);
   }
+  function logEntry(st, ease) {
+    st = st || {};
+    return { d: DIR, k: st.kind || '', x: st.x || '', s: st.status || '', near: !!st.near, ms: st.ms || 0, e: ease };
+  }
+  // any sentence aloud: desktop — the add-on's voice (Piper); AnkiDroid — its TTS
+  function say(text) {
+    if (!text) return;
+    var h = host();
+    if (h === 'desktop' && ADDON) { window.pycmd('et_say:' + text); return; }
+    var api = h === 'ankidroid' ? ankiDroid() : null;
+    try {
+      if (api && typeof api.ankiTtsSpeak === 'function') {
+        if (typeof api.ankiTtsSetLanguage === 'function') api.ankiTtsSetLanguage('en_US');
+        api.ankiTtsSpeak(text, 1);   // 1 = add to the queue (after the word)
+      }
+    } catch (e) {}
+  }
+  var CAN_SAY = ADDON || (host() === 'ankidroid' && !!ankiDroid() && typeof ankiDroid().ankiTtsSpeak === 'function');
+  function prefetch(text) { if (ADDON && text) window.pycmd('et_prefetch:' + text); }
 
   /* Timers never act on another card: Desktop keeps the page (and old timers)
    * across cards, so every render bumps a global token. */
@@ -191,6 +225,7 @@
   };
   IC.auto = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18l5-6 4 3 7-9"/><path d="M15 6h5v5"/></svg>';
   var MODE_LABEL = { auto: 'Авто', choice: 'Выбор', type: 'Ввод', recall: 'Вспомнить' };
+  var PLAY = '<svg class="playImage" viewBox="0 0 64 64"><circle cx="32" cy="32" r="29"/><path d="M56.502,32.301l-37.502,20.101l0.329,-40.804l37.173,20.703Z"/></svg>';
 
   function altsHtml(list) {
     return list.map(function (s) { return '<span class="et-alt">' + esc(s) + '</span>'; })
@@ -198,13 +233,24 @@
   }
   function chip() {
     return '<span class="et-chip">' + (CTX ? 'КОНТЕКСТ' : TO_EN ? 'RU <i>→</i> EN' : 'EN <i>→</i> RU') + '</span>' +
-      (HARD ? '<span class="et-chip et-chip-hard" title="Часто забываешь это слово">трудное</span>' : '');
+      (HARD ? '<span class="et-chip et-chip-hard" title="Часто забываешь это слово">трудное</span>' : '') +
+      (PRACTICE ? '<span class="et-chip et-chip-practice" title="Не влияет на расписание">закрепление</span>' : '');
   }
   function mountAudio(slotId, srcId) {
     var src = document.getElementById(srcId || 'et-audio-src');
     var slot = document.getElementById(slotId);
     if (!src || !slot) return;
     while (src.firstChild) slot.appendChild(src.firstChild);
+  }
+  function sayBtn(text, cls) {
+    if (!CAN_SAY || !text) return '';
+    return '<span class="et-audio-slot et-audio-inline ' + (cls || 'et-audio-small') + '"><a class="replay-button et-say" href="#" data-say="' +
+      esc(text) + '">' + PLAY + '</a></span>';
+  }
+  function bindSay() {
+    each('.et-say', function (b) {
+      b.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); say(b.getAttribute('data-say')); });
+    });
   }
   function diffHtml(typed, expected) {
     var d = C.diff(typed, expected);
@@ -219,50 +265,136 @@
     return '<div class="et-diff">' + row('Ты', d.typed, 'd-bad') + row('Верно', d.expected, 'd-miss') + '</div>';
   }
   function each(sel, fn) { Array.prototype.forEach.call(root.querySelectorAll(sel), fn); }
+  function exById(id) { for (var i = 0; i < XS.length; i++) if (XS[i].id === id) return XS[i]; return null; }
+  function meaningOf(x) {
+    var ms = (DATA && DATA.m) || [];
+    for (var i = 0; i < ms.length; i++) if (ms[i].id === (x && x.m)) return ms[i];
+    return ms[0] || null;
+  }
+
+  /* ---------- the exercise: kind + example + what counts as the answer ---------- */
+  var K = null;   // {kind, x, lang, a, accept, wrong, target, opts?, self?}
+
+  function caps() {
+    var withT = XS.filter(function (x) { return !!C.findTarget(x.en, x.t, EN); });
+    return {
+      ru: XS.some(function (x) { return !!x.ru && !!C.findTarget(x.en, x.t, EN); }),
+      t: withT.length > 0 && !!(DATA && DATA.m.length),
+      c: !!(DATA && DATA.c.length),
+      listen: CAN_SAY && withT.length > 0
+    };
+  }
+
+  // kinds a card can show; anything that does not fit this word falls back to the card's basic exercise
+  function setupKind(kind, xId, info) {
+    var cp = caps(), x = null, need = null;
+    if ((kind === 'situation' || kind === 'produce') && !cp.ru) kind = 'type';
+    if (kind === 'meaning' && !cp.t) kind = 'choice';
+    if (kind === 'contrast' && !cp.c) kind = 'type';
+    if (kind === 'listen' && !cp.listen) kind = 'type';
+    if (kind === 'situation' || kind === 'produce') need = 'ru';
+    if (xId) x = exById(xId);
+    if (!x) {
+      var opts = { last: recentEx(), need: need, weak: (info && info.exw) || [], seen: (info && info.exs) || [] };
+      var pool = XS.filter(function (e) { return !!C.findTarget(e.en, e.t, EN); });
+      x = C.pickExample(pool.length ? pool : XS, opts);
+    }
+    var found = x ? C.findTarget(x.en, x.t, EN) : null;
+    var k = { kind: kind, x: x, target: found ? found.text : '' };
+    var forms = (DATA && DATA.f) || [];
+    if (kind === 'meaning') {
+      var m = meaningOf(x);
+      k.lang = 'ru';
+      k.a = m && m.ru ? m.ru : RU;
+      k.opts = C.meaningOptions(DATA, m && m.id, WRU);
+      if (!k.opts || k.opts.length < 2) { kind = k.kind = 'choice'; k.opts = null; }
+    }
+    if (kind === 'contrast') {
+      k.lang = 'en';
+      k.a = EN;
+      k.opts = C.buildOptions(EN, DATA.c.map(function (c) { return c.en; }), 'en');
+    }
+    if (!k.lang) {
+      var toEn = TO_EN || kind === 'situation';
+      k.lang = toEn ? 'en' : 'ru';
+      k.a = toEn ? EN : RU;
+    }
+    k.wrong = k.lang === 'en' ? WEN : WRU;
+    k.accept = k.lang === 'en' ? C.acceptFor(EN, forms, k.target) : k.a.slice();
+    k.self = kind === 'produce' || kind === 'sentence';
+    if (kind === 'produce' && x) k.a = [x.en];
+    return k;
+  }
 
   /* ---------- shared view: the same on both sides ---------- */
   // auto: "Авто" is on and the exercise it picked is marked softly (is-auto)
   function segHtml(mode) {
-    var h = '', setting = getSetting();
+    var h = '', setting = PRACTICE ? 'auto' : getSetting(), base = BASE[mode] || mode;
     SETTINGS.forEach(function (m) {
-      var cls = m === setting ? 'is-on' : (setting === 'auto' && m === mode ? 'is-auto' : '');
-      h += '<button type="button" data-mode="' + m + '" class="' + cls + '">' +
+      var cls = m === setting ? 'is-on' : (setting === 'auto' && m === base ? 'is-auto' : '');
+      h += '<button type="button" data-mode="' + m + '" class="' + cls + '"' + (PRACTICE ? ' disabled' : '') + '>' +
         IC[m] + '<span>' + MODE_LABEL[m] + '</span></button>';
     });
     return '<div class="et-seg" role="tablist">' + h + '</div>';
   }
+  var LABEL = {
+    meaning: 'Что значит выделенное здесь?',
+    situation: 'Вставь слово по смыслу',
+    produce: 'Переведи предложение',
+    sentence: 'Составь своё предложение',
+    contrast: 'Какое выражение подходит?',
+    listen: 'Послушай и впиши пропущенное'
+  };
+  function revealsHtml(items) {
+    if (!items.length) return '';
+    return '<div class="et-reveals">' + items.map(function (it) {
+      return '<button type="button" class="et-reveal" data-reveal="' + it[0] + '">' + it[1] + '</button>';
+    }).join('') + '</div>' + items.map(function (it) {
+      return '<div class="et-hidden" data-for="' + it[0] + '"' + (it[3] ? ' lang="' + it[3] + '"' : '') + '>' + it[2] + '</div>';
+    }).join('');
+  }
   function promptHtml() {
-    var reveal = '';
-    if (CTX && SIDE !== 'back') {
-      // the sentence itself is the question; translation (and hint) only on request
-      reveal += '<button type="button" class="et-reveal" data-reveal="ru">Перевод</button>';
+    var kind = K.kind, x = K.x, back = SIDE === 'back';
+    var hint = D.hint && (HARD || CTX) && !back ? [['hint', 'Подсказка', esc(D.hint)]] : [];
+    var sentenceMasked = x ? C.maskTarget(x.en, x.t, EN) : '';
+    var sentenceMarked = x ? C.markTarget(x.en, x.t, EN) : '';
+    var head = '<section class="et-glass et-prompt et-in"><div class="et-label">' + chip() + (LABEL[kind] ||
+      (CTX ? 'Вставь пропущенное' : TO_EN ? 'Переведи на английский' : 'Переведи на русский')) + '</div>';
+
+    if (kind === 'meaning') {
+      return head + '<div class="et-word et-word-ctx" lang="en">' + sentenceMarked + '</div>' +
+        sayBtn(x.en) + revealsHtml(hint) + '</section>';
     }
-    if (SIDE !== 'back' && D.hint && (HARD || CTX)) {
-      reveal += '<button type="button" class="et-reveal" data-reveal="hint">Подсказка</button>';
+    if (kind === 'situation') {
+      return head + '<div class="et-situation" lang="ru">' + esc(x.ru) + '</div>' +
+        '<div class="et-word et-word-ctx" lang="en">' + (back ? sentenceMarked : sentenceMasked) + '</div>' +
+        (back ? sayBtn(x.en) : '') + revealsHtml(hint) + '</section>';
     }
-    var hidden = (CTX ? '<div class="et-hidden" data-for="ru" lang="ru">' + altsHtml(RU) + '</div>' : '') +
-      (D.hint ? '<div class="et-hidden" data-for="hint">' + esc(D.hint) + '</div>' : '');
-    if (CTX) {
-      var sentence = SIDE === 'back' ? C.highlightExample(D.example, EN) : C.maskExample(D.example, EN);
-      return '<section class="et-glass et-prompt et-in">' +
-        '<div class="et-label">' + chip() + 'Вставь пропущенное</div>' +
-        '<div class="et-word et-word-ctx" lang="en">' + sentence + '</div>' +
-        (SIDE === 'back' ? '<div class="et-audio-slot" id="et-audio-exslot"></div>' : '') +
-        (reveal ? '<div class="et-reveals">' + reveal + '</div>' + hidden : '') +
-        '</section>';
+    if (kind === 'produce') {
+      return head + '<div class="et-word et-word-ctx" lang="ru">' + esc(x.ru) + '</div>' +
+        '<div class="et-hint">Используй: <b lang="en">' + esc(EN[0]) + '</b></div>' + '</section>';
     }
-    var hint = '';
-    if (D.example) {
-      hint = '<div class="et-hint" lang="en">' +
-        (TO_EN ? C.maskExample(D.example, EN) : C.highlightExample(D.example, EN)) + '</div>';
+    if (kind === 'sentence') {
+      return head + '<div class="et-word" lang="en">' + altsHtml(EN) + '</div>' +
+        '<div class="et-hint" lang="ru">' + altsHtml(RU) + '</div></section>';
     }
-    return '<section class="et-glass et-prompt et-in">' +
-      '<div class="et-label">' + chip() + (TO_EN ? 'Переведи на английский' : 'Переведи на русский') + '</div>' +
-      '<div class="et-word" lang="' + (TO_EN ? 'ru' : 'en') + '">' + altsHtml(D.q) + '</div>' +
-      (TO_EN ? '' : '<div class="et-audio-slot" id="et-audio-q"></div>') +
-      hint +
-      (reveal ? '<div class="et-reveals">' + reveal + '</div>' + hidden : '') +
-      '</section>';
+    if (kind === 'listen') {
+      return head + (back ? '<div class="et-word et-word-ctx" lang="en">' + sentenceMarked + '</div>'
+        : '<div class="et-listen-note">Предложение звучит — текста нет, как в жизни.</div>') +
+        sayBtn(x.en, 'et-audio-big') + '</section>';
+    }
+    if (CTX || kind === 'contrast') {
+      var tr = x && x.ru ? esc(x.ru) : altsHtml(RU);
+      var rv = back ? [] : [['ru', 'Перевод', tr, 'ru']].concat(hint);
+      return head + '<div class="et-word et-word-ctx" lang="en">' + (x ? (back ? sentenceMarked : sentenceMasked) : '—') + '</div>' +
+        (back && x ? sayBtn(x.en) : '') + revealsHtml(rv) + '</section>';
+    }
+    // RU → EN / EN → RU word cards: the word, and a sentence for context under it
+    var under = '';
+    if (x) under = '<div class="et-hint" lang="en">' + (TO_EN ? sentenceMasked : sentenceMarked) + '</div>';
+    var rvw = D.hint && HARD && !back ? [['hint', 'Подсказка', esc(D.hint)]] : [];
+    return head + '<div class="et-word" lang="' + (TO_EN ? 'ru' : 'en') + '">' + altsHtml(TO_EN ? RU : EN) + '</div>' +
+      (TO_EN ? '' : '<div class="et-audio-slot" id="et-audio-q"></div>') + under + revealsHtml(rvw) + '</section>';
   }
   function bindReveals() {
     each('[data-reveal]', function (b) {
@@ -283,20 +415,24 @@
         else if (i === chosen) { cls += ' is-wrong'; key = IC.bad; }
         else cls += ' is-dim';
       }
-      h += '<button type="button" class="' + cls + '" style="animation-delay:' + (i * 45) + 'ms" lang="' + D.lang + '"' +
+      h += '<button type="button" class="' + cls + '" style="animation-delay:' + (i * 45) + 'ms" lang="' + K.lang + '"' +
         (chosen >= 0 ? ' disabled' : '') + '><span class="et-opt-key">' + key + '</span><span class="et-opt-text">' +
         esc(o.text) + '</span></button>';
     });
     return h + '</div>';
   }
-  function typeHtml(value, cls, done) {
-    return '<div class="et-glass et-type et-in">' +
-      '<input id="et-input" class="et-input' + (cls ? ' ' + cls : '') + '" type="text" lang="' + D.lang + '"' +
+  function typeHtml(value, cls, done, multi) {
+    var ph = K.kind === 'sentence' ? 'Твоё предложение по-английски…' : K.kind === 'produce' ? 'Предложение по-английски…'
+      : K.lang === 'en' ? 'Напиши по-английски…' : 'Напиши по-русски…';
+    var attrs = ' class="et-input' + (multi ? ' et-input-multi' : '') + (cls ? ' ' + cls : '') + '" lang="' + K.lang + '"' +
       ' autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="done"' +
-      ' placeholder="' + (TO_EN ? 'Напиши по-английски…' : 'Напиши по-русски…') + '"' +
-      ' value="' + esc(value || '') + '"' + (done ? ' readonly' : '') + '>' +
+      ' placeholder="' + ph + '"' + (done ? ' readonly' : '');
+    var field = multi ? '<textarea id="et-input" rows="2"' + attrs + '>' + esc(value || '') + '</textarea>'
+      : '<input id="et-input" type="text"' + attrs + ' value="' + esc(value || '') + '">';
+    return '<div class="et-glass et-type et-in">' + field +
       '<div class="et-row">' +
-        '<button type="button" class="et-btn et-btn-primary" id="et-check"' + (done ? ' disabled' : '') + '>Проверить</button>' +
+        '<button type="button" class="et-btn et-btn-primary" id="et-check"' + (done ? ' disabled' : '') + '>' +
+          (multi ? 'Сравнить' : 'Проверить') + '</button>' +
         '<button type="button" class="et-btn et-btn-ghost" id="et-skip"' + (done ? ' disabled' : '') + '>Не знаю</button>' +
       '</div></div>';
   }
@@ -309,59 +445,68 @@
   }
 
   /* =================== FRONT =================== */
-  var answered = false;
+  var answered = false, shownAt = Date.now();
 
   function renderFront() {
-    if (getSetting() !== 'auto') { drawFront(getSetting()); return; }
+    if (PRACTICE) { cardInfo(function (info) { drawFront(PRACTICE.kind || 'choice', PRACTICE.x, info); }); return; }
+    var setting = getSetting();
     var tok = window.__etTok;
     cardInfo(function (info) {
       if (window.__etTok !== tok) return;   // Desktop already moved to another card
-      window.__etAutoMode = autoMode(info);
-      drawFront(window.__etAutoMode);
+      var kind = setting === 'auto' ? C.pickKind(DIR, info, caps()) : setting;
+      drawFront(kind, null, info);
     });
   }
 
-  function drawFront(mode) {
-    root.innerHTML = segHtml(mode) + promptHtml() +
+  function drawFront(kind, xId, info) {
+    K = setupKind(kind, xId, info);
+    window.__etK = K;   // read by the browser tests (tests/kinds_sim.py)
+    if (K.x) { rememberEx(K.x.id); prefetch(K.x.en); }
+    root.innerHTML = segHtml(K.kind) + promptHtml() +
       '<section id="et-ex" class="et-ex"></section><section id="et-fb" class="et-fb" aria-live="polite"></section>';
     mountAudio('et-audio-q');
     bindReveals();
+    bindSay();
     each('.et-seg button', function (b) {
       b.addEventListener('click', function () {
-        if (answered) return;
+        if (answered || PRACTICE) return;
         var m = b.getAttribute('data-mode');
         setMode(m);
         if (m === 'auto') { renderFront(); return; }
-        each('.et-seg button', function (x) { x.className = x === b ? 'is-on' : ''; });
-        renderExercise(m);
+        drawFront(m, K.x && K.x.id, info);
       });
     });
-    renderExercise(mode);
+    renderExercise();
+    if (K.kind === 'listen') later(function () { say(K.x.en); }, 150);   // after renderExercise's bump()
   }
 
-  function renderExercise(mode) {
+  function renderExercise() {
     var ex = document.getElementById('et-ex');
     document.getElementById('et-fb').innerHTML = '';
     bump();
     answered = false;
-    var opts = null, notice = '';
-    if (mode === 'choice') {
-      opts = C.buildOptions(D.a, D.wrong, D.lang);
+    shownAt = Date.now();
+    var kind = K.kind, opts = K.opts, notice = '';
+    if (kind === 'choice') {
+      opts = C.buildOptions(K.a, K.wrong, K.lang);
       if (opts.length < 2) {
-        mode = 'type';
+        kind = K.kind = 'type';
         notice = '<div class="et-notice">У этой карточки нет вариантов ответа — напиши перевод.</div>';
       }
     }
-    saveResult({ status: 'pending', mode: mode, t: Date.now() });
-    if (mode === 'choice') frontChoice(ex, opts);
-    else if (mode === 'type') frontTyping(ex, notice);
-    else frontRecall(ex);
+    saveResult({ status: 'pending', kind: kind, x: K.x && K.x.id, t: Date.now() });
+    if (opts && (kind === 'choice' || kind === 'meaning' || kind === 'contrast')) frontChoice(ex, opts);
+    else if (kind === 'recall') frontRecall(ex);
+    else frontTyping(ex, notice, K.self);
   }
 
   // Result is decided: remember it and move to the answer side, which shows the same picture.
   function finish(st, delay) {
     answered = true;
     st.t = Date.now();
+    st.kind = K.kind;
+    st.x = K.x && K.x.id;
+    st.ms = Date.now() - shownAt;
     saveResult(st);
     if (host()) {
       later(flip, delay);
@@ -374,8 +519,8 @@
   function inlineFallback(st) {
     var fb = document.getElementById('et-fb');
     if (!fb) return;
-    var kind = st.status === 'correct' ? 'ok' : st.status === 'recall' ? 'skip' : st.status === 'skipped' ? 'skip' : 'bad';
-    var title = st.status === 'correct' ? 'Верно' : st.status === 'recall' ? 'Ответ' : 'Правильно: ' + esc(D.a[0]);
+    var kind = st.status === 'correct' ? 'ok' : st.status === 'recall' || st.status === 'self' ? 'skip' : st.status === 'skipped' ? 'skip' : 'bad';
+    var title = st.status === 'correct' ? 'Верно' : st.status === 'recall' || st.status === 'self' ? 'Ответ' : 'Правильно: ' + esc(K.a[0]);
     fb.innerHTML = '<div class="et-res et-res-' + kind + ' et-in"><div class="et-res-head"><span class="et-res-ico">' +
       IC[kind] + '</span><span>' + title + '</span></div></div>' +
       '<div class="et-flip-hint">Нажми «Показать ответ» внизу</div>';
@@ -400,8 +545,8 @@
     });
   }
 
-  function frontTyping(ex, notice) {
-    ex.innerHTML = (notice || '') + typeHtml('', '', false);
+  function frontTyping(ex, notice, self) {
+    ex.innerHTML = (notice || '') + typeHtml('', '', false, self);
     var input = document.getElementById('et-input');
     var bCheck = document.getElementById('et-check');
     var bSkip = document.getElementById('et-skip');
@@ -413,8 +558,7 @@
     }
     function check() {
       if (answered) return;
-      var r = C.checkTyped(input.value, D.accept, D.lang);
-      if (r.status === 'empty') {
+      if (!C.clean(input.value)) {
         input.classList.remove('is-shake');
         void input.offsetWidth;
         input.classList.add('is-shake');
@@ -422,6 +566,11 @@
         return;
       }
       lock();
+      if (self) {   // a whole sentence: compared with a model by the user, not by string matching
+        finish({ status: 'self', mode: 'type', given: input.value }, 200);
+        return;
+      }
+      var r = C.checkTyped(input.value, K.accept, K.lang);
       var cls = r.status === 'correct' ? 'is-correct' : r.near ? 'is-near' : 'is-wrong';
       input.classList.add(cls);
       finish({ status: r.status, near: !!r.near, mode: 'type', given: input.value, expected: r.expected, cls: cls },
@@ -435,13 +584,13 @@
     bCheck.addEventListener('click', check);
     bSkip.addEventListener('click', skip);
     input.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.keyCode === 13) { e.preventDefault(); e.stopPropagation(); check(); }
+      if ((e.key === 'Enter' || e.keyCode === 13) && !(self && e.shiftKey)) { e.preventDefault(); e.stopPropagation(); check(); }
     });
     if (CFG.autoFocus !== false) setTimeout(function () { try { input.focus(); } catch (e) {} }, 60);
   }
 
   function frontRecall(ex) {
-    saveResult({ status: 'recall', mode: 'recall', t: Date.now() });
+    saveResult({ status: 'recall', kind: 'recall', x: K.x && K.x.id, t: Date.now() });
     ex.innerHTML = recallHtml();
     ex.querySelector('[data-act="reveal"]').addEventListener('click', function () {
       if (answered) return;
@@ -455,11 +604,12 @@
   var autoPending = false;   // auto answer sent, the add-on is waiting for the audio
   function grade(st, ease, auto) {
     if (graded && !(autoPending && !auto)) return;   // a click while waiting answers at once
+    var first = !graded;
     graded = true;
     autoPending = !!auto;
     if (st) { st.graded = true; saveResult(st); }
     if (!auto) root.classList.add('is-leaving');
-    sendGrade(ease, auto);
+    if (first || !PRACTICE) sendGrade(ease, auto, st, !first);
   }
 
   // Desktop only: on views where Anki's own Space/Enter would mean "Good",
@@ -483,49 +633,70 @@
     setTimeout(function () { try { t.focus({ preventScroll: true }); } catch (e) {} }, 30);
   }
 
-  function exampleHtml(title) {
-    return '<section class="et-glass et-section et-in">' + (title ? '<h4>' + title + '</h4>' : '') +
-      '<div class="et-example-row"><div class="et-example" lang="en">' + C.highlightExample(D.example, EN) + '</div>' +
-      '<span class="et-audio-slot et-audio-inline et-audio-small" id="et-audio-exslot"></span></div></section>';
+  function section(title, body, cls) {
+    return '<section class="et-glass et-section et-in' + (cls ? ' ' + cls : '') + '">' + (title ? '<h4>' + title + '</h4>' : '') + body + '</section>';
+  }
+  function exampleRow(x) {
+    return '<div class="et-example-row"><div class="et-example" lang="en">' + C.markTarget(x.en, x.t, EN) +
+      (x.ru ? '<div class="et-example-ru" lang="ru">' + esc(x.ru) + '</div>' : '') + '</div>' + sayBtn(x.en) + '</div>';
+  }
+  // one more context, only on request (never all examples at once)
+  function moreExamplesHtml(n) {
+    var cur = K.x && K.x.id, others = XS.filter(function (x) { return x.id !== cur && C.findTarget(x.en, x.t, EN); });
+    if (!others.length) return '';
+    others = C.shuffle(others).slice(0, n || 2);
+    return '<div class="et-reveals"><button type="button" class="et-reveal" data-reveal="more">Ещё пример</button></div>' +
+      '<div class="et-hidden" data-for="more">' + others.map(exampleRow).join('') + '</div>';
   }
 
   // Wrong answer: write the correct word once — active recall instead of just reading it.
   function retryHtml() {
+    var en = K.lang === 'en';
     return '<div class="et-glass et-type et-retry et-in">' +
-      '<div class="et-retry-label">' + (TO_EN ? 'Напиши слово по-английски, чтобы запомнить'
+      '<div class="et-retry-label">' + (en ? 'Напиши слово по-английски, чтобы запомнить'
         : 'Напиши перевод по-русски, чтобы запомнить') + '</div>' +
-      '<input id="et-retry" class="et-input" type="text" lang="' + D.lang + '" autocomplete="off" autocorrect="off"' +
-      ' autocapitalize="none" spellcheck="false" enterkeyhint="done" placeholder="' + esc(TO_EN ? 'по-английски…' : 'по-русски…') + '">' +
+      '<input id="et-retry" class="et-input" type="text" lang="' + K.lang + '" autocomplete="off" autocorrect="off"' +
+      ' autocapitalize="none" spellcheck="false" enterkeyhint="done" placeholder="' + (en ? 'по-английски…' : 'по-русски…') + '">' +
       '<div class="et-row">' +
         '<button type="button" class="et-btn et-btn-primary" data-act="retry">Проверить</button>' +
         '<button type="button" class="et-btn et-btn-ghost" data-ease="1">Пропустить</button>' +
       '</div></div>';
   }
 
-  function detailsHtml(exampleOnly) {
-    var h = '';
-    var hint = D.hint ? '<section class="et-glass et-section et-in"><h4>Ассоциация</h4><div class="et-expl">' +
-      esc(D.hint) + '</div></section>' : '';
-    if (CTX) {
-      // the sentence is already on screen (with its audio); show the translation instead
-      var tr = '<section class="et-glass et-section et-in"><h4>Перевод</h4><div class="et-expl" lang="ru">' +
-        altsHtml(RU) + '</div></section>';
-      if (exampleOnly) return tr;
-      h += tr + hint;
-      if (D.expl) h += '<section class="et-glass et-section et-in"><h4>Пояснение</h4><div class="et-expl">' + D.expl + '</div></section>';
-      return h;
+  function detailsHtml(brief) {
+    var h = '', x = K.x, kind = K.kind;
+    var hint = D.hint ? section('Ассоциация', '<div class="et-expl">' + esc(D.hint) + '</div>') : '';
+    var meaningCard = kind === 'meaning' || (!TO_EN && kind !== 'situation');
+    var m = meaningOf(x);
+    // what the word means (in this sentence, if it has several meanings)
+    var sense = '';
+    if (DATA && DATA.m.length > 1 && m) sense = '<div class="et-expl"><b>Здесь:</b> ' + esc(m.ru.join(' · ')) +
+      (m.g ? ' <span class="et-muted">(' + esc(m.g) + ')</span>' : '') + '</div>';
+    if (kind === 'contrast' && DATA && DATA.c.length) {
+      h += section('Разница', DATA.c.map(function (c) {
+        return '<div class="et-expl"><b lang="en">' + esc(c.en) + '</b>' + (c.ru ? ' — ' + esc(c.ru) : '') +
+          (c.n ? '<div class="et-muted">' + esc(c.n) + '</div>' : '') + '</div>';
+      }).join(''));
     }
-    if (exampleOnly) return (D.example ? exampleHtml('') : '') + (HARD ? hint : '');
-    if (D.example) h += exampleHtml('Пример');
-    h += hint;
-    if (D.expl) h += '<section class="et-glass et-section et-in"><h4>Пояснение</h4><div class="et-expl">' + D.expl + '</div></section>';
-    return h;
+    if (CTX || kind === 'situation' || kind === 'listen' || kind === 'meaning' || kind === 'contrast') {
+      // the sentence is already on screen; show its translation (and the word's meaning)
+      var tr = (x && x.ru ? '<div class="et-expl" lang="ru">' + esc(x.ru) + '</div>' : '') +
+        '<div class="et-expl" lang="ru">' + (meaningCard ? '' : '<b lang="en">' + esc(EN[0]) + '</b> — ') + altsHtml(RU) + '</div>' + sense;
+      if (brief) return section('Перевод', tr) + (HARD ? hint : '');
+      h += section('Перевод', tr) + hint;
+    } else {
+      if (x) h += section(brief ? '' : 'Пример', exampleRow(x) + sense);
+      if (brief) return h + (HARD ? hint : '');
+      h += hint;
+    }
+    if (D.expl) h += section('Пояснение', '<div class="et-expl">' + D.expl + '</div>');
+    return h + moreExamplesHtml(2);
   }
 
   function resHtml(kind, title, body) {
     return '<div class="et-res et-res-' + kind + ' et-in"><div class="et-res-head"><span class="et-res-ico">' + IC[kind] +
       '</span><span class="et-res-title">' + title + '</span>' +
-      (TO_EN ? '<span class="et-audio-slot et-audio-inline" id="et-audio-a"></span>' : '') +
+      (K.lang === 'en' && !K.self ? '<span class="et-audio-slot et-audio-inline" id="et-audio-a"></span>' : '') +
       '</div>' + (body || '') + '</div>';
   }
 
@@ -539,45 +710,72 @@
     return h + '</div>';
   }
 
+  // own sentence / translation: show models, the user decides (an automatic check would either
+  // reject good paraphrases or accept broken grammar)
+  function selfCheckHtml(st) {
+    var given = C.clean(st.given || ''), used = false;
+    var forms = C.acceptFor(EN, (DATA && DATA.f) || [], K.target);
+    forms.forEach(function (f) { if (C.findTarget(given, f, [f])) used = true; });
+    if (!used && C.findTarget(given, '', EN)) used = true;
+    var models = K.kind === 'produce' && K.x ? [K.x] : XS.filter(function (x) { return C.findTarget(x.en, x.t, EN); }).slice(0, 2);
+    return resHtml('skip', K.kind === 'produce' ? 'Сравни с образцом' : 'Сравни с примерами',
+      '<div class="et-expl"><span class="et-muted">Ты:</span> ' + esc(given || '—') + '</div>' +
+      (given ? '<div class="et-expl ' + (used ? 'et-ok-note' : 'et-warn-note') + '">' +
+        (used ? '✓ «' + esc(EN[0]) + '» есть в твоём ответе' : 'Нет «' + esc(EN[0]) + '» — проверь, использовано ли нужное слово') + '</div>' : '')) +
+      section('Образец', models.map(exampleRow).join(''));
+  }
+
   function renderBack() {
     var st = loadResult();
-    var mode = st ? st.mode : getMode();
     var status = st ? st.status : 'none';
     if (st && st.graded) status = 'graded';
-    var answer = '<b>' + altsHtml(D.a) + '</b>';
-    var body = '', result = '', actions = '', primary = null, auto = false, retry = false;
+    K = setupKind(st && st.kind ? st.kind : PRACTICE ? PRACTICE.kind : TO_EN ? 'type' : 'choice', st && st.x, window.ET_CARD);
+    var mode = K.kind;
+    var answer = '<b>' + altsHtml(K.kind === 'produce' ? EN : K.a) + '</b>';
+    var body = '', result = '', actions = '', primary = null, auto = false, retry = false, details = '';
 
-    if (mode === 'choice' && st && st.opts) body = optionsHtml(st.opts, st.chosen);
-    else if (mode === 'type' && st) body = typeHtml(st.given, st.cls || '', true);
+    if (st && st.opts && (mode === 'choice' || mode === 'meaning' || mode === 'contrast')) body = optionsHtml(st.opts, st.chosen);
+    else if (st && st.mode === 'type') body = typeHtml(st.given, st.cls || '', true, K.self);
 
-    if (status === 'correct') {
-      result = resHtml('ok', 'Верно' + (mode === 'type' && D.a.length > 1 ? ' · ' + answer : ''));
+    if (status === 'self') {
+      result = selfCheckHtml(st);
+      primary = 3;
+      actions = actionsHtml([{ ease: 1, label: 'Не вышло' }, { ease: 2, label: 'Почти' }, { ease: 3, label: 'Получилось', primary: true }]);
+      details = (D.expl ? section('Пояснение', '<div class="et-expl">' + D.expl + '</div>') : '');
+    } else if (status === 'correct') {
+      result = resHtml('ok', 'Верно' + (st.mode === 'type' && K.a.length > 1 ? ' · ' + answer : ''));
       if (AUTO && host()) auto = true;
       else { primary = 3; actions = actionsHtml([{ ease: 3, label: 'Дальше', primary: true }]); }
+      details = detailsHtml(true);
     } else if (status === 'wrong' && st.near) {
-      result = resHtml('warn', 'Похоже на опечатку', diffHtml(st.given, st.expected || D.a[0]));
+      result = resHtml('warn', 'Похоже на опечатку', diffHtml(st.given, st.expected || K.a[0]));
       actions = actionsHtml([{ ease: 2, label: 'Засчитать', primary: true }, { ease: 1, label: 'Это ошибка' }]);
+      details = detailsHtml(false);
     } else if (status === 'wrong' || status === 'skipped') {
       result = status === 'wrong'
-        ? resHtml('bad', 'Правильно: ' + answer, mode === 'type' ? diffHtml(st.given, st.expected || D.a[0]) : '')
+        ? resHtml('bad', 'Правильно: ' + answer, st.mode === 'type' ? diffHtml(st.given, st.expected || K.a[0]) : '')
         : resHtml('skip', 'Ответ: ' + answer);
       primary = 1;
-      if (RETRY && host()) retry = true;
+      if (RETRY && host() && !K.self) retry = true;
       else actions = actionsHtml([{ ease: 1, label: 'Дальше', primary: true }]);
+      details = detailsHtml(false);
     } else {
       // recall, unknown state (e.g. preview) or already graded: show the answer, user decides
       result = resHtml('skip', answer);
       actions = actionsHtml([{ ease: 1, label: 'Не вспомнил' }, { ease: 3, label: 'Вспомнил', primary: true }]);
+      details = detailsHtml(false);
     }
 
-    var details = status === 'correct' ? detailsHtml(true) : detailsHtml();
     if (auto) actions = '<div class="et-flip-hint">Нажми в любом месте, чтобы перейти сразу</div>';
     root.className += ' et-static';
     root.innerHTML = segHtml(mode) + promptHtml() + '<section class="et-ex">' + body + '</section>' +
       '<section class="et-fb">' + result + (retry ? retryHtml() : '') + details + actions + '</section>';
     mountAudio(TO_EN ? 'et-audio-a' : 'et-audio-q');
-    mountAudio('et-audio-exslot', 'et-audio-ex');
+    bindReveals();
+    bindSay();
     each('.et-seg button', function (b) { b.disabled = true; });
+    // the sentence of this exercise aloud, after the word (Anki plays the word itself)
+    if (K.x && status !== 'graded' && CFG.exampleAudio !== false) say(K.x.en);
 
     each('[data-ease]', function (b) {
       b.addEventListener('click', function () { grade(st, +b.getAttribute('data-ease')); });
@@ -587,7 +785,7 @@
       var inp = document.getElementById('et-retry');
       var check = function () {
         if (graded) return;
-        var r = C.checkTyped(inp.value, D.accept, D.lang);
+        var r = C.checkTyped(inp.value, K.accept, K.lang);
         if (r.status === 'correct') {
           inp.readOnly = true;
           inp.classList.add('is-correct');
@@ -598,10 +796,13 @@
           void inp.offsetWidth;
           inp.classList.add('is-shake');
           if (r.status !== 'empty') inp.select();
-          // EN → RU: typed the English word (or forgot to switch the keyboard) — say what is expected
+          // a Russian answer but Latin letters (or the other way round): say what is expected
           var lbl = root.querySelector('.et-retry-label');
-          if (lbl && !TO_EN && /[a-z]/i.test(inp.value) && !/[а-яё]/i.test(inp.value)) {
-            lbl.textContent = 'Нужен перевод по-русски — переключи раскладку';
+          var latin = /[a-z]/i.test(inp.value) && !/[а-яё]/i.test(inp.value);
+          var cyr = /[а-яё]/i.test(inp.value) && !/[a-z]/i.test(inp.value);
+          if (lbl && ((K.lang === 'ru' && latin) || (K.lang === 'en' && cyr))) {
+            lbl.textContent = K.lang === 'ru' ? 'Нужен перевод по-русски — переключи раскладку'
+              : 'Нужно слово по-английски — переключи раскладку';
             lbl.classList.add('is-warn');
           }
         }
@@ -614,15 +815,14 @@
     }
 
     if (auto) {
-      // Correct: let the result and the audio (word, then example) play, then Good in the background.
-      var exWords = D.example && document.getElementById('et-audio-exslot') &&
-        document.getElementById('et-audio-exslot').firstChild ? D.example.split(/\s+/).length : 0;
+      // Correct: let the result and the audio (word, then sentence) play, then Good in the background.
+      var exWords = K.x && CAN_SAY ? K.x.en.split(/\s+/).length : 0;
       // Desktop with the add-on: it waits for the audio itself, so only the minimum pause here.
-      var waitsForAudio = host() === 'desktop' && !!window.ET_CARD;
+      var waitsForAudio = ADDON && !PRACTICE;
       var delay = waitsForAudio ? CORRECT_DELAY : Math.max(CORRECT_DELAY, exWords ? 1500 + exWords * 380 : 0);
       later(function () { grade(st, 3, waitsForAudio); }, delay);
       root.addEventListener('click', function (e) {
-        if (!e.target.closest || !e.target.closest('.replay-button')) grade(st, 3);
+        if (!e.target.closest || !e.target.closest('.replay-button, .et-reveal')) grade(st, 3);
       });
     } else if (host() && !retry) {
       keyTrap(function (k) {

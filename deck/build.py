@@ -1,4 +1,4 @@
-"""Build the English Trainer deck: deck/words.csv -> English_Trainer.apkg (repo root)
+"""Build the English Trainer deck: deck/words.csv (+ deck/units.jsonl) -> English_Trainer.apkg (repo root)
 
 Usage:
     python build.py                    # needs: pip install genanki
@@ -20,6 +20,8 @@ from pathlib import Path
 
 import genanki
 
+import units
+
 ROOT = Path(__file__).parent
 SRC = ROOT / "src"
 DIST = ROOT / "dist"
@@ -34,7 +36,8 @@ DECK_NAME = "English Trainer"
 WORDS = ROOT / "words.csv"
 OUT = "English_Trainer.apkg"
 
-FIELDS = ["English", "Russian", "Example", "Audio", "WrongEN", "WrongRU", "Explanation", "Hint"]
+FIELDS = ["English", "Russian", "Example", "Audio", "WrongEN", "WrongRU", "Explanation", "Hint", "Data"]
+# Data: the Vocabulary Unit (meanings, examples, forms, contrast) from deck/units.jsonl — see units.py
 DIRECTIONS = [("ru-en", "RU → EN"), ("en-ru", "EN → RU"), ("ctx", "Контекст")]
 FRONT_AUDIO = {
     "ru-en": "",  # the English sound would give the answer away
@@ -50,9 +53,9 @@ def load_sources():
     config = read("config.js")
     css = read("style.css")
     front = read("front.html").replace("%%CONFIG%%", config)
-    example_audio = not re.search(r"exampleAudio\s*:\s*false", config)
-    back = (read("back.html").replace("%%CONFIG%%", config)
-            .replace("%%EXAMPLE_AUDIO%%", "{{#Example}}{{tts en_US:Example}}{{/Example}}" if example_audio else ""))
+    # example sentences are spoken by the card itself (a different sentence each time):
+    # desktop — the add-on's voice, AnkiDroid — its TTS API
+    back = read("back.html").replace("%%CONFIG%%", config)
     for name, text in (("core.js/ui.js", js), ("config.js", config), ("style.css", css)):
         if "{{" in text:
             raise SystemExit(f"{name} contains '{{{{' which Anki would treat as a field tag")
@@ -93,7 +96,11 @@ def read_rows(path):
     for r in rows:
         for k in FIELDS + ["Tags", "GUID"]:
             r[k] = (r.get(k) or "").strip()
-    return [r for r in rows if r["English"] and r["Russian"]]
+    rows = [r for r in rows if r["English"] and r["Russian"]]
+    U = units.load()
+    for r in rows:
+        r["Data"] = units.card_data(U.get(note_guid(r)))
+    return rows
 
 
 def autofill(rows):

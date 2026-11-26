@@ -153,10 +153,138 @@ var ETCore = (function () {
     return re ? h.replace(re, '<mark>$&</mark>') : h;
   }
 
+  /* ================= Vocabulary Unit (hidden "Data" field, see units.py) ================= */
+
+  // {m: meanings, x: examples, f: forms, c: contrast, d: definition} or null for old notes
+  function parseData(text) {
+    var d;
+    try { d = JSON.parse(clean(text) || 'null'); } catch (e) { return null; }
+    if (!d || typeof d !== 'object') return null;
+    d.m = d.m || []; d.x = d.x || []; d.f = d.f || []; d.c = d.c || [];
+    return d;
+  }
+
+  // The exact words to hide in a sentence: the stored target if it is really there,
+  // otherwise whatever the inflection regex finds (old single-example notes).
+  function findTarget(sentence, target, answers) {
+    if (target) {
+      var re = new RegExp("(^|[^A-Za-z'])(" + escRe(target) + ')(?![A-Za-z])', 'i'), m = re.exec(sentence);
+      if (m) return { start: m.index + m[1].length, text: m[2] };
+    }
+    var rx = targetRegex(answers || []);
+    if (!rx) return null;
+    var all = [], mm;
+    rx.lastIndex = 0;
+    while ((mm = rx.exec(sentence))) all.push({ start: mm.index, text: mm[0] });
+    if (!all.length) return null;
+    var last = all[all.length - 1];   // phrasal verbs: hide the whole span "came ... across"
+    return { start: all[0].start, text: sentence.slice(all[0].start, last.start + last.text.length), parts: all };
+  }
+
+  function maskTarget(sentence, target, answers) {
+    var t = findTarget(sentence, target, answers);
+    if (!t) return esc(sentence);
+    if (t.parts && t.parts.length > 1) return maskExample(sentence, answers);
+    return esc(sentence.slice(0, t.start)) + '<span class="et-mask"></span>' + esc(sentence.slice(t.start + t.text.length));
+  }
+
+  function markTarget(sentence, target, answers) {
+    var t = findTarget(sentence, target, answers);
+    if (!t) return esc(sentence);
+    if (t.parts && t.parts.length > 1) return highlightExample(sentence, answers);
+    return esc(sentence.slice(0, t.start)) + '<mark>' + esc(t.text) + '</mark>' + esc(sentence.slice(t.start + t.text.length));
+  }
+
+  /* Pick an example for this showing.
+   * - never the one shown last time (opts.last: id or list of ids) when there is another one;
+   * - prefer examples that failed before (opts.weak), then ones not seen yet (opts.seen);
+   * - opts.need: 'ru' (needs a translation), 't' (needs the target in the sentence);
+   * - opts.meaning: only this meaning. */
+  function pickExample(xs, opts, rnd) {
+    rnd = rnd || Math.random;
+    opts = opts || {};
+    var last = [].concat(opts.last || []), weak = opts.weak || [], seen = opts.seen || [];
+    var pool = xs.filter(function (x) {
+      if (!x || !x.en) return false;
+      if (opts.need === 'ru' && !x.ru) return false;
+      if (opts.meaning && x.m && x.m !== opts.meaning) return false;
+      return true;
+    });
+    if (!pool.length) return null;
+    var fresh = pool.filter(function (x) { return last.indexOf(x.id) < 0; });
+    if (fresh.length) pool = fresh;
+    var w = pool.filter(function (x) { return weak.indexOf(x.id) >= 0; });
+    if (w.length && rnd() < 0.7) pool = w;
+    else {
+      var u = pool.filter(function (x) { return seen.indexOf(x.id) < 0; });
+      if (u.length) pool = u;
+    }
+    return pool[Math.floor(rnd() * pool.length)];
+  }
+
+  // Typed answers accepted for a gap: dictionary forms + listed forms + the form in this sentence.
+  function acceptFor(answers, forms, inSentence) {
+    var out = answers.slice();
+    (forms || []).concat(inSentence ? [inSentence] : []).forEach(function (f) {
+      if (f && out.map(function (a) { return norm(a, 'en'); }).indexOf(norm(f, 'en')) < 0) out.push(f);
+    });
+    return out;
+  }
+
+  // "What does it mean here?": the right meaning + other meanings of the same word + wrong options.
+  function meaningOptions(data, meaningId, wrongRu, rnd) {
+    var right = null, others = [];
+    (data.m || []).forEach(function (m) {
+      if (!m.ru || !m.ru.length) return;
+      if (m.id === meaningId) right = m.ru[0]; else others.push(m.ru[0]);
+    });
+    if (!right) return null;
+    return buildOptions([right], others.concat(shuffle(wrongRu || [], rnd)), 'ru', 4, rnd);
+  }
+
+  /* Which exercise this card shows (mode "auto").
+   *   dir:  'ru-en' (retrieval), 'en-ru' (meaning), 'ctx' (recognition in context)
+   *   info: {type, ivl} of the card (Anki); info.m: skills from the add-on {meaning|retrieval|recognition|production: 'weak'|'ok'|'strong'}
+   *   caps: {ru: examples with a translation, t: examples with the target, c: contrast items, listen: can play any sentence}
+   * The card's own interval sets the ladder; a weak skill (from all three cards' history) can borrow the turn. */
+  function pickKind(dir, info, caps, rnd) {
+    rnd = rnd || Math.random;
+    caps = caps || {};
+    var ivl = info && info.type === 2 ? info.ivl : -1;   // -1: new / learning / relearning
+    var M = (info && info.m) || {}, r = rnd();
+    if (ivl >= 4) {
+      if (M.meaning === 'weak' && dir !== 'en-ru' && caps.t && r < 0.5) return 'meaning';
+      if (M.retrieval === 'weak' && dir === 'en-ru' && caps.ru && r < 0.5) return 'situation';
+      if (M.recognition === 'weak' && dir === 'ru-en' && caps.t && r < 0.4) return 'meaning';
+      r = rnd();
+    }
+    if (dir === 'ru-en') {
+      if (ivl < 4) return 'choice';
+      if (ivl < 21) return caps.ru && r < 0.5 ? 'situation' : 'type';
+      if (ivl >= 60 && r < 0.15) return 'sentence';
+      if (caps.ru && r < 0.5) return 'situation';
+      if (caps.ru && r < 0.7) return 'produce';
+      return 'type';
+    }
+    if (dir === 'en-ru') {
+      if (ivl < 0) return 'choice';
+      if (ivl < 21) return caps.t && r < (ivl < 4 ? 0.4 : 0.5) ? 'meaning' : 'choice';
+      return caps.t && r < 0.5 ? 'meaning' : 'type';
+    }
+    // ctx
+    if (ivl < 4) return 'choice';
+    if (ivl < 21) return caps.c && r < 0.25 ? 'contrast' : 'type';
+    if (caps.listen && r < 0.2) return 'listen';
+    if (caps.c && r < 0.4) return 'contrast';
+    return 'type';
+  }
+
   return {
     clean: clean, brToSep: brToSep, splitText: splitText, norm: norm, lev: lev,
     shuffle: shuffle, buildOptions: buildOptions, checkTyped: checkTyped, diff: diff,
-    targetRegex: targetRegex, esc: esc, maskExample: maskExample, highlightExample: highlightExample
+    targetRegex: targetRegex, esc: esc, maskExample: maskExample, highlightExample: highlightExample,
+    parseData: parseData, findTarget: findTarget, maskTarget: maskTarget, markTarget: markTarget,
+    pickExample: pickExample, acceptFor: acceptFor, meaningOptions: meaningOptions, pickKind: pickKind
   };
 })();
 

@@ -145,8 +145,9 @@ def _on_overview(overview, content) -> None:
         if not mw.col.find_cards(f'did:{deck["id"]} "note:{NOTETYPE}"'):
             return
         block = render(level_stats(mw.col))
-        extra = (render_pacing(pacing.plan(mw.col)) + render_hard(hard_words(mw.col))
-                 + fsrs_hint(mw.col, deck["id"]))
+        from . import practice
+        extra = (render_pacing(pacing.plan(mw.col)) + practice.overview_button()
+                 + render_hard(hard_words(mw.col)) + fsrs_hint(mw.col, deck["id"]))
         if extra:
             block = block[: -len("</div>")] + extra + "</div>"
         content.table += block
