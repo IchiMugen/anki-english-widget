@@ -609,3 +609,7 @@ mark {
 .et-audio-big .replay-button svg { width: 56px; height: 56px; }
 .et-chip-practice { background: rgba(245, 158, 11, .18); color: #f59e0b; }
 .et-section .et-example-row + .et-example-row { margin-top: 10px; }
+
+/* public deck: "a new version of the deck is out" (src/ui.js updateBanner) */
+.et-update { display: block; margin: 14px auto 4px; max-width: 520px; padding: 10px 14px; border-radius: 12px;
+  background: rgba(80, 140, 255, .14); color: inherit; text-align: center; font-size: 14px; text-decoration: none; }

@@ -2,7 +2,7 @@
     english_widget.ankiaddon      the add-on (double-click to install into Anki)
     English_Trainer.apkg          the deck (also kept in the repo root for the installers)
     English-Trainer-Setup.zip     install.cmd + install.ps1 + install.sh + add-on + deck
-Run:  python tools/make_release.py   (needs: pip install genanki)
+Run:  python tools/make_release.py 3.1.0   (the version of this release; needs: pip install genanki)
 """
 import shutil
 import subprocess
@@ -23,6 +23,10 @@ def addon_files():
 
 
 def main():
+    # the release version: python tools/make_release.py 3.1.0 — written into the add-on (updater.py compares it
+    # with GitHub) and into the deck (cards on the phone show "a new version is out")
+    if len(sys.argv) > 1:
+        (ADDON / "VERSION").write_text(sys.argv[1].lstrip("v") + chr(10), encoding="utf-8")
     subprocess.check_call([sys.executable, str(ROOT / "deck" / "build.py"), "--no-autofill"])
     DIST.mkdir(exist_ok=True)
     with zipfile.ZipFile(DIST / "english_widget.ankiaddon", "w", zipfile.ZIP_DEFLATED) as z:

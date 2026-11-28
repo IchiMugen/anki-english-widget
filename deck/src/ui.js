@@ -107,6 +107,7 @@
 
   // Desktop: the add-on puts window.ET_CARD into the card HTML. AnkiDroid: JS API (async).
   // Anything else (AnkiMobile, preview): no info -> the easiest exercise.
+  var EXTRA = false;   // shown in a temporary (filtered) deck: extra practice that counts in the main progress
   function cardInfo(cb) {
     if (window.ET_CARD) { cb(window.ET_CARD); return; }
     var api = host() === 'ankidroid' ? ankiDroid() : null;
@@ -115,6 +116,13 @@
     function once(v) { if (!done) { done = true; cb(v); } }
     function val(r) { return r && typeof r === 'object' && 'value' in r ? r.value : r; }
     setTimeout(function () { once(null); }, 600);
+    // a temporary deck (AnkiDroid «Дополнительное обучение» = Anki custom study): the same cards, answers go
+    // into their own history and schedule, i.e. the main progress — the card only says where it is shown
+    try {
+      var dn = typeof api.ankiGetDeckName === 'function' ? api.ankiGetDeckName() : null;
+      var mark = function (n) { n = val(n); EXTRA = !!n && String(n).indexOf('English Trainer') !== 0; };
+      if (dn && typeof dn.then === 'function') dn.then(mark, function () {}); else if (dn) mark(dn);
+    } catch (e) {}
     try {
       var t = api.ankiGetCardType(), i = api.ankiGetCardInterval();
       if (t && typeof t.then === 'function') {
@@ -237,7 +245,8 @@
   function chip() {
     return '<span class="et-chip">' + (CTX ? 'КОНТЕКСТ' : TO_EN ? 'RU <i>→</i> EN' : 'EN <i>→</i> RU') + '</span>' +
       (HARD ? '<span class="et-chip et-chip-hard" title="Часто забываешь это слово">трудное</span>' : '') +
-      (PRACTICE ? '<span class="et-chip et-chip-practice" title="Не влияет на расписание">закрепление</span>' : '');
+      (PRACTICE ? '<span class="et-chip et-chip-practice" title="Не влияет на расписание">закрепление</span>' : '') +
+      (EXTRA ? '<span class="et-chip et-chip-practice" title="Временная колода: ответы идут в основной прогресс">доп. занятие</span>' : '');
   }
   function mountAudio(slotId, srcId) {
     var src = document.getElementById(srcId || 'et-audio-src');
@@ -857,10 +866,52 @@
     }
   }
 
+  // Public deck only (window.ET_UPDATE is added by its build): where the add-on cannot update the deck
+  // (phone, Anki without the add-on) the card checks the latest GitHub release once a day and, when it is
+  // newer, shows one link to the new English_Trainer.apkg — opening it imports the update, progress stays.
+  function verTuple(t) {
+    return String(t || '').replace(/^v/i, '').split('.').map(function (p) { return parseInt(p, 10) || 0; });
+  }
+  function newer(a, b) {
+    var x = verTuple(a), y = verTuple(b);
+    for (var i = 0; i < Math.max(x.length, y.length); i++) {
+      if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) > (y[i] || 0);
+    }
+    return false;
+  }
+  function updateBanner() {
+    var U = window.ET_UPDATE;
+    if (!U || !U.repo || ADDON || typeof fetch !== 'function') return;
+    var day = new Date().toISOString().slice(0, 10), st = null;
+    try { st = JSON.parse(localStorage.getItem('et-upd') || 'null'); } catch (e) { st = null; }
+    function show(s) {
+      if (!s || !/^https:\/\/github\.com\//.test(s.url || '') || !newer(s.tag, U.version) ||
+          document.getElementById('et-upd')) return;
+      var a = document.createElement('a');
+      a.id = 'et-upd';
+      a.className = 'et-update';
+      a.href = s.url;
+      a.textContent = 'Вышла новая версия колоды ' + s.tag + ' — обновить (откроется файл: выбери Anki)';
+      root.parentNode.appendChild(a);
+    }
+    if (st && st.day === day) { show(st); return; }
+    fetch('https://api.github.com/repos/' + U.repo + '/releases/latest').then(function (r) {
+      return r.ok ? r.json() : null;
+    }).then(function (rel) {
+      if (!rel) return;
+      var url = '';
+      (rel.assets || []).forEach(function (a) { if (a.name === 'English_Trainer.apkg') url = a.browser_download_url; });
+      var s = { day: day, tag: rel.tag_name || '', url: url };
+      try { localStorage.setItem('et-upd', JSON.stringify(s)); } catch (e) {}
+      show(s);
+    })['catch'](function () {});
+  }
+
   try {
     if (SIDE === 'back') renderBack();
     else renderFront();
   } catch (err) {
     root.innerHTML = '<div class="et-error">English Trainer: ошибка шаблона — ' + esc(err && err.message) + '</div>';
   }
+  try { updateBanner(); } catch (e) {}
 })();

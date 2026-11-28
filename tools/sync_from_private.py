@@ -16,6 +16,13 @@ ROOT = Path(__file__).resolve().parent.parent
 DECK = ROOT / "deck"
 
 
+# public deck only: the cards on a phone check the latest GitHub release once a day (src/ui.js updateBanner)
+UPDATE_DEF = '''# public deck: cards compare their version with the latest GitHub release (src/ui.js updateBanner)
+_VER = (ROOT.parent / "addon" / "english_widget" / "VERSION").read_text(encoding="utf-8").strip()
+UPDATE_JS = "\\nwindow.ET_UPDATE = {repo: 'IchiMugen/anki-english-widget', version: '" + _VER + "'};\\n"
+'''
+
+
 def put(dst: Path, text: str) -> None:
     dst.parent.mkdir(parents=True, exist_ok=True)
     dst.write_bytes(text.replace("\r\n", "\n").replace("\n", "\r\n").encode("utf-8"))
@@ -42,6 +49,8 @@ def main(priv: Path) -> None:
         ("DECK_ID = 1_731_906_002", "DECK_ID = 1_764_331_102"),
         ('WORDS = ROOT / "data" / "words.csv"', 'WORDS = ROOT / "words.csv"'),
         ("    out = DIST / OUT\n", "    out = ROOT.parent / OUT          # next to install.cmd\n"),
+        ('    config = read("config.js")\n', '    config = read("config.js") + UPDATE_JS\n'),
+        ("NO_EXAMPLE = ", UPDATE_DEF + "NO_EXAMPLE = "),
     ]))
     put(DECK / "units.py", sub(rd("units.py"), [
         ('UNITS = ROOT / "data" / "units.jsonl"', 'UNITS = ROOT / "units.jsonl"'),

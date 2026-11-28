@@ -19,7 +19,8 @@ from aqt.utils import showInfo
 ALWAYS = ImportAnkiPackageUpdateCondition.IMPORT_ANKI_PACKAGE_UPDATE_CONDITION_ALWAYS
 
 
-def update_deck(path: str | None = None) -> None:
+def update_deck(path: str | None = None, on_done=None) -> None:
+    """on_done(log): called instead of the message box (automatic update from GitHub, updater.py)."""
     if not path:
         path, _ = QFileDialog.getOpenFileName(mw, "English_Trainer.apkg", "", "Anki deck (*.apkg)")
     if not path:
@@ -29,6 +30,9 @@ def update_deck(path: str | None = None) -> None:
 
     def done(out) -> None:
         log = out.log
+        if on_done:
+            on_done(log)
+            return
         showInfo(f"Колода обновлена: новых слов {len(log.new)}, обновлено {len(log.updated)}. "
                  "Прогресс сохранён.\n\nЕсли Anki попросит полную синхронизацию — на компьютере "
                  "выберите «Отправить в AnkiWeb», затем на телефоне «Загрузить из AnkiWeb».")

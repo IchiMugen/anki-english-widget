@@ -50,7 +50,7 @@ FRONT_AUDIO = {
 def load_sources():
     read = lambda n: (SRC / n).read_text(encoding="utf-8")
     js = read("core.js") + "\n" + read("ui.js")
-    config = read("config.js")
+    config = read("config.js") + UPDATE_JS
     css = read("style.css")
     front = read("front.html").replace("%%CONFIG%%", config)
     # example sentences are spoken by the card itself (a different sentence each time):
@@ -62,6 +62,9 @@ def load_sources():
     return js, css, front, back
 
 
+# public deck: cards compare their version with the latest GitHub release (src/ui.js updateBanner)
+_VER = (ROOT.parent / "addon" / "english_widget" / "VERSION").read_text(encoding="utf-8").strip()
+UPDATE_JS = "\nwindow.ET_UPDATE = {repo: 'IchiMugen/anki-english-widget', version: '" + _VER + "'};\n"
 NO_EXAMPLE = "\u2014"   # "—": not a sentence; the card shows an honest notice (src/ui.js NOEX)
 
 
