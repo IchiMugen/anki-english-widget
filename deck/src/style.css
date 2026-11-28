@@ -613,3 +613,7 @@ mark {
 /* public deck: "a new version of the deck is out" (src/ui.js updateBanner) */
 .et-update { display: block; margin: 14px auto 4px; max-width: 520px; padding: 10px 14px; border-radius: 12px;
   background: rgba(80, 140, 255, .14); color: inherit; text-align: center; font-size: 14px; text-decoration: none; }
+
+/* the user's switch: go on by itself after a correct answer, or wait (src/ui.js autoNext) */
+.et-autotoggle { display: block; margin: 10px auto 0; padding: 6px 12px; border: 0; border-radius: 10px;
+  background: transparent; color: var(--muted); font-size: 13px; text-decoration: underline; cursor: pointer; }

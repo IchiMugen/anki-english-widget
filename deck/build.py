@@ -105,12 +105,50 @@ def read_rows(path):
     rows = [r for r in rows if r["English"] and r["Russian"]]
     U = units.load()
     Q = units.load_corpus()
-    for r in rows:
-        r["Data"] = units.card_data(U.get(note_guid(r)), Q.get(note_guid(r)))
+    gaps = gap_options(rows)
+    for i, r in enumerate(rows):
+        r["Data"] = units.card_data(U.get(note_guid(r)), Q.get(note_guid(r)), gaps[i])
         # the old Example column is synthetic (archived). The field only keeps the context card alive in Anki
         # ({{#Example}}): a real quote, or NO_EXAMPLE when the word has no real material yet.
         r["Example"] = Q[note_guid(r)][0]["en"] if Q.get(note_guid(r)) else NO_EXAMPLE
     return rows
+
+
+def gap_options(rows):
+    """Wrong options for the exercises with a gap in a sentence (context card, situation): three words of the same
+    part of speech that come EARLIER in the learning order — already learnt or being learnt now — the most recent
+    first. With unseen look-alikes as options the one familiar word would give the answer away (owner, 2026-11-28).
+    A basic-level word takes them only from basic words (B2-C1 words are mixed in later by pacing.py)."""
+    def tag(r, name):
+        m = re.search(name + r"::(\S+)", r.get("Tags", ""))
+        return m.group(1) if m else ""
+    out = []
+    for i, r in enumerate(rows):
+        en = norm(r["English"], "en")
+        ru = {norm(a) for a in alts(r["Russian"])}
+        verb, multi = r["English"].lower().startswith("to "), len(en.split()) > 1
+        pos, hard = tag(r, "pos"), tag(r, "level") == "B2-C1"
+        picked, seen_ru = [], set(ru)
+        if not pos:
+            out.append(None)              # no part of speech tag: keep the look-alike options of the row
+            continue
+        # earlier words first (most recent first); the very first words of the deck borrow the nearest next ones
+        for j in list(range(i - 1, -1, -1)) + list(range(i + 1, len(rows))):
+            o = rows[j]
+            if tag(o, "pos") != pos or (not hard and tag(o, "level") == "B2-C1"):
+                continue
+            oen = norm(o["English"], "en")
+            if oen == en or o["English"].lower().startswith("to ") != verb or (len(oen.split()) > 1) != multi:
+                continue
+            oru = {norm(a) for a in alts(o["Russian"])}
+            if oru & seen_ru:
+                continue
+            picked.append(alts(o["English"])[0])
+            seen_ru |= oru
+            if len(picked) == 3:
+                break
+        out.append(picked if len(picked) == 3 else None)
+    return out
 
 
 def autofill(rows):

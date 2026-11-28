@@ -31,6 +31,10 @@
   var esc = C.esc;
   var AUTO = CFG.autoGrade !== false;
   var CORRECT_DELAY = typeof CFG.correctDelay === 'number' ? CFG.correctDelay : 3000;
+  // the user's own switch on the card (per device): after a correct answer go on by itself, or wait for «Дальше»
+  function autoNext() { try { return localStorage.getItem('et-autonext') !== '0'; } catch (e) { return true; } }
+  function setAutoNext(on) { try { localStorage.setItem('et-autonext', on ? '1' : '0'); } catch (e) {} }
+  var BACK_TOKEN = 0, QUIET = false;
   var RETRY = CFG.retryAfterError !== false;
   var PRACTICE = window.ET_PRACTICE || null;
 
@@ -332,6 +336,9 @@
       k.a = toEn ? EN : RU;
     }
     k.wrong = k.lang === 'en' ? WEN : WRU;
+    // a sentence with a gap: the options are words of the same kind learnt before this one (Data.w), not unseen
+    // look-alikes — otherwise the one familiar word gives the answer away
+    if ((CTX || kind === 'situation') && k.lang === 'en' && DATA && DATA.w && DATA.w.length >= 2) k.wrong = DATA.w;
     k.accept = k.lang === 'en' ? C.acceptFor(EN, forms, k.target) : k.a.slice();
     k.self = kind === 'produce' || kind === 'sentence';
     if (kind === 'produce' && x) k.a = [x.en];
@@ -765,7 +772,8 @@
     K = setupKind(st && st.kind ? st.kind : PRACTICE ? PRACTICE.kind : TO_EN ? 'type' : 'choice', st && st.x, window.ET_CARD);
     var mode = K.kind;
     var answer = '<b>' + altsHtml(K.kind === 'produce' ? EN : K.a) + '</b>';
-    var body = '', result = '', actions = '', primary = null, auto = false, retry = false, details = '';
+    var body = '', result = '', actions = '', primary = null, auto = false, retry = false, details = '', toggle = '';
+    var token = ++BACK_TOKEN;   // a re-render (the auto switch) cancels the timers of the previous one
 
     if (st && st.opts && (mode === 'choice' || mode === 'meaning' || mode === 'contrast')) body = optionsHtml(st.opts, st.chosen);
     else if (st && st.mode === 'type') body = typeHtml(st.given, st.cls || '', true, K.self);
@@ -777,9 +785,11 @@
       details = (D.expl ? section('Пояснение', '<div class="et-expl">' + D.expl + '</div>') : '');
     } else if (status === 'correct') {
       result = resHtml('ok', 'Верно' + (st.mode === 'type' && K.a.length > 1 ? ' · ' + answer : ''));
-      if (AUTO && host()) auto = true;
+      if (AUTO && host() && autoNext()) auto = true;
       else { primary = 3; actions = actionsHtml([{ ease: 3, label: 'Дальше', primary: true }]); }
       details = detailsHtml(true);
+      if (AUTO && host()) toggle = '<button type="button" class="et-autotoggle" data-act="autotoggle">' +
+        (auto ? 'Не листать самому — дочитать' : 'Листать самому после верного ответа') + '</button>';
     } else if (status === 'wrong' && st.near) {
       result = resHtml('warn', 'Похоже на опечатку', diffHtml(st.given, st.expected || K.a[0]));
       actions = actionsHtml([{ ease: 2, label: 'Засчитать', primary: true }, { ease: 1, label: 'Это ошибка' }]);
@@ -802,16 +812,25 @@
     if (auto) actions = '<div class="et-flip-hint">Нажми в любом месте, чтобы перейти сразу</div>';
     root.className += ' et-static';
     root.innerHTML = segHtml(mode) + promptHtml() + '<section class="et-ex">' + body + '</section>' +
-      '<section class="et-fb">' + result + (retry ? retryHtml() : '') + details + actions + '</section>';
+      '<section class="et-fb">' + result + (retry ? retryHtml() : '') + details + actions + toggle + '</section>';
     mountAudio(TO_EN ? 'et-audio-a' : 'et-audio-q');
     bindReveals();
     bindSay();
     each('.et-seg button', function (b) { b.disabled = true; });
     // the sentence of this exercise aloud, after the word (Anki plays the word itself)
-    if (K.x && status !== 'graded' && CFG.exampleAudio !== false) say(K.x.en);
+    if (K.x && status !== 'graded' && CFG.exampleAudio !== false && !QUIET) say(K.x.en);
+    QUIET = false;
 
     each('[data-ease]', function (b) {
       b.addEventListener('click', function () { grade(st, +b.getAttribute('data-ease')); });
+    });
+    each('[data-act="autotoggle"]', function (b) {
+      b.addEventListener('click', function (e) {
+        e.stopPropagation();
+        setAutoNext(!auto);
+        QUIET = true;
+        renderBack();   // the same answer, now with (or without) the automatic step (no audio replay)
+      });
     });
 
     if (retry) {
@@ -853,9 +872,10 @@
       // Desktop with the add-on: it waits for the audio itself, so only the minimum pause here.
       var waitsForAudio = ADDON && !PRACTICE;
       var delay = waitsForAudio ? CORRECT_DELAY : Math.max(CORRECT_DELAY, exWords ? 1500 + exWords * 380 : 0);
-      later(function () { grade(st, 3, waitsForAudio); }, delay);
+      later(function () { if (token === BACK_TOKEN) grade(st, 3, waitsForAudio); }, delay);
       root.addEventListener('click', function (e) {
-        if (!e.target.closest || !e.target.closest('.replay-button, .et-reveal')) grade(st, 3);
+        if (token !== BACK_TOKEN) return;
+        if (!e.target.closest || !e.target.closest('.replay-button, .et-reveal, .et-autotoggle')) grade(st, 3);
       });
     } else if (host() && !retry) {
       keyTrap(function (k) {

@@ -142,7 +142,7 @@ def load_corpus(public: bool = False) -> dict[str, list[dict]]:
     return out
 
 
-def card_data(u: dict | None, corpus: list[dict] | None = None) -> str:
+def card_data(u: dict | None, corpus: list[dict] | None = None, gap_wrong: list[str] | None = None) -> str:
     """The compact JSON for the hidden Data field (HTML-escaped).
     corpus = the word's authentic examples from load_corpus — nothing else can become a card sentence."""
     if not u:
@@ -155,6 +155,8 @@ def card_data(u: dict | None, corpus: list[dict] | None = None) -> str:
                                           ("g", m.get("grammar", ""))) if v}
                        for m in u.get("meanings", [])],
          "x": xs}
+    if gap_wrong:
+        d["w"] = gap_wrong        # options for a sentence with a gap: words learnt before this one (build.gap_options)
     for k_in, k_out in (("forms", "f"), ("def", "d"), ("colloc", "co")):
         if u.get(k_in):
             d[k_out] = u[k_in]
