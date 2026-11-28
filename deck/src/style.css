@@ -625,3 +625,12 @@ mark {
 .et-report-grid b { display: block; font-size: 22px; }
 .et-report-grid span { display: block; font-size: 12px; color: var(--muted); }
 .et-report-line { margin-top: 8px; font-size: 14px; }
+
+/* the learner's level on the first card (public deck, src/ui.js levelPicker) */
+.et-level { text-align: center; padding: 20px 16px; }
+.et-level-title { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+.et-level-sub { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+.et-level-btn { display: block; width: 100%; margin: 8px 0; padding: 14px 16px; border-radius: 14px; border: 1px solid rgba(127,127,127,.3);
+  background: rgba(127,127,127,.08); color: inherit; text-align: left; cursor: pointer; }
+.et-level-btn b { display: block; font-size: 17px; }
+.et-level-btn span { display: block; font-size: 13px; color: var(--muted); }

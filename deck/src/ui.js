@@ -124,7 +124,7 @@
     // into their own history and schedule, i.e. the main progress — the card only says where it is shown
     try {
       var dn = typeof api.ankiGetDeckName === 'function' ? api.ankiGetDeckName() : null;
-      var mark = function (n) { n = val(n); EXTRA = !!n && String(n).indexOf('English Trainer') !== 0; };
+      var mark = function (n) { n = val(n); EXTRA = !!n && String(n) !== 'English Trainer'; };   // «Ещё занятие» or custom study
       if (dn && typeof dn.then === 'function') dn.then(mark, function () {}); else if (dn) mark(dn);
     } catch (e) {}
     try {
@@ -477,13 +477,83 @@
   /* =================== FRONT =================== */
   var answered = false, shownAt = Date.now();
 
+  /* ---------- the learner's level (public deck only — window.ET_UPDATE; owner, 2026-11-28) ----------
+   * Chosen once with one tap on the first card: beginner / medium / advanced. Stored on this device.
+   *  - exercises: the auto mode moves to typing later (beginner, interval ×0.4) or sooner (advanced, ×2);
+   *  - new words (phone, no add-on): a new word above the level (beginner: B2-C1 until 150 new words, B1-B2
+   *    until 40; advanced: A1-A2 until 400) is buried till tomorrow with AnkiDroid's own «bury» — it comes later;
+   *  - computer with the add-on: the level goes to the add-on, which reorders the new cards for real (pacing.py)
+   *    and the card buries nothing. */
+  var LEVELS = [['beginner', 'Начальный', 'самые простые слова сначала, больше подсказок'],
+                ['medium', 'Средний', 'простые и средние вперемешку'],
+                ['advanced', 'Продвинутый', 'больше сложных слов, сразу ввод']];
+  function getLevel() {
+    if (window.ET_CARD && typeof window.ET_CARD.level === 'string' && window.ET_CARD.level) return window.ET_CARD.level;
+    try { return localStorage.getItem('et-level') || ''; } catch (e) { return ''; }
+  }
+  // a small «Уровень: …» under the card: one tap opens the three choices again
+  function levelLink() {
+    if (!levelOn() || !getLevel() || PRACTICE || document.getElementById('et-lvl')) return;
+    var name = ''; LEVELS.forEach(function (l) { if (l[0] === getLevel()) name = l[1]; });
+    var b = document.createElement('button');
+    b.id = 'et-lvl'; b.type = 'button'; b.className = 'et-autotoggle';
+    b.textContent = 'Уровень: ' + name + ' — поменять';
+    b.addEventListener('click', function (e) {
+      e.stopPropagation();
+      try { localStorage.removeItem('et-level'); } catch (err) {}
+      if (window.ET_CARD) window.ET_CARD.level = '';
+      b.parentNode.removeChild(b);
+      levelPicker(function () { SIDE === 'back' ? renderBack() : renderFront(); levelLink(); });
+    });
+    root.parentNode.appendChild(b);
+  }
+  function levelOn() { return !!(window.ET_UPDATE && window.ET_UPDATE.repo); }
+  function tierOf() { return / level::a1-a2 /.test(TAGS) ? 0 : / level::(b2-c1|c1-c2) /.test(TAGS) ? 2 : 1; }
+  function newSeen() { return sessLoad().filter(function (x) { return x.n; }).length + (+(localStorage.getItem('et-new0') || 0)); }
+  function scaleInfo(info) {
+    var lv = levelOn() ? getLevel() : '';
+    if (!info || info.type !== 2 || !lv || lv === 'medium') return info;
+    var o = {}; for (var k in info) o[k] = info[k];
+    o.ivl = lv === 'beginner' ? Math.floor(info.ivl * 0.4) : info.ivl * 2;
+    return o;
+  }
+  function levelPicker(done) {
+    root.innerHTML = '<section class="et-glass et-level et-in"><div class="et-level-title">Ваш уровень английского?</div>' +
+      '<div class="et-level-sub">Под него подстроятся уроки. Поменять можно в любой момент — внизу карточки.</div>' +
+      LEVELS.map(function (l) {
+        return '<button type="button" class="et-level-btn" data-level="' + l[0] + '"><b>' + l[1] + '</b><span>' + l[2] + '</span></button>';
+      }).join('') + '</section>';
+    each('[data-level]', function (b) {
+      b.addEventListener('click', function () {
+        var lv = b.getAttribute('data-level');
+        try { localStorage.setItem('et-level', lv); } catch (e) {}
+        if (host() === 'desktop' && typeof window.pycmd === 'function') window.pycmd('et_level:' + lv);
+        done();
+      });
+    });
+  }
+  // a new word above the chosen level on a phone: bury it till tomorrow (it comes back later), say why
+  function deferIfAboveLevel(info) {
+    var lv = getLevel(), api = host() === 'ankidroid' ? ankiDroid() : null;
+    if (!levelOn() || !lv || lv === 'medium' || !info || info.type !== 0 || !api || typeof api.ankiBuryCard !== 'function') return false;
+    var t = tierOf(), n = newSeen();
+    var later = lv === 'beginner' ? (t === 2 && n < 150) || (t === 1 && n < 40) : (t === 0 && n < 400);
+    if (!later) return false;
+    root.innerHTML = '<section class="et-glass et-in"><div class="et-noex">Это слово ' +
+      (lv === 'beginner' ? 'посложнее — придёт, когда освоите базовые' : 'простое — придёт позже') + '.</div></section>';
+    try { api.ankiBuryCard(); } catch (e) {}
+    return true;
+  }
+
   function renderFront() {
+    if (levelOn() && !getLevel() && !PRACTICE) { levelPicker(renderFront); return; }
     if (PRACTICE) { cardInfo(function (info) { drawFront(PRACTICE.kind || 'choice', PRACTICE.x, info); }); return; }
     var setting = getSetting();
     var tok = window.__etTok;
     cardInfo(function (info) {
       if (window.__etTok !== tok) return;   // Desktop already moved to another card
-      var kind = setting === 'auto' ? C.pickKind(DIR, info, caps()) : setting;
+      if (deferIfAboveLevel(info)) return;
+      var kind = setting === 'auto' ? C.pickKind(DIR, scaleInfo(info), caps()) : setting;
       drawFront(kind, null, info);
     });
   }
@@ -1011,4 +1081,5 @@
     root.innerHTML = '<div class="et-error">English Trainer: ошибка шаблона — ' + esc(err && err.message) + '</div>';
   }
   try { updateBanner(); } catch (e) {}
+  try { levelLink(); } catch (e) {}
 })();

@@ -218,6 +218,13 @@ def _on_js_message(handled, message: str, context):
     if message.startswith("et_prefetch:"):
         prefetch(message[12:])
         return (True, None)
+    if message.startswith("et_level:"):          # the level chosen on the first card (src/ui.js levelPicker)
+        try:
+            from . import level
+            level.set_level(message[9:])
+        except Exception as e:
+            print("English Trainer level:", e)
+        return (True, None)
     if message.startswith("et_log:"):
         if isinstance(context, Reviewer) and context.card:
             try:
@@ -248,6 +255,11 @@ def _card_state(text: str, card, kind: str) -> str:
             info = mastery.card_info(mw.col, card)
             try:   # cards left in this lesson (the template shows the lesson report on the last one)
                 info["left"] = sum(mw.col.sched.counts())
+            except Exception:
+                pass
+            try:   # the learner's level chosen in the add-on (the card uses it instead of its own memory)
+                from . import level
+                info["level"] = (mw.addonManager.getConfig(level.PKG) or {}).get("level") or ""
             except Exception:
                 pass
             state = json.dumps(info, ensure_ascii=False)
@@ -327,3 +339,4 @@ from . import practice  # noqa: E402,F401  (Reinforcement: extra practice outsid
 from . import deck_update  # noqa: E402,F401  (Tools → update the deck with the right import options)
 from . import updater  # noqa: E402,F401  (one-click / automatic update from the GitHub release)
 from . import level  # noqa: E402,F401  (the learner's level: asked at the first start, Tools menu)
+from . import extra  # noqa: E402,F401  («Ещё занятие»: filtered sub-deck, filled once the lesson is done)

@@ -38,7 +38,7 @@ function show(h) {
   [].slice.call(qa.querySelectorAll('script')).forEach(function (s) {
     var n = document.createElement('script'); n.text = s.text; s.parentNode.replaceChild(n, s); });
 }
-try { localStorage.clear(); sessionStorage.clear(); } catch (e) {}
+try { localStorage.clear(); sessionStorage.clear(); localStorage.setItem('et-level', 'medium'); } catch (e) {}   // public deck: the level is chosen
 var DIR = %(dir)s, HOST = %(host)s, ACT = %(act)s, A = %(a)s, Q = %(q)s;
 if (%(recent)s) localStorage.setItem('et-x:' + %(note)s, JSON.stringify(%(recent)s));
 if (HOST === 'android') {

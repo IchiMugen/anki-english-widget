@@ -1,4 +1,4 @@
-"""The learner's level — asked once at the first start, changed any time in Tools.
+"""The learner's level — asked on the first card (one tap, src/ui.js), changed any time in Tools.
 
     beginner — A1-A2 words first, B1-B2 after them, advanced (B2-C1) only once ~30% of the base is learned;
     medium   — the deck order, advanced words 15% → 50% as the base is learned;
@@ -29,6 +29,18 @@ def _save(level: str) -> None:
     mw.addonManager.writeConfig(PKG, cfg)
 
 
+def set_level(level: str) -> None:
+    """From the card's own picker (et_level:…) or the dialog: save and reorder the new cards."""
+    if level not in NAMES:
+        return
+    _save(level)
+    try:
+        from . import pacing
+        pacing.apply(mw.col, level)
+    except Exception as e:
+        print("English Trainer level:", e)
+
+
 def ask(first: bool = False) -> None:
     box = QMessageBox(mw)
     box.setWindowTitle("English Trainer — уровень")
@@ -56,9 +68,7 @@ def ask(first: bool = False) -> None:
 
 
 def _on_open() -> None:
-    cfg = mw.addonManager.getConfig(PKG) or {}
-    if not cfg.get("level"):
-        QTimer.singleShot(1500, lambda: ask(first=True))
+    pass   # the first card asks the level (src/ui.js levelPicker → et_level:…), the same on a phone
 
 
 act = QAction("English Trainer: уровень…", mw)

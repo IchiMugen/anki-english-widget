@@ -28,15 +28,11 @@ def main():
     if len(sys.argv) > 1:
         (ADDON / "VERSION").write_text(sys.argv[1].lstrip("v") + chr(10), encoding="utf-8")
     subprocess.check_call([sys.executable, str(ROOT / "deck" / "build.py"), "--no-autofill"])
-    # the same deck with the new words in another order: chosen at install on a phone (no add-on there)
-    for lv in ("beginner", "advanced"):
-        subprocess.check_call([sys.executable, str(ROOT / "deck" / "build.py"), "--no-autofill", f"--level={lv}"])
     DIST.mkdir(exist_ok=True)
     with zipfile.ZipFile(DIST / "english_widget.ankiaddon", "w", zipfile.ZIP_DEFLATED) as z:
         for p in addon_files():
             z.write(p, p.relative_to(ADDON).as_posix())   # .ankiaddon: files at the zip root
-    for name in ("English_Trainer.apkg", "English_Trainer_beginner.apkg", "English_Trainer_advanced.apkg"):
-        shutil.copy(ROOT / name, DIST / name)
+    shutil.copy(ROOT / "English_Trainer.apkg", DIST / "English_Trainer.apkg")   # one deck: the level is chosen on its first card
     with zipfile.ZipFile(DIST / "English-Trainer-Setup.zip", "w", zipfile.ZIP_DEFLATED) as z:
         base = "English-Trainer-Setup/"
         for name in ("install.cmd", "install.ps1", "install.sh", "English_Trainer.apkg", "README.md", "LICENSE"):
