@@ -2,11 +2,13 @@
 
     python tools/import_words.py path/to/words.csv
 
-* words tagged domain::3d / techart / it / ai are left out (too narrow for everyone);
+* every word of the source list is taken (since v3: the public deck = the maintainer's deck);
 * words already in deck/words.csv keep their GUID (so people who imported the deck keep their progress),
   new words keep the GUID from the source list;
 * words that are only in deck/words.csv stay, at the front of the queue;
-* deck/units.jsonl (meanings, examples, forms…) is copied from the units.jsonl next to the source list;
+* deck/units.jsonl (meanings, forms…) is copied from the units.jsonl next to the source list;
+* deck/corpus/ (real examples + their sources) is copied from <source>/corpus/, re-keyed to this deck's GUIDs —
+  the only place card sentences come from (nothing is ever invented);
 * run deck/tests/check_deck.py and deck/build.py afterwards.
 """
 import csv
@@ -16,7 +18,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DEST = ROOT / "deck" / "words.csv"
-SKIP = {"domain::3d", "domain::techart", "domain::it", "domain::ai"}
+SKIP = set()
+NL = chr(10)
 
 
 def load(path):
@@ -84,7 +87,29 @@ def write_units(src_units, rows):
             u = deck_units.migrate(r, guid)
         out[guid] = u
     deck_units.save(out, order)
-    print(f"deck/units.jsonl: {len(out)} units, {rich} enriched")
+    print(f"deck/units.jsonl: {len(out)} units")
+    write_corpus(src_units.parent / "corpus", private, out)
+
+
+def write_corpus(src_dir, private, units_out):
+    """deck/corpus/examples.jsonl + sources.jsonl: the real examples of this deck's words, with its GUIDs."""
+    by_key = {key(u["en"]): g for g, u in units_out.items()}
+    remap = {u["guid"]: by_key[k] for k, u in private.items() if k in by_key}
+    dst = ROOT / "deck" / "corpus"
+    dst.mkdir(parents=True, exist_ok=True)
+    ex, used = [], set()
+    for line in (src_dir / "examples.jsonl").read_text(encoding="utf-8").splitlines():
+        if line.strip():
+            e = json.loads(line)
+            if e.get("guid") in remap:
+                e["guid"] = remap[e["guid"]]
+                ex.append(e)
+                used.add(e.get("src", ""))
+    (dst / "examples.jsonl").write_text("".join(json.dumps(e, ensure_ascii=False) + NL for e in ex), encoding="utf-8")
+    src = [json.loads(x) for x in (src_dir / "sources.jsonl").read_text(encoding="utf-8").splitlines() if x.strip()]
+    src = [s for s in src if s["id"] in used]
+    (dst / "sources.jsonl").write_text("".join(json.dumps(s, ensure_ascii=False) + NL for s in src), encoding="utf-8")
+    print(f"deck/corpus: {len(ex)} real examples from {len(src)} sources")
 
 
 if __name__ == "__main__":

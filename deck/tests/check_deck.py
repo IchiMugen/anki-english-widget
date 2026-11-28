@@ -1,6 +1,6 @@
 """Quality checks for a word list (run before building / after adding words).
 
-    python tests/check_deck.py [words.csv ...]
+    python tests/check_deck.py data/core.csv [data/words.csv ...]
 The first file is checked; the others are only used to report overlaps.
 Exit code 1 if there are errors.
 """
@@ -48,7 +48,7 @@ COGNATES = {"проблема", "интересный", "приоритет", "�
              "партия", "история", "эффект", "период", "момент",
              "школа", "план", "студент", "новости",
              "популярный", "брат", "сестра", "огород",
-             "ферма", "лифт", "коллега", "плюс", "секрет", "странный"}
+             "ферма", "лифт", "коллега", "плюс", "секрет", "странный", "гость"}
 
 
 def _skel(s):

@@ -52,8 +52,11 @@
   if (!RU.length) RU = ['—'];
   var DATA = C.parseData(htmlToText(fhtml('data')));
   var LEGACY_EX = ftext('ex');
+  var NO_EX = '\u2014';
   // examples: the unit's set, or the single old example
-  var XS = DATA && DATA.x.length ? DATA.x : (LEGACY_EX ? [{ id: 'e1', en: LEGACY_EX, ru: '', t: '', m: 'm1' }] : []);
+  // real quotes only (Data); the Example field is just the card's existence flag ('—' = no real example yet)
+  var XS = DATA ? DATA.x : (LEGACY_EX && LEGACY_EX !== NO_EX ? [{ id: 'e1', en: LEGACY_EX, ru: '', t: '', m: 'm1' }] : []);
+  var NOEX = CTX && !XS.length;      // context card of a word without real material: honest notice, no sentence
   var WEN = flist('wen'), WRU = flist('wru');
   var D = {
     lang: TO_EN ? 'en' : 'ru',
@@ -353,11 +356,16 @@
       return '<div class="et-hidden" data-for="' + it[0] + '"' + (it[3] ? ' lang="' + it[3] + '"' : '') + '>' + it[2] + '</div>';
     }).join('');
   }
+  var MARKED = '';
   function promptHtml() {
     var kind = K.kind, x = K.x, back = SIDE === 'back';
     var hint = D.hint && (HARD || CTX) && !back ? [['hint', 'Подсказка', esc(D.hint)]] : [];
-    var sentenceMasked = x ? C.maskTarget(x.en, x.t, EN) : '';
-    var sentenceMarked = x ? C.markTarget(x.en, x.t, EN) : '';
+    // ONE rule for every card: before the answer the word is a gap, after it the word is highlighted.
+    // A sentence where the word cannot be found is never shown before the answer (it would give it away).
+    var found = x && C.findTarget(x.en, x.t, EN);
+    var sentenceMarked = x ? '<span class="et-sent">' + C.markTarget(x.en, x.t, EN) + '</span>' : '';
+    var sentenceMasked = found ? '<span class="et-sent">' + C.maskTarget(x.en, x.t, EN) + '</span>' : '';
+    MARKED = sentenceMarked;
     var head = '<section class="et-glass et-prompt et-in"><div class="et-label">' + chip() + (LABEL[kind] ||
       (CTX ? 'Вставь пропущенное' : TO_EN ? 'Переведи на английский' : 'Переведи на русский')) + '</div>';
 
@@ -383,15 +391,21 @@
         : '<div class="et-listen-note">Предложение звучит — текста нет, как в жизни.</div>') +
         sayBtn(x.en, 'et-audio-big') + '</section>';
     }
+    if (NOEX) {
+      return head + '<div class="et-noex">Реального примера для этого слова пока нет — придуманные предложения '
+        + 'в колоду не берём. Вспомни слово по переводу.</div>' +
+        '<div class="et-word" lang="ru">' + altsHtml(RU) + '</div>' + revealsHtml(hint) + '</section>';
+    }
     if (CTX || kind === 'contrast') {
       var tr = x && x.ru ? esc(x.ru) : altsHtml(RU);
       var rv = back ? [] : [['ru', 'Перевод', tr, 'ru']].concat(hint);
-      return head + '<div class="et-word et-word-ctx" lang="en">' + (x ? (back ? sentenceMarked : sentenceMasked) : '—') + '</div>' +
+      return head + '<div class="et-word et-word-ctx" lang="en">' + (x ? (back ? sentenceMarked : sentenceMasked || '—') : '—') + '</div>' +
         (back && x ? sayBtn(x.en) : '') + revealsHtml(rv) + '</section>';
     }
     // RU → EN / EN → RU word cards: the word, and a sentence for context under it
     var under = '';
-    if (x) under = '<div class="et-hint" lang="en">' + (TO_EN ? sentenceMasked : sentenceMarked) + '</div>';
+    var shown = TO_EN && !back ? sentenceMasked : sentenceMarked;
+    if (x && shown) under = '<div class="et-hint" lang="en">' + shown + '</div>';
     var rvw = D.hint && HARD && !back ? [['hint', 'Подсказка', esc(D.hint)]] : [];
     return head + '<div class="et-word" lang="' + (TO_EN ? 'ru' : 'en') + '">' + altsHtml(TO_EN ? RU : EN) + '</div>' +
       (TO_EN ? '' : '<div class="et-audio-slot" id="et-audio-q"></div>') + under + revealsHtml(rvw) + '</section>';
@@ -503,6 +517,7 @@
   // Result is decided: remember it and move to the answer side, which shows the same picture.
   function finish(st, delay) {
     answered = true;
+    revealSentence();
     st.t = Date.now();
     st.kind = K.kind;
     st.x = K.x && K.x.id;
@@ -514,6 +529,11 @@
     } else {
       inlineFallback(st);
     }
+  }
+
+  // the answer is known: the gap in the prompt becomes the highlighted word at once (same as the back side)
+  function revealSentence() {
+    if (MARKED) each('.et-prompt .et-sent', function (el) { el.outerHTML = MARKED; });
   }
 
   function inlineFallback(st) {
@@ -636,9 +656,13 @@
   function section(title, body, cls) {
     return '<section class="et-glass et-section et-in' + (cls ? ' ' + cls : '') + '">' + (title ? '<h4>' + title + '</h4>' : '') + body + '</section>';
   }
+  // a real quote carries its source (x.s): "TED · Al Gore", "фильм · Title (1999)"…
+  function srcLine(x) {
+    return x && x.s ? '<div class="et-src">— ' + esc(x.s) + '</div>' : '';
+  }
   function exampleRow(x) {
     return '<div class="et-example-row"><div class="et-example" lang="en">' + C.markTarget(x.en, x.t, EN) +
-      (x.ru ? '<div class="et-example-ru" lang="ru">' + esc(x.ru) + '</div>' : '') + '</div>' + sayBtn(x.en) + '</div>';
+      (x.ru ? '<div class="et-example-ru" lang="ru">' + esc(x.ru) + '</div>' : '') + srcLine(x) + '</div>' + sayBtn(x.en) + '</div>';
   }
   // one more context, only on request (never all examples at once)
   function moreExamplesHtml(n) {
@@ -680,7 +704,7 @@
     }
     if (CTX || kind === 'situation' || kind === 'listen' || kind === 'meaning' || kind === 'contrast') {
       // the sentence is already on screen; show its translation (and the word's meaning)
-      var tr = (x && x.ru ? '<div class="et-expl" lang="ru">' + esc(x.ru) + '</div>' : '') +
+      var tr = (x && x.ru ? '<div class="et-expl" lang="ru">' + esc(x.ru) + '</div>' : '') + srcLine(x) +
         '<div class="et-expl" lang="ru">' + (meaningCard ? '' : '<b lang="en">' + esc(EN[0]) + '</b> — ') + altsHtml(RU) + '</div>' + sense;
       if (brief) return section('Перевод', tr) + (HARD ? hint : '');
       h += section('Перевод', tr) + hint;

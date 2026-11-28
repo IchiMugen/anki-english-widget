@@ -1,4 +1,4 @@
-"""Build the English Trainer deck: deck/words.csv (+ deck/units.jsonl) -> English_Trainer.apkg (repo root)
+"""Build the English Trainer deck: deck/words.csv (+ deck/units.jsonl, deck/corpus) -> English_Trainer.apkg
 
 Usage:
     python build.py                    # needs: pip install genanki
@@ -37,7 +37,7 @@ WORDS = ROOT / "words.csv"
 OUT = "English_Trainer.apkg"
 
 FIELDS = ["English", "Russian", "Example", "Audio", "WrongEN", "WrongRU", "Explanation", "Hint", "Data"]
-# Data: the Vocabulary Unit (meanings, examples, forms, contrast) from deck/units.jsonl — see units.py
+# Data: the Vocabulary Unit (meanings, examples, forms, contrast) from data/units.jsonl — see units.py
 DIRECTIONS = [("ru-en", "RU → EN"), ("en-ru", "EN → RU"), ("ctx", "Контекст")]
 FRONT_AUDIO = {
     "ru-en": "",  # the English sound would give the answer away
@@ -60,6 +60,9 @@ def load_sources():
         if "{{" in text:
             raise SystemExit(f"{name} contains '{{{{' which Anki would treat as a field tag")
     return js, css, front, back
+
+
+NO_EXAMPLE = "\u2014"   # "—": not a sentence; the card shows an honest notice (src/ui.js NOEX)
 
 
 def build_templates(js, front, back):
@@ -98,8 +101,12 @@ def read_rows(path):
             r[k] = (r.get(k) or "").strip()
     rows = [r for r in rows if r["English"] and r["Russian"]]
     U = units.load()
+    Q = units.load_corpus()
     for r in rows:
-        r["Data"] = units.card_data(U.get(note_guid(r)))
+        r["Data"] = units.card_data(U.get(note_guid(r)), Q.get(note_guid(r)))
+        # the old Example column is synthetic (archived). The field only keeps the context card alive in Anki
+        # ({{#Example}}): a real quote, or NO_EXAMPLE when the word has no real material yet.
+        r["Example"] = Q[note_guid(r)][0]["en"] if Q.get(note_guid(r)) else NO_EXAMPLE
     return rows
 
 

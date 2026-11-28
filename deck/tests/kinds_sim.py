@@ -20,23 +20,26 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 import build  # noqa: E402
 
-WORD = "to come across"
+import os
+WORD = os.environ.get("ET_WORD", "to come across")   # ET_WORD=… : any word, e.g. one without examples
 KINDS = {"ru-en": ["choice", "type", "situation", "produce", "sentence", "recall"],
          "en-ru": ["choice", "type", "meaning", "recall"],
          "ctx": ["choice", "type", "contrast", "listen"]}
+GAPPED = {"ru-en": ("choice", "type", "situation"), "ctx": ("choice", "type", "contrast")}   # sentence with a gap
 ORD = {"ru-en": 0, "en-ru": 1, "ctx": 2}
 
 PAGE = """<!doctype html><html><head><meta charset="utf-8"><style>%(css)s</style></head>
 <body class="card"><div id="qa"></div><pre id="log"></pre><script>
 var L = [];
 function log(x) { L.push(x); document.getElementById('log').textContent = JSON.stringify(L); }
+window.onerror = function (m, src, line) { log('ERROR:js ' + m + ' @' + line); };
 function show(h) {
   var qa = document.getElementById('qa'); qa.innerHTML = h;
   [].slice.call(qa.querySelectorAll('script')).forEach(function (s) {
     var n = document.createElement('script'); n.text = s.text; s.parentNode.replaceChild(n, s); });
 }
 try { localStorage.clear(); sessionStorage.clear(); } catch (e) {}
-var HOST = %(host)s, ACT = %(act)s, A = %(a)s, Q = %(q)s;
+var DIR = %(dir)s, HOST = %(host)s, ACT = %(act)s, A = %(a)s, Q = %(q)s;
 if (%(recent)s) localStorage.setItem('et-x:' + %(note)s, JSON.stringify(%(recent)s));
 if (HOST === 'android') {
   document.documentElement.classList.add('android');
@@ -57,6 +60,10 @@ setTimeout(function () {
   var K = window.__etK; if (!K) { log('NO-K'); return; }
   log('KIND:' + K.kind + ':' + (K.x ? K.x.id : ''));
   var err = document.querySelector('.et-error'); if (err) log('ERROR:' + err.textContent);
+  // one rule for example sentences: before the answer the word is a gap (never shown on RU->EN / context cards)
+  var pr = document.querySelector('.et-prompt');
+  if (pr && DIR !== 'en-ru' && pr.querySelector('mark')) log('SPOILER-BEFORE-ANSWER');
+  if (pr && pr.querySelector('.et-mask')) log('GAP-BEFORE');
   var opts = [].slice.call(document.querySelectorAll('.et-opt'));
   var inp = document.getElementById('et-input');
   var reveal = document.querySelector('[data-act="reveal"]');
@@ -73,6 +80,9 @@ setTimeout(function () {
 }, 500);
 setTimeout(function () {
   var err = document.querySelector('.et-error'); if (err) log('ERROR:' + err.textContent);
+  // ...and after the answer the gap is gone: the word is highlighted in its place
+  var pa = document.querySelector('.et-prompt');
+  if (pa && pa.querySelector('.et-mask')) log('GAP-LEFT-AFTER-ANSWER');
   var b = document.querySelector('[data-ease="3"]') && ACT === 'right' ? document.querySelector('[data-ease="3"]')
         : document.querySelector('[data-ease="1"]');
   if (b && !document.querySelector('.et-res-ok')) b.click();
@@ -91,7 +101,7 @@ def browser():
 
 
 def run(page: Path, exe: str) -> list:
-    out = subprocess.run([exe, "--headless=new", "--disable-gpu", "--virtual-time-budget=9000", "--dump-dom",
+    out = subprocess.run([exe, "--headless=new", "--disable-gpu", "--virtual-time-budget=20000", "--dump-dom",
                           page.as_uri()], capture_output=True, text=True, encoding="utf-8").stdout
     import html as h
     import re
@@ -117,15 +127,18 @@ def main():
         a = build.render_mustache(t["afmt"], note)
         return PAGE % {"css": css, "host": json.dumps(host), "act": json.dumps(act), "kind": json.dumps(kind),
                        "a": json.dumps(a).replace("</", "<\\/"), "q": json.dumps(q).replace("</", "<\\/"),
-                       "recent": recent, "note": note_key, "force": force}
+                       "recent": recent, "note": note_key, "force": force, "dir": json.dumps(d)}
 
     def check(name, log, want, forbid=()):
         nonlocal fails
         flat = " ".join(log)
-        ok = all(w in flat for w in want) and not any(f in flat for f in forbid) and "ERROR:" not in flat
-        print(("ok  " if ok else "FAIL") + f" {name}: " + (" | ".join(x[:70] for x in log) if not ok else ""))
+        ok = (all(w in flat for w in want) and not any(f in flat for f in forbid) and "ERROR:" not in flat
+              and "SPOILER-BEFORE-ANSWER" not in flat and "GAP-LEFT-AFTER-ANSWER" not in flat)
+        print(("ok  " if ok else "FAIL") + f" {name}: " + (" | ".join(x[:300] for x in log) if not ok else ""))
         fails += not ok
 
+    import html as _hx
+    has_x = bool(json.loads(_hx.unescape(note["Data"]))["x"]) if note.get("Data") else False
     n = 0
     for d, kinds in KINDS.items():
         for kind in kinds:
@@ -134,7 +147,7 @@ def main():
                 p = tmp / f"p{n}.html"
                 p.write_text(page(d, kind, "practice", act), encoding="utf-8")
                 log = run(p, exe)
-                want = ["KIND:", "ans", "et_practice:"]
+                want = ["KIND:", "ans", "et_practice:"] + (["GAP-BEFORE"] if kind in GAPPED.get(d, ()) and has_x else [])
                 check(f"practice {d} {kind} {act}", log, want, forbid=["ease1", "ease3", "et_log:"])
     # scheduled desktop + android, auto mode (kind chosen by the card itself), a few times each
     for d in KINDS:
@@ -149,14 +162,17 @@ def main():
                 else:
                     want = ["api:ans", "api:ease3"] if act == "right" else ["api:ans", "api:ease"]
                 check(f"{host} auto {d} {act}", log, want, forbid=["et_practice:"])
-    # a new example each time: with e1,e2 shown last, the next pick is neither of them
-    for i in range(5):
+    # a new example each time: with the first two examples shown last, the next pick is neither of them
+    import html as _h
+    ids = [x["id"] for x in json.loads(_h.unescape(note["Data"]))["x"]]
+    recent = json.dumps(ids[:2])
+    for i in range(5 if len(ids) > 2 else 0):
         n += 1
         p = tmp / f"p{n}.html"
-        p.write_text(page("ctx", "type", "practice", "right", recent='["e1","e2"]'), encoding="utf-8")
+        p.write_text(page("ctx", "type", "practice", "right", recent=recent), encoding="utf-8")
         log = run(p, exe)
         kind_line = next((x for x in log if x.startswith("KIND:")), "")
-        check(f"no repeat #{i + 1}", log, ["KIND:type:e"], forbid=["KIND:type:e1", "KIND:type:e2"]) \
+        check(f"no repeat #{i + 1}", log, ["KIND:type:"], forbid=[f"KIND:type:{x}" for x in ids[:2]]) \
             if kind_line else check(f"no repeat #{i + 1}", log, ["KIND:"])
     shutil.rmtree(tmp, ignore_errors=True)
     print("OK" if not fails else f"{fails} failed")

@@ -1,24 +1,23 @@
-"""Vocabulary Units: the rich data behind each word (deck/units.jsonl).
+"""Vocabulary Units (data/units.jsonl) and the only door from the corpus to the cards.
 
-deck/words.csv stays the master list: one row = one Anki note (GUID, English, Russian, wrong options,
-explanation, hint, tags, order). deck/units.jsonl extends a row by GUID — one JSON object per line:
+PRINCIPLE (contract 3.0, permanent): real language first, then the unit, then the exercise.
+Every sentence a card shows is a real quote from data/corpus/examples.jsonl with a registered source
+(data/corpus/sources.jsonl). Generated sentences are never shown: the old ones are archived in
+data/archive/synthetic_legacy.jsonl (status synthetic_legacy) and nothing in the build reads them.
 
-    {"guid": "...", "en": "to come across", "pos": "phrasal", "status": "rich",
-     "def": "to find or meet by chance",
-     "forms": ["come across", "comes across", "came across", "coming across"],
+data/words.csv stays the master list: one row = one Anki note (GUID, English, Russian, wrong options,
+explanation, hint, tags, order; its old Example column is archived, not used). units.jsonl extends a
+row by GUID — meanings, forms, contrasts, collocations, mistakes:
+
+    {"guid": "...", "en": "to come across", "pos": "phrasal", "status": "full",
      "meanings": [{"id": "m1", "ru": ["наткнуться", "случайно найти"], "def": "...", "grammar": "come across sth"},
-                  {"id": "m2", "ru": ["производить впечатление"], "def": "...", "grammar": "come across as + adj"}],
-     "examples": [{"id": "e1", "en": "I came across an old photo.", "ru": "Я наткнулся на старое фото.",
-                   "t": "came across", "m": "m1", "ctx": "home", "gp": "past simple", "lvl": 1,
-                   "src": "generated", "st": "auto"}],
-     "contrast": [{"en": "run into", "ru": "случайно встретить", "note": "run into — о людях"}],
-     "colloc": ["come across a problem"], "mistakes": ["..."], "pron": "/.../", "doubts": ["..."]}
+                  {"id": "m2", "ru": ["производить впечатление"], "def": "...", "from": "corpus"}],
+     "forms": [...], "contrast": [...], "colloc": [...], "mistakes": [...],
+     "corpus": {"batch": "pilot01", "examples": [...], "notes": [...], "rejected": [...]}}
 
-status:  "migrated" — only what words.csv had (one legacy example, one meaning);
-         "rich"     — meanings, 5+ examples with Russian translations, forms (target: 6–8 for phrasal/polysemous).
-example st: "legacy" (from words.csv), "auto" (generated + passed automatic checks),
-            "review" (doubtful — kept out of the cards until fixed). Nothing is marked as checked by a human.
-src is always "generated" or "legacy": examples are written for the deck, they are not quotes.
+status = authentic coverage (corpus/quality.py coverage): "full" / "partial" /
+"insufficient_authentic_data" (no real example yet: the word stays, the card has no sentence — it is
+never filled with an invented one). legacy_status = the old v2 enrichment status (rich / migrated).
 """
 from __future__ import annotations
 
@@ -29,6 +28,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 UNITS = ROOT / "units.jsonl"
+CORPUS_EXAMPLES = ROOT / "corpus" / "examples.jsonl"
+CORPUS_SOURCES = ROOT / "corpus" / "sources.jsonl"
 MIN_EXAMPLES = 5            # rich unit
 MIN_EXAMPLES_COMPLEX = 6    # phrasal verbs, idioms, several meanings
 
@@ -72,14 +73,9 @@ def pos_of(row: dict) -> str:
 
 
 def migrate(row: dict, guid: str) -> dict:
-    """A unit built only from the words.csv row (status "migrated")."""
-    u = {"guid": guid, "en": row["English"], "pos": pos_of(row), "status": "migrated",
-         "meanings": [{"id": "m1", "ru": split_alts(row["Russian"])}], "examples": []}
-    ex = (row.get("Example") or "").strip()
-    if ex:
-        u["examples"].append({"id": "e1", "en": ex, "ru": "", "t": "", "m": "m1",
-                              "src": "legacy", "st": "legacy"})
-    return u
+    """A unit built only from the words.csv row. No example: real ones come from the corpus."""
+    return {"guid": guid, "en": row["English"], "pos": pos_of(row), "status": "insufficient_authentic_data",
+            "meanings": [{"id": "m1", "ru": split_alts(row["Russian"])}]}
 
 
 def is_complex(u: dict) -> bool:
@@ -91,12 +87,62 @@ def target_in(sentence: str, target: str) -> bool:
                                       sentence, re.I) is not None
 
 
-def card_data(u: dict | None) -> str:
-    """The compact JSON for the hidden Data field (HTML-escaped). Doubtful examples stay out."""
+def _jsonl(path: Path) -> list[dict]:
+    if not path.exists():
+        return []
+    return [json.loads(x) for x in path.read_text(encoding="utf-8").splitlines() if x.strip()]
+
+
+def source_label(s: dict | None) -> str:
+    """Short attribution shown under a quote on the card."""
+    if not s:
+        return ""
+    t, a, ti, d = s.get("type"), s.get("author") or "", s.get("title") or "", s.get("date") or ""
+    yr = f" ({d[:4]})" if d[:4].isdigit() else ""
+    if t == "talk":
+        return f"TED · {a}" if a else f"TED · {ti}"
+    if t in ("film", "series"):
+        return ("сериал · " if t == "series" else "фильм · ") + ti + yr
+    if t in ("book", "essay"):
+        return f"книга · {a}, «{ti}»{yr}"
+    if t == "news":
+        return "новости · Wikinews" + (f", {d[-4:]}" if d[-4:].isdigit() else "")
+    return ti
+
+
+class SyntheticExampleError(ValueError):
+    """A sentence without a verified real source tried to reach a card."""
+
+
+def load_corpus(public: bool = False) -> dict[str, list[dict]]:
+    """guid -> authentic examples for the card — the ONLY source of card sentences.
+    An example qualifies only with: source_verified, a source id present in the Source Registry with a
+    licence, not synthetic, not rejected, no open doubt. public=True also requires a source that may be
+    redistributed (public domain / CC BY / CC BY-SA)."""
+    src = {s["id"]: s for s in _jsonl(CORPUS_SOURCES)}
+    out: dict[str, list[dict]] = {}
+    for e in _jsonl(CORPUS_EXAMPLES):
+        s = src.get(e.get("src", ""))
+        st = e.get("status", [])
+        if (not s or not s.get("license") or "not resolved" in (s.get("title") or "")   # unknown work = no attribution
+                or "source_verified" not in st or "rejected" in st
+                or e.get("origin") == "synthetic" or e.get("doubt")
+                or (public and not s.get("public"))):
+            continue
+        out.setdefault(e["guid"], []).append({"id": "q-" + e["id"], "en": e["quote"], "ru": e.get("ru", ""),
+                                              "t": e["t"], "m": e.get("m", "m1"), "s": source_label(s)})
+    return out
+
+
+def card_data(u: dict | None, corpus: list[dict] | None = None) -> str:
+    """The compact JSON for the hidden Data field (HTML-escaped).
+    corpus = the word's authentic examples from load_corpus — nothing else can become a card sentence."""
     if not u:
         return ""
-    xs = [{"id": e["id"], "en": e["en"], "ru": e.get("ru", ""), "t": e.get("t", ""), "m": e.get("m", "m1")}
-          for e in u.get("examples", []) if e.get("st") != "review"]
+    xs = list(corpus or [])
+    for x in xs:
+        if not str(x.get("id", "")).startswith("q-") or not x.get("s"):
+            raise SyntheticExampleError(f"«{u.get('en')}»: example without a verified source: {x.get('en', '')[:60]}")
     d = {"v": 1, "m": [{k: v for k, v in (("id", m["id"]), ("ru", m.get("ru", [])), ("def", m.get("def", "")),
                                           ("g", m.get("grammar", ""))) if v}
                        for m in u.get("meanings", [])],

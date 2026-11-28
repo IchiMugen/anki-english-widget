@@ -1,1303 +1,1536 @@
-# Отчёт о качестве данных — English Trainer
+# Отчёт о данных — English Trainer (контракт 3.0: сначала реальный язык)
 
-Создаётся `tests/check_units.py` из `deck/words.csv` + `deck/units.jsonl`. Руками не править.
+Создаётся `tests/check_units.py`. Руками не править. Метрики по партиям корпуса — `data/corpus/reports/`.
 
-Статусы: **rich** — значения, 5+ примеров (6+ для фразовых глаголов и многозначных) с переводом, формы; **migrated** — только старые данные (один пример, одно значение), ещё не обработано.
-Все примеры написаны для колоды (сгенерированы, это не цитаты) и проверены автоматически: целевая форма есть в предложении, пропуск не оставляет подсказку, есть перевод, нет повторов. **Ни один пример не помечен как проверенный человеком**; сомнительное — в разделе ниже.
+**Принцип:** каждое предложение в карточке — реальная цитата (TED, фильмы и сериалы, книги, новости) с зарегистрированным источником и лицензией. Придуманных предложений в карточках нет: `tests/check_authentic.py` останавливает обновление, если такое появится. Старые синтетические примеры лежат в архиве `data/archive/synthetic_legacy.jsonl` и не используются.
+
+**Кто что проверял.** «script» — цитата найдена в скачанном источнике дословно. «model» (Claude) — прочитала контекст и сравнила значение / перевод. «auto-ru» — в русском переводе самого источника есть перевод этого значения слова (это сигнал, не проверка). «auto-pos» — теггер частей речи согласен. **Человеком не проверено ничего.**
 
 ## Итог
 
 | | |
 |---|---|
-| Учебных единиц (слова и выражения) | 1261 |
-| Обработано (rich) | 79 (6%) |
-| Ещё не обработано (migrated) | 1182 |
-| Примеров в карточках | 1640 (с переводом: 457) |
-| Многозначных единиц | 15 |
-| Примеров отложено на проверку | 1 |
+| Слов в библиотеке | 1493 |
+| Обработано корпусом | 1491 из 1493 |
+| Полностью обеспечено (≥5 примеров, все значения, ≥2 типа источников) | 1367 |
+| Частично обеспечено | 122 |
+| Недостаточно данных (insufficient_authentic_data) | 4 |
+| Реальных примеров в карточках | 10940 |
+| Уникальных источников | 8223 |
+| Источники по типам | сериалы — 4717, TED — 4003, новости — 1326, фильмы — 857, книги — 36, нон-фикшн — 1 |
+| Разговорных / письменных примеров | 9577 / 1363 |
+| Перевод из источника / перевод модели / без перевода | 9542 / 115 / 1283 |
+| Примеров с непроверенным переводом | 10733 |
+| Примеров, требующих проверки (needs_review) | 10733 |
+| Синтетических примеров вне активной библиотеки (архив) | 0 |
+| Проверено человеком | 0 |
 | Ошибок | 0 |
-| Предупреждений | 15 |
 
-## Нужно посмотреть человеку
+## Проверки по видам (активные примеры)
 
-- «other»: сомнение — «the other day» обычно значит «на днях» (в прошлом), а не «в другой раз» — пример нужно заменить
-- одно предложение у разных слов (friend, to be): she is my best friend
-- одно предложение у разных слов (lunch, to have): let's have lunch together
-- одно предложение у разных слов (between, difference): what's the difference between them
-- одно предложение у разных слов (next, week): see you next week
-- одно предложение у разных слов (many, people): many people work from home now
-- одно предложение у разных слов (before, to wash): wash your hands before dinner
-- одно предложение у разных слов (great, idea): that's a great idea
-- одно предложение у разных слов (early, to get up): i get up early on weekdays
-- одно предложение у разных слов (form, to fill in): please fill in this form
-- одно предложение у разных слов (date, today): what's the date today
-- одно предложение у разных слов (nice, to meet): nice to meet you
-- одно предложение у разных слов (key, to find): i can't find my keys
-- одно предложение у разных слов (light, to turn on): turn on the light please
-- одно предложение у разных слов (glass, water): can i have a glass of water
+| Проверка | Кто / результат |
+|---|---|
+| source_verified | script — 10940 |
+| context_verified | нет — 10618, model — 322 |
+| meaning_verified | auto-ru — 9335, нет — 1283, model — 322 |
+| translation_verified | нет — 10733, model — 207 |
+| grammar_verified | auto-pos — 9046, нет — 1572, model — 322 |
+| human_reviewed | нет — 10940 |
 
-## По каждой единице
+## По каждому слову
 
-| # | English | Уровень | Статус | Значений | Примеров | С переводом | Заметки |
-|---|---|---|---|---|---|---|---|
-| 1 | to borrow | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 2 | to undermine | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 3 | approach | B1-B2 | rich | 1 | 6 | 6 |  |
-| 4 | issue | B1-B2 | rich | 1 | 6 | 6 |  |
-| 5 | outcome | B1-B2 | rich | 1 | 6 | 6 |  |
-| 6 | to improve | B1-B2 | rich | 1 | 6 | 6 |  |
-| 7 | to persuade | B1-B2 | rich | 1 | 6 | 6 |  |
-| 8 | requirement | B1-B2 | rich | 1 | 6 | 6 |  |
-| 9 | capable | B1-B2 | rich | 1 | 6 | 6 |  |
-| 10 | purpose | B1-B2 | rich | 1 | 6 | 6 |  |
-| 11 | consistent | B1-B2 | rich | 1 | 6 | 6 |  |
-| 12 | trade-off | Pro | rich | 1 | 6 | 6 |  |
-| 13 | repetitive | B1-B2 | rich | 1 | 5 | 5 |  |
-| 14 | arrogant | B1-B2 | rich | 1 | 5 | 5 |  |
-| 15 | constraint | B2-C1 | rich | 1 | 5 | 5 |  |
-| 16 | pacing | B2-C1 | rich | 1 | 5 | 5 |  |
-| 17 | reunion | B1-B2 | rich | 1 | 5 | 5 |  |
-| 18 | consumer | B1-B2 | rich | 1 | 5 | 5 |  |
-| 19 | to edit | B1-B2 | rich | 1 | 6 | 6 |  |
-| 20 | reluctant | B1-B2 | rich | 1 | 6 | 6 |  |
-| 21 | to come across | B2-C1 | rich | 2 | 7 | 7 |  |
-| 22 | to come up with | B1-B2 | rich | 1 | 6 | 6 |  |
-| 23 | to come down with | B2-C1 | rich | 1 | 6 | 6 |  |
-| 24 | to be | A1-A2 | rich | 1 | 6 | 6 |  |
-| 25 | to clarify | B1-B2 | rich | 1 | 6 | 6 |  |
-| 26 | to take for granted | B1-B2 | rich | 1 | 7 | 6 |  |
-| 27 | to bring about | B2-C1 | rich | 1 | 6 | 6 |  |
-| 28 | eventually | B1-B2 | rich | 1 | 6 | 6 |  |
-| 29 | to cut down on | B2-C1 | rich | 1 | 6 | 6 |  |
-| 30 | to have | A1-A2 | rich | 2 | 7 | 7 |  |
-| 31 | to get rid of | B1-B2 | rich | 1 | 6 | 6 |  |
-| 32 | to assign | B1-B2 | rich | 1 | 6 | 6 |  |
-| 33 | to back up | B2-C1 | rich | 2 | 6 | 6 |  |
-| 34 | thorough | B1-B2 | rich | 1 | 6 | 6 |  |
-| 35 | to back out | B2-C1 | rich | 1 | 6 | 6 |  |
-| 36 | to do | A1-A2 | rich | 1 | 6 | 6 |  |
-| 37 | to figure out | B1-B2 | rich | 1 | 6 | 6 |  |
-| 38 | to stand out | B2-C1 | rich | 1 | 6 | 6 |  |
-| 39 | feedback | B1-B2 | rich | 1 | 6 | 6 |  |
-| 40 | affordable | B1-B2 | rich | 1 | 5 | 5 |  |
-| 41 | to stand up for | B2-C1 | rich | 1 | 6 | 6 |  |
-| 42 | to make | A1-A2 | rich | 2 | 7 | 7 |  |
-| 43 | to make sense | B1-B2 | rich | 1 | 6 | 6 |  |
-| 44 | to look up to | B2-C1 | rich | 1 | 6 | 6 |  |
-| 45 | other | A1-A2 | rich | 1 | 5 | 5 | «the other day» обычно значит «на днях» (в прошлом), а не «в другой раз» — пример нужно заменить; 1 пример(ов) на проверке |
-| 46 | nevertheless | B1-B2 | rich | 1 | 5 | 5 |  |
-| 47 | to adjust | B1-B2 | rich | 2 | 6 | 6 |  |
-| 48 | well | A1-A2 | rich | 2 | 6 | 6 |  |
-| 49 | to look down on | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 50 | to go | A1-A2 | rich | 1 | 6 | 6 |  |
-| 51 | because | A1-A2 | rich | 1 | 5 | 5 |  |
-| 52 | to give up | B1-B2 | rich | 2 | 6 | 6 |  |
-| 53 | to let down | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 54 | just | A1-A2 | rich | 2 | 6 | 6 |  |
-| 55 | to put off | B1-B2 | rich | 1 | 6 | 6 |  |
-| 56 | to get away with | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 57 | also | A1-A2 | rich | 1 | 5 | 5 |  |
-| 58 | to align | Pro | rich | 2 | 6 | 6 |  |
-| 59 | to come | A1-A2 | rich | 1 | 6 | 6 |  |
-| 60 | only | A1-A2 | rich | 1 | 5 | 5 |  |
-| 61 | to call off | B1-B2 | rich | 1 | 6 | 6 |  |
-| 62 | to get on with | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 63 | most | A1-A2 | rich | 1 | 5 | 5 |  |
-| 64 | to turn down | B1-B2 | rich | 2 | 6 | 6 |  |
-| 65 | to get by | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 66 | to mean | A1-A2 | rich | 2 | 6 | 6 |  |
-| 67 | to get | A1-A2 | rich | 3 | 7 | 7 |  |
-| 68 | flexible | B1-B2 | rich | 1 | 5 | 5 |  |
-| 69 | even | A1-A2 | rich | 1 | 5 | 5 |  |
-| 70 | to look forward to | B1-B2 | rich | 1 | 6 | 6 |  |
-| 71 | to go through | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 72 | such | B1-B2 | rich | 1 | 5 | 5 |  |
-| 73 | to look after | B1-B2 | rich | 1 | 6 | 6 |  |
-| 74 | to turn out | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 75 | last | A1-A2 | rich | 2 | 6 | 6 |  |
-| 76 | to take | A1-A2 | rich | 3 | 7 | 7 |  |
-| 77 | to find out | B1-B2 | rich | 1 | 6 | 6 |  |
-| 78 | really | A1-A2 | rich | 1 | 5 | 5 |  |
-| 79 | to meet a deadline | Pro | rich | 1 | 5 | 5 |  |
-| 80 | to keep up with | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 81 | between | A1-A2 | rich | 1 | 5 | 5 |  |
-| 82 | to run out of | B1-B2 | rich | 1 | 6 | 6 |  |
-| 83 | to make up for | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 84 | a lot of | A1-A2 | rich | 1 | 5 | 5 |  |
-| 85 | to give | A1-A2 | rich | 1 | 6 | 6 |  |
-| 86 | to get along with | B1-B2 | rich | 1 | 6 | 6 |  |
-| 87 | own | A1-A2 | rich | 1 | 5 | 5 |  |
-| 88 | to rule out | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 89 | draft | B1-B2 | rich | 1 | 5 | 5 |  |
-| 90 | little | A1-A2 | rich | 2 | 6 | 6 |  |
-| 91 | to get over | B1-B2 | rich | 1 | 6 | 6 |  |
-| 92 | to sort out | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 93 | to know | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 94 | another | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 95 | to set up | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 96 | to take over | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 97 | to become | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 98 | to evaluate | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 99 | to take up | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 100 | interest | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 101 | to take after | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 102 | to think | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 103 | next | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 104 | first | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 105 | to take off | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 106 | to wear off | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 107 | where | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 108 | while | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 109 | to bring up | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 110 | much | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 111 | to reach out | Pro | migrated | 1 | 1 | 0 |  |
-| 112 | to include | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 113 | many | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 114 | to put forward | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 115 | to see | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 116 | before | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 117 | report | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 118 | to grow up | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 119 | great | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 120 | to give in | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 121 | around | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 122 | number | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 123 | to show up | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 124 | to hold on | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 125 | school | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 126 | to seem | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 127 | accurate | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 128 | high | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 129 | to look | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 130 | kind | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 131 | why | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 132 | to deal with | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 133 | to hang out | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 134 | book | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 135 | every | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 136 | to put up with | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 137 | month | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 138 | to drop by | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 139 | during | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 140 | business | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 141 | to watch | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 142 | to get stuck | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 143 | word | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 144 | to begin | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 145 | to carry on | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 146 | to build | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 147 | to drop out | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 148 | since | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 149 | plan | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 150 | to work out | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 151 | to fall out | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 152 | hour | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 153 | few | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 154 | to want | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 155 | student | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 156 | to point out | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 157 | early | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 158 | head | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 159 | to resolve | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 160 | person | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 161 | state | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 162 | to fall behind | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 163 | night | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 164 | to look up | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 165 | area | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 166 | force | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 167 | to fall through | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 168 | to need | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 169 | bit | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 170 | large | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 171 | to run into | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 172 | language | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 173 | burnout | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 174 | without | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 175 | town | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 176 | to put up | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 177 | top | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 178 | order | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 179 | to catch up | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 180 | colour | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 181 | market | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 182 | note | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 183 | to pick up | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 184 | to like | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 185 | to create | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 186 | service | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 187 | to address | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 188 | game | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 189 | to check in | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 190 | against | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 191 | to receive | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 192 | to show off | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 193 | body | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 194 | second | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 195 | to sign up | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 196 | team | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 197 | to talk into | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 198 | though | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 199 | black | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 200 | to bear | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 201 | to love | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 202 | downside | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 203 | to regard | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 204 | research | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 205 | result | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 206 | foot | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 207 | to fill in | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 208 | war | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 209 | current | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 210 | to think over | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 211 | example | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 212 | century | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 213 | account | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 214 | to break down | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 215 | particularly | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 216 | to make out | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 217 | major | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 218 | cell | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 219 | to offer | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 220 | to say | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 221 | art | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 222 | above | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 223 | to break up | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 224 | plant | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 225 | to lead | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 226 | condition | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 227 | to paint | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 228 | to hand over | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 229 | to set off | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 230 | to press | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 231 | certain | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 232 | far | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 233 | to fit | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 234 | to achieve | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 235 | main | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 236 | guy | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 237 | to acknowledge | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 238 | face | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 239 | wall | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 240 | to die | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 241 | to tell | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 242 | direct | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 243 | to accomplish | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 244 | to describe | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 245 | success | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 246 | less | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 247 | to avoid | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 248 | clearly | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 249 | especially | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 250 | scope | Pro | migrated | 1 | 1 | 0 |  |
-| 251 | lack | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 252 | until | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 253 | strong | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 254 | review | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 255 | to anticipate | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 256 | to speak | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 257 | to depend | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 258 | to rise | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 259 | form | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 260 | race | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 261 | to afford | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 262 | girl | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 263 | to recognize | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 264 | to assume | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 265 | level | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 266 | to gain | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 267 | community | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 268 | to allow | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 269 | tree | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 270 | to ensure | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 271 | else | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 272 | to argue | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 273 | member | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 274 | to implement | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 275 | board | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 276 | particular | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 277 | to ask | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 278 | mark | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 279 | able | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 280 | to join | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 281 | church | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 282 | to admit | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 283 | to emphasize | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 284 | item | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 285 | detail | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 286 | support | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 287 | to prove | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 288 | to suggest | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 289 | difference | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 290 | season | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 291 | to hesitate | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 292 | whether | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 293 | floor | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 294 | step | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 295 | to answer | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 296 | stuff | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 297 | to maintain | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 298 | true | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 299 | wide | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 300 | to refer | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 301 | present | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 302 | to expect | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 303 | unclear | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 304 | anyone | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 305 | to draw | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 306 | directly | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 307 | to struggle | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 308 | below | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 309 | heavy | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 310 | quite | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 311 | white | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 312 | to remove | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 313 | doctor | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 314 | to accept | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 315 | to conduct | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 316 | to cope with | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 317 | statement | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 318 | equipment | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 319 | date | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 320 | term | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 321 | title | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 322 | link | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 323 | to work | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 324 | extra | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 325 | customer | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 326 | to introduce | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 327 | chair | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 328 | to refuse | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 329 | least | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 330 | sample | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 331 | to marry | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 332 | front | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 333 | to deliver | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 334 | to follow through | Pro | migrated | 1 | 1 | 0 |  |
-| 335 | strike | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 336 | connection | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 337 | to postpone | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 338 | to explain | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 339 | to collect | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 340 | to seek | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 341 | age | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 342 | to inform | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 343 | to reduce | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 344 | ability | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 345 | straight | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 346 | outside | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 347 | to overcome | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 348 | appeal | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 349 | hospital | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 350 | low | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 351 | highly | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 352 | teacher | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 353 | quickly | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 354 | to trust | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 355 | to live | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 356 | to increase | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 357 | wonderful | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 358 | agreement | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 359 | land | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 360 | flat | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 361 | within | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 362 | to release | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 363 | absolutely | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 364 | to overlook | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 365 | charge | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 366 | flow | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 367 | solution | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 368 | to outline | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 369 | additional | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 370 | public | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 371 | popular | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 372 | farm | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 373 | finally | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 374 | to require | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 375 | negative | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 376 | fear | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 377 | to tend to | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 378 | relative | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 379 | to enjoy | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 380 | to aim | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 381 | pair | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 382 | possible | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 383 | to eat | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 384 | double | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 385 | serious | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 386 | death | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 387 | leg | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 388 | to manage | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 389 | target | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 390 | to observe | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 391 | rather | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 392 | nice | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 393 | sentence | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 394 | degree | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 395 | to deserve | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 396 | truth | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 397 | to mention | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 398 | to pull | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 399 | nobody | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 400 | amount | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 401 | view | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 402 | to examine | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 403 | red | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 404 | to provide | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 405 | to lay | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 406 | picture | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 407 | husband | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 408 | to reply | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 409 | parent | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 410 | to display | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 411 | access | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 412 | boy | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 413 | perfect | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 414 | to consider | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 415 | movement | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 416 | slightly | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 417 | to drink | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 418 | couple | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 419 | overall | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 420 | to treat | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 421 | hard | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 422 | to intend | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 423 | to remind | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 424 | loss | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 425 | to respond | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 426 | to act | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 427 | to confirm | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 428 | slow | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 429 | modern | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 430 | party | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 431 | regular | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 432 | quality | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 433 | treatment | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 434 | physical | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 435 | to rely on | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 436 | stakeholder | Pro | migrated | 1 | 1 | 0 |  |
-| 437 | apart | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 438 | supply | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 439 | round | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 440 | to suit | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 441 | local | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 442 | village | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 443 | to reveal | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 444 | to convince | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 445 | road | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 446 | peace | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 447 | natural | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 448 | to sleep | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 449 | to decline | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 450 | story | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 451 | to express | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 452 | decade | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 453 | list | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 454 | to complain | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 455 | to launch | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 456 | to indicate | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 457 | to blame | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 458 | to warn | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 459 | to wish | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 460 | to attend | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 461 | favour | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 462 | almost | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 463 | to apologize | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 464 | dry | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 465 | brother | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 466 | kid | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 467 | spot | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 468 | to claim | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 469 | score | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 470 | horse | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 471 | to continue | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 472 | education | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 473 | heat | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 474 | beyond | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 475 | feasible | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 476 | excited | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 477 | to buy | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 478 | fish | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 479 | reader | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 480 | to measure | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 481 | whole | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 482 | importance | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 483 | to promise | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 484 | to appreciate | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 485 | distance | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 486 | to kill | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 487 | trouble | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 488 | guide | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 489 | to estimate | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 490 | yet | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 491 | to grant | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 492 | middle | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 493 | to serve | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 494 | to feed | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 495 | to commit | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 496 | to suffer | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 497 | mistake | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 498 | to pay | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 499 | certainly | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 500 | to satisfy | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 501 | deep | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 502 | rate | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 503 | chief | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 504 | to prevent | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 505 | except | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 506 | cool | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 507 | field | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 508 | to put together | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 509 | wave | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 510 | star | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 511 | to care | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 512 | south | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 513 | security | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 514 | generally | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 515 | surface | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 516 | to encourage | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 517 | to pretend | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 518 | library | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 519 | seat | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 520 | air | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 521 | excellent | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 522 | effect | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 523 | to throw | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 524 | lift | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 525 | to settle | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 526 | trade | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 527 | to advertise | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 528 | task | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 529 | to open | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 530 | to select | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 531 | ever | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 532 | positive | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 533 | to surround | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 534 | news | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 535 | to waste | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 536 | extent | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 537 | option | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 538 | experience | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 539 | river | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 540 | to vote | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 541 | box | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 542 | annual | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 543 | anything | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 544 | to streamline | Pro | migrated | 1 | 1 | 0 |  |
-| 545 | fully | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 546 | huge | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 547 | stage | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 548 | entire | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 549 | to close | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 550 | message | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 551 | crowd | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 552 | cause | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 553 | space | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 554 | corner | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 555 | quarter | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 556 | opportunity | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 557 | shift | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 558 | awareness | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 559 | baby | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 560 | quick | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 561 | to realize | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 562 | past | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 563 | to spread | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 564 | successful | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 565 | opinion | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 566 | driver | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 567 | single | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 568 | to sing | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 569 | ball | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 570 | benefit | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 571 | power | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 572 | to cry | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 573 | doubt | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 574 | society | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 575 | introduction | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 576 | to help | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 577 | to propose | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 578 | north | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 579 | robust | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 580 | choice | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 581 | senior | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 582 | argument | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 583 | nothing | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 584 | to emerge | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 585 | decision | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 586 | adult | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 587 | map | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 588 | to save | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 589 | burden | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 590 | island | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 591 | to fly | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 592 | to return | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 593 | to survive | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 594 | common | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 595 | obviously | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 596 | flight | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 597 | advice | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 598 | concern | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 599 | left | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 600 | bill | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 601 | demand | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 602 | to solve | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 603 | matter | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 604 | to search | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 605 | neighbour | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 606 | to wait | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 607 | due | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 608 | background | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 609 | separate | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 610 | knowledge | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 611 | traffic | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 612 | value | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 613 | speech | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 614 | tool | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 615 | to complete | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 616 | willing | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 617 | improvement | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 618 | dog | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 619 | contribution | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 620 | circumstance | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 621 | to lie | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 622 | throughout | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 623 | smoke | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 624 | to record | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 625 | skill | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 626 | rain | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 627 | to dress | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 628 | ground | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 629 | lesson | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 630 | profit | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 631 | brain | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 632 | to stay | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 633 | animal | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 634 | funny | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 635 | to guess | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 636 | evidence | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 637 | to contribute | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 638 | to find | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 639 | fun | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 640 | failure | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 641 | to exist | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 642 | several | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 643 | schedule | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 644 | to protect | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 645 | goal | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 646 | speaker | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 647 | similar | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 648 | disease | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 649 | to adopt | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 650 | to be swamped | Pro | migrated | 1 | 1 | 0 |  |
-| 651 | light | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 652 | to combine | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 653 | balance | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 654 | to fight | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 655 | mountain | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 656 | damage | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 657 | to hide | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 658 | feature | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 659 | fine | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 660 | marriage | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 661 | hair | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 662 | to develop | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 663 | meal | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 664 | reason | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 665 | to reflect | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 666 | colleague | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 667 | former | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 668 | bag | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 669 | exercise | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 670 | to share | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 671 | to repeat | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 672 | wife | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 673 | useful | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 674 | equal | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 675 | impact | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 676 | to lose | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 677 | expression | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 678 | income | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 679 | to prepare | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 680 | plus | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 681 | real | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 682 | property | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 683 | extremely | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 684 | redundant | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 685 | to discuss | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 686 | owner | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 687 | previous | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 688 | challenge | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 689 | plane | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 690 | letter | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 691 | dark | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 692 | lady | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 693 | response | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 694 | insight | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 695 | duty | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 696 | to imagine | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 697 | attitude | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 698 | strength | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 699 | voice | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 700 | to earn | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 701 | to connect | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 702 | subject | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 703 | to remember | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 704 | to arrange | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 705 | daughter | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 706 | to suppose | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 707 | payment | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 708 | behaviour | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 709 | post | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 710 | unfortunately | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 711 | half | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 712 | to apply | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 713 | brief | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 714 | newspaper | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 715 | bird | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 716 | to bring sb up to speed | Pro | migrated | 1 | 1 | 0 |  |
-| 717 | to define | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 718 | to demonstrate | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 719 | fire | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 720 | clear | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 721 | chapter | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 722 | conclusion | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 723 | priority | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 724 | secret | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 725 | to compare | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 726 | clock | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 727 | novel | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 728 | habit | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 729 | future | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 730 | to burn | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 731 | everybody | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 732 | court | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 733 | pleasure | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 734 | to perform | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 735 | suggestion | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 736 | to forget | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 737 | store | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 738 | to gather | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 739 | memory | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 740 | ago | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 741 | mostly | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 742 | relationship | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 743 | green | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 744 | earth | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 745 | poor | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 746 | desire | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 747 | song | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 748 | to remain | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 749 | to promote | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 750 | to laugh | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 751 | object | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 752 | currently | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 753 | to reassure | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 754 | range | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 755 | to employ | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 756 | ring | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 757 | arm | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 758 | path | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 759 | among | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 760 | to discover | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 761 | topic | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 762 | environment | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 763 | heart | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 764 | beach | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 765 | dead | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 766 | to attract | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 767 | to win | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 768 | afternoon | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 769 | to engage | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 770 | source | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 771 | to understand | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 772 | powerful | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 773 | to prefer | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 774 | advantage | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 775 | flower | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 776 | employee | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 777 | to extend | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 778 | aid | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 779 | to involve | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 780 | shortage | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 781 | twice | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 782 | possibility | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 783 | simply | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 784 | fresh | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 785 | bottom line | Pro | migrated | 1 | 1 | 0 |  |
-| 786 | direction | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 787 | delay | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 788 | period | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 789 | fast | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 790 | safety | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 791 | variety | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 792 | salary | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 793 | quiet | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 794 | daily | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 795 | insurance | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 796 | foreign | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 797 | type | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 798 | nurse | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 799 | clothes | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 800 | threat | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 801 | to divide | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 802 | surprise | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 803 | screen | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 804 | length | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 805 | to learn | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 806 | sound | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 807 | investigation | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 808 | to dance | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 809 | pretty | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 810 | package | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 811 | deadline | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 812 | completely | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 813 | somewhere | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 814 | recently | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 815 | to expand | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 816 | responsibility | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 817 | moment | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 818 | to jump | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 819 | to procrastinate | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 820 | sister | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 821 | weapon | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 822 | to affect | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 823 | trend | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 824 | relatively | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 825 | rock | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 826 | sale | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 827 | host | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 828 | recent | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 829 | dream | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 830 | winter | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 831 | effort | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 832 | wealth | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 833 | broad | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 834 | nor | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 835 | to relate | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 836 | to tire | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 837 | further | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 838 | easily | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 839 | spring | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 840 | to teach | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 841 | to miss | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 842 | spirit | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 843 | garden | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 844 | consequence | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 845 | lunch | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 846 | general | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 847 | ahead | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 848 | actual | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 849 | private | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 850 | pool | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 851 | to cross | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 852 | hands-on | Pro | migrated | 1 | 1 | 0 |  |
-| 853 | battle | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 854 | everyone | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 855 | weight | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 856 | cash | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 857 | to appear | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 858 | mood | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 859 | award | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 860 | proposal | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 861 | to worry | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 862 | coach | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 863 | available | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 864 | conversation | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 865 | strange | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 866 | full | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 867 | summer | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 868 | possibly | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 869 | shape | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 870 | guilt | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 871 | accident | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 872 | to study | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 873 | sea | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 874 | to represent | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 875 | perhaps | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 876 | immediately | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 877 | reliable | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 878 | key | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 879 | to smile | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 880 | pressure | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 881 | to add | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 882 | to replace | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 883 | inside | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 884 | accountable | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 885 | judge | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 886 | responsible | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 887 | to contain | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 888 | suddenly | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 889 | to pass | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 890 | patience | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 891 | favourite | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 892 | to notice | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 893 | to read | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 894 | difficulty | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 895 | to produce | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 896 | nature | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 897 | purchase | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 898 | reasonable | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 899 | significant | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 900 | to shoot | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 901 | exactly | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 902 | to sell | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 903 | to announce | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 904 | suitable | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 905 | worker | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 906 | independent | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 907 | to fine-tune | Pro | migrated | 1 | 1 | 0 |  |
-| 908 | law | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 909 | to recommend | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 910 | whatever | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 911 | sufficient | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 912 | survey | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 913 | to write | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 914 | necessary | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 915 | to stick | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 916 | everything | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 917 | aware | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 918 | request | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 919 | growth | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 920 | efficient | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 921 | rich | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 922 | to cover | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 923 | influence | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 924 | wind | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 925 | confident | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 926 | relevant | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 927 | none | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 928 | respect | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 929 | paper | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 930 | exchange | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 931 | to overthink | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 932 | various | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 933 | famous | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 934 | to listen | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 935 | position | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 936 | blood | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 937 | attempt | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 938 | comfortable | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 939 | appropriate | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 940 | relieved | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 941 | son | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 942 | to count | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 943 | near | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 944 | convenient | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 945 | writer | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 946 | simple | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 947 | grateful | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 948 | to invite | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 949 | human | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 950 | bed | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 951 | to mix | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 952 | to hear | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 953 | to sign off on | Pro | migrated | 1 | 1 | 0 |  |
-| 954 | correct | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 955 | to hit | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 956 | situation | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 957 | to beat | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 958 | obvious | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 959 | to establish | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 960 | to copy | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 961 | anxious | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 962 | staff | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 963 | to handle | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 964 | indeed | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 965 | curious | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 966 | glass | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 967 | size | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 968 | trial | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 969 | activity | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 970 | cautious | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 971 | to ride | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 972 | addition | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 973 | to call | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 974 | event | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 975 | to determine | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 976 | self-conscious | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 977 | likely | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 978 | to fail | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 979 | special | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 980 | player | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 981 | challenging | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 982 | average | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 983 | to enter | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 984 | demanding | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 985 | to send | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 986 | to occur | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 987 | to pitch | Pro | migrated | 1 | 1 | 0 |  |
-| 988 | essential | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 989 | alone | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 990 | overwhelmed | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 991 | disappointed | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 992 | straightforward | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 993 | to bring | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 994 | embarrassed | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 995 | versatile | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 996 | sophisticated | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 997 | exhausted | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 998 | specific | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 999 | to put | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1000 | upset | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1001 | vague | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1002 | to justify | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1003 | rude | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1004 | valid | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1005 | to start | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1006 | polite | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1007 | vivid | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1008 | tedious | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1009 | patient | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1010 | workload | Pro | migrated | 1 | 1 | 0 |  |
-| 1011 | tough | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1012 | to finish | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1013 | however | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1014 | to sync up | Pro | migrated | 1 | 1 | 0 |  |
-| 1015 | to proceed | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1016 | genuine | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1017 | therefore | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1018 | to follow up | Pro | migrated | 1 | 1 | 0 |  |
-| 1019 | generous | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1020 | to stop | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1021 | otherwise | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1022 | to touch base | Pro | migrated | 1 | 1 | 0 |  |
-| 1023 | inevitable | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1024 | although | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1025 | to loop in | Pro | migrated | 1 | 1 | 0 |  |
-| 1026 | to try | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1027 | unless | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1028 | to push back | Pro | migrated | 1 | 1 | 0 |  |
-| 1029 | eager | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1030 | actually | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1031 | to wrap up | Pro | migrated | 1 | 1 | 0 |  |
-| 1032 | fluent | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1033 | to use | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1034 | probably | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1035 | to walk sb through | Pro | migrated | 1 | 1 | 0 |  |
-| 1036 | awkward | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1037 | nearly | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1038 | to run late | Pro | migrated | 1 | 1 | 0 |  |
-| 1039 | complicated | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1040 | to feel | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1041 | hardly | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1042 | to be on track | Pro | migrated | 1 | 1 | 0 |  |
-| 1043 | lately | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1044 | to be on hold | Pro | migrated | 1 | 1 | 0 |  |
-| 1045 | moreover | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1046 | to leave | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1047 | instead | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1048 | heads-up | Pro | migrated | 1 | 1 | 0 |  |
-| 1049 | whereas | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1050 | anyway | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1051 | ASAP | Pro | migrated | 1 | 1 | 0 |  |
-| 1052 | despite | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1053 | to arrive | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1054 | according to | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1055 | FYI | Pro | migrated | 1 | 1 | 0 |  |
-| 1056 | meanwhile | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1057 | to make a decision | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1058 | ETA | Pro | migrated | 1 | 1 | 0 |  |
-| 1059 | apparently | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1060 | to meet | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1061 | to pay attention | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1062 | bandwidth | Pro | migrated | 1 | 1 | 0 |  |
-| 1063 | approximately | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1064 | to take part in | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1065 | to take ownership | Pro | migrated | 1 | 1 | 0 |  |
-| 1066 | gradually | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1067 | to visit | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1068 | to take place | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1069 | to raise a concern | Pro | migrated | 1 | 1 | 0 |  |
-| 1070 | thoroughly | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1071 | to keep in touch | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1072 | to get back to sb | Pro | migrated | 1 | 1 | 0 |  |
-| 1073 | definitely | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1074 | to travel | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1075 | to be about to | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1076 | to be up for | Pro | migrated | 1 | 1 | 0 |  |
-| 1077 | deliberately | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1078 | to be used to | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1079 | on my end | Pro | migrated | 1 | 1 | 0 |  |
-| 1080 | regardless | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1081 | to walk | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1082 | worth it | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1083 | it's a known issue | Pro | migrated | 1 | 1 | 0 |  |
-| 1084 | as long as | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1085 | it depends | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1086 | good catch | Pro | migrated | 1 | 1 | 0 |  |
-| 1087 | as soon as | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1088 | to run | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1089 | no wonder | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1090 | good call | Pro | migrated | 1 | 1 | 0 |  |
-| 1091 | to make ends meet | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1092 | by the way | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1093 | to make a point | Pro | migrated | 1 | 1 | 0 |  |
-| 1094 | to keep an eye on | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1095 | to drive | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1096 | on purpose | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1097 | to get the hang of | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1098 | in advance | B1-B2 | migrated | 1 | 1 | 0 |  |
-| 1099 | to prioritize | Pro | migrated | 1 | 1 | 0 |  |
-| 1100 | to break the ice | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1101 | to play | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1102 | to delegate | Pro | migrated | 1 | 1 | 0 |  |
-| 1103 | to be on the same page | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1104 | to negotiate | Pro | migrated | 1 | 1 | 0 |  |
-| 1105 | to be on the safe side | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1106 | to cook | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1107 | to keep sb posted | Pro | migrated | 1 | 1 | 0 |  |
-| 1108 | to cut corners | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1109 | no worries | Pro | migrated | 1 | 1 | 0 |  |
-| 1110 | to call it a day | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1111 | to clean | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1112 | to brainstorm | Pro | migrated | 1 | 1 | 0 |  |
-| 1113 | under the weather | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1114 | deliverable | Pro | migrated | 1 | 1 | 0 |  |
-| 1115 | over the moon | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1116 | to wash | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1117 | milestone | Pro | migrated | 1 | 1 | 0 |  |
-| 1118 | out of the blue | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1119 | once in a blue moon | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1120 | to sit | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1121 | to ship | Pro | migrated | 1 | 1 | 0 |  |
-| 1122 | a piece of cake | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1123 | a pain in the neck | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1124 | to stand | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1125 | no big deal | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1126 | to be up to | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1127 | to wake up | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1128 | to be fed up with | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1129 | to be keen on | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1130 | to get up | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1131 | it's on me | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1132 | fair enough | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1133 | to turn on | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1134 | that makes two of us | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1135 | not my cup of tea | B2-C1 | migrated | 1 | 1 | 0 |  |
-| 1136 | to turn off | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1137 | to look for | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1138 | to show | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1139 | to change | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1140 | to choose | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1141 | to decide | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1142 | to move | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1143 | to cost | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1144 | to spend | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1145 | to rest | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1146 | to hope | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1147 | to believe | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1148 | to happen | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1149 | to agree | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1150 | time | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1151 | day | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1152 | week | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1153 | year | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1154 | morning | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1155 | evening | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1156 | weekend | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1157 | people | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1158 | man | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1159 | woman | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1160 | child | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1161 | friend | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1162 | family | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1163 | mother | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1164 | father | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1165 | home | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1166 | house | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1167 | room | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1168 | kitchen | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1169 | door | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1170 | window | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1171 | table | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1172 | car | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1173 | bus | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1174 | train | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1175 | street | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1176 | city | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1177 | country | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1178 | money | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1179 | price | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1180 | shop | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1181 | job | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1182 | food | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1183 | water | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1184 | breakfast | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1185 | dinner | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1186 | question | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1187 | problem | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1188 | idea | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1189 | phone | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1190 | name | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1191 | weather | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1192 | holiday | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1193 | trip | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1194 | ticket | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1195 | place | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1196 | way | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1197 | thing | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1198 | life | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1199 | world | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1200 | health | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1201 | good | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1202 | bad | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1203 | big | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1204 | small | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1205 | new | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1206 | old | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1207 | young | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1208 | long | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1209 | short | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1210 | easy | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1211 | difficult | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1212 | hot | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1213 | cold | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1214 | warm | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1215 | cheap | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1216 | expensive | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1217 | free | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1218 | busy | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1219 | tired | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1220 | hungry | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1221 | happy | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1222 | sad | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1223 | beautiful | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1224 | interesting | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1225 | important | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1226 | ready | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1227 | sure | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1228 | right | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1229 | wrong | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1230 | different | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1231 | same | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1232 | always | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1233 | never | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1234 | often | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1235 | sometimes | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1236 | usually | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1237 | already | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1238 | still | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1239 | again | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1240 | soon | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1241 | now | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1242 | today | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1243 | tomorrow | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1244 | yesterday | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1245 | here | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1246 | there | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1247 | very | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1248 | too | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1249 | maybe | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1250 | together | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1251 | thank you | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1252 | please | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1253 | you're welcome | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1254 | excuse me | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1255 | sorry | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1256 | of course | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1257 | see you | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1258 | good luck | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1259 | never mind | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1260 | How are you? | A1-A2 | migrated | 1 | 1 | 0 |  |
-| 1261 | What time is it? | A1-A2 | migrated | 1 | 1 | 0 |  |
+| # | Слово | Уровень | Состояние | Примеров | Источников | Значений (подтв./всего) | Разг./письм. | На проверке | Отклонено | Значения без материала | Заметки |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | to borrow | A1-A2 | нет материала | 0 | 0 | 0/1 | 0/0 | 0 | 0 | m1 |  |
+| 2 | to undermine | B2-C1 | нет материала | 0 | 0 | 0/1 | 0/0 | 0 | 0 | m1 |  |
+| 3 | approach | B1-B2 | обеспечено | 10 | 10 | 2/2 | 5/5 | 5 | 3 | — | глагол to approach («подойти к кому-то») в фильмах встречается чаще существительного — кандидат в отдельное слово |
+| 4 | issue | B1-B2 | обеспечено | 9 | 9 | 2/2 | 6/3 | 3 | 3 | — | глагол to issue («выпускать, издавать») встречается часто — кандидат в отдельное слово; have issues with — разговорное «у меня проблемы с…» |
+| 5 | outcome | B1-B2 | обеспечено | 7 | 7 | 1/1 | 5/2 | 3 | 0 | — |  |
+| 6 | to improve | B1-B2 | обеспечено | 7 | 7 | 1/1 | 5/2 | 2 | 0 | — |  |
+| 7 | to persuade | B1-B2 | обеспечено | 7 | 7 | 1/1 | 5/2 | 4 | 2 | — |  |
+| 8 | requirement | B1-B2 | обеспечено | 7 | 7 | 1/1 | 5/2 | 3 | 1 | — |  |
+| 9 | capable | B1-B2 | обеспечено | 8 | 8 | 1/1 | 6/2 | 2 | 0 | — |  |
+| 10 | purpose | B1-B2 | обеспечено | 12 | 12 | 2/2 | 8/4 | 5 | 1 | — |  |
+| 11 | consistent | B1-B2 | обеспечено | 9 | 9 | 2/2 | 6/3 | 5 | 1 | — | в сериалах (криминальные, медицинские) почти всегда consistent with — «согласуется с»: это значение важнее для понимания речи |
+| 12 | trade-off | Pro | обеспечено | 6 | 6 | 1/1 | 6/0 | 0 | 3 | — | в книгах и новостях не найдено; в фильмах чаще глагол trade off — «по очереди» (другая единица) |
+| 13 | repetitive | B1-B2 | обеспечено | 6 | 6 | 1/1 | 5/1 | 2 | 0 | — | в книгах начала XX века не найдено |
+| 14 | arrogant | B1-B2 | обеспечено | 7 | 7 | 1/1 | 5/2 | 3 | 0 | — |  |
+| 15 | constraint | B2-C1 | обеспечено | 10 | 10 | 2/2 | 6/4 | 4 | 1 | — |  |
+| 16 | pacing | B2-C1 | обеспечено | 8 | 8 | 2/2 | 6/2 | 3 | 0 | — | значение «темп» в корпусе почти не встречается (2 примера); в речи и книгах pacing — почти всегда «ходить взад-вперёд» |
+| 17 | reunion | B1-B2 | обеспечено | 7 | 7 | 1/1 | 5/2 | 2 | 0 | — |  |
+| 18 | consumer | B1-B2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 3 | 0 | — | в книгах начала XX века не найдено |
+| 19 | to edit | B1-B2 | обеспечено | 9 | 9 | 2/2 | 7/2 | 4 | 1 | — | в фильмах и сериалах edit чаще значит «монтировать» |
+| 20 | reluctant | B1-B2 | обеспечено | 7 | 7 | 1/1 | 5/2 | 2 | 0 | — |  |
+| 21 | to come across | B2-C1 | обеспечено | 11 | 11 | 2/2 | 7/4 | 6 | 3 | — |  |
+| 22 | to come up with | B1-B2 | обеспечено | 10 | 10 | 2/2 | 7/3 | 5 | 3 | — |  |
+| 23 | to come down with | B2-C1 | обеспечено | 7 | 7 | 1/1 | 5/2 | 2 | 3 | — |  |
+| 24 | to be | A1-A2 | частично | 1 | 1 | 1/1 | 0/1 | 1 | 0 | — |  |
+| 25 | to clarify | B1-B2 | обеспечено | 7 | 7 | 1/1 | 5/2 | 2 | 0 | — |  |
+| 26 | to take for granted | B1-B2 | обеспечено | 9 | 9 | 2/2 | 7/2 | 3 | 1 | — |  |
+| 27 | to bring about | B2-C1 | обеспечено | 9 | 9 | 1/1 | 6/3 | 4 | 5 | — |  |
+| 28 | eventually | B1-B2 | обеспечено | 9 | 9 | 1/1 | 6/3 | 3 | 1 | — |  |
+| 29 | to cut down on | B2-C1 | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 30 | to have | A1-A2 | частично | 1 | 1 | 1/2 | 1/0 | 1 | 0 | m1 |  |
+| 31 | to get rid of | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 32 | to assign | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 33 | to back up | B2-C1 | обеспечено | 6 | 6 | 2/2 | 6/0 | 6 | 0 | — |  |
+| 34 | thorough | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 35 | to back out | B2-C1 | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 36 | to do | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 37 | to figure out | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 38 | to stand out | B2-C1 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 39 | feedback | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 40 | affordable | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 41 | to stand up for | B2-C1 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 42 | to make | A1-A2 | обеспечено | 7 | 7 | 2/2 | 7/0 | 7 | 0 | — |  |
+| 43 | to make sense | B1-B2 | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 44 | to look up to | B2-C1 | обеспечено | 5 | 5 | 1/1 | 5/0 | 5 | 0 | — |  |
+| 45 | other | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 46 | nevertheless | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 47 | to adjust | B1-B2 | обеспечено | 6 | 6 | 2/2 | 6/0 | 6 | 0 | — |  |
+| 48 | well | A1-A2 | частично | 7 | 7 | 1/2 | 7/0 | 7 | 0 | m2 |  |
+| 49 | to look down on | B2-C1 | обеспечено | 5 | 5 | 1/1 | 5/0 | 5 | 0 | — |  |
+| 50 | to go | A1-A2 | частично | 3 | 3 | 1/1 | 2/1 | 3 | 0 | — |  |
+| 51 | because | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 52 | to give up | B1-B2 | обеспечено | 7 | 7 | 2/2 | 7/0 | 7 | 0 | — |  |
+| 53 | to let down | B2-C1 | обеспечено | 6 | 6 | 1/1 | 6/0 | 6 | 0 | — |  |
+| 54 | just | A1-A2 | частично | 7 | 7 | 1/2 | 7/0 | 7 | 0 | m1 |  |
+| 55 | to put off | B1-B2 | обеспечено | 6 | 6 | 1/1 | 6/0 | 6 | 0 | — |  |
+| 56 | to get away with | B2-C1 | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 57 | also | A1-A2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 58 | to align | Pro | обеспечено | 5 | 5 | 2/2 | 5/0 | 5 | 0 | — |  |
+| 59 | to come | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 60 | only | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 61 | to call off | B1-B2 | обеспечено | 5 | 5 | 1/1 | 5/0 | 5 | 0 | — |  |
+| 62 | to get on with | B2-C1 | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 63 | most | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 64 | to turn down | B1-B2 | частично | 2 | 2 | 1/2 | 2/0 | 2 | 0 | m2 |  |
+| 65 | to get by | B2-C1 | обеспечено | 6 | 6 | 1/1 | 6/0 | 5 | 2 | — |  |
+| 66 | to mean | A1-A2 | частично | 7 | 7 | 1/2 | 7/0 | 7 | 0 | m2 |  |
+| 67 | to get | A1-A2 | частично | 6 | 6 | 1/3 | 6/0 | 6 | 0 | m2, m3 |  |
+| 68 | flexible | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 69 | even | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 70 | to look forward to | B1-B2 | обеспечено | 6 | 6 | 1/1 | 6/0 | 6 | 0 | — |  |
+| 71 | to go through | B2-C1 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 72 | such | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 73 | to look after | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 74 | to turn out | B2-C1 | частично | 1 | 1 | 1/1 | 1/0 | 1 | 0 | — |  |
+| 75 | last | A1-A2 | обеспечено | 7 | 7 | 2/2 | 7/0 | 7 | 0 | — |  |
+| 76 | to take | A1-A2 | частично | 7 | 7 | 2/3 | 7/0 | 7 | 0 | m3 |  |
+| 77 | to find out | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 78 | really | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 79 | to meet a deadline | Pro | частично | 6 | 6 | 1/1 | 6/0 | 0 | 1 | — | только фильмы и сериалы; в TED, книгах и новостях не найдено |
+| 80 | to keep up with | B2-C1 | обеспечено | 5 | 5 | 1/1 | 5/0 | 5 | 0 | — |  |
+| 81 | between | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 82 | to run out of | B1-B2 | частично | 2 | 2 | 1/1 | 2/0 | 2 | 0 | — |  |
+| 83 | to make up for | B2-C1 | обеспечено | 5 | 5 | 1/1 | 5/0 | 5 | 0 | — |  |
+| 84 | a lot of | A1-A2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 85 | to give | A1-A2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 86 | to get along with | B1-B2 | обеспечено | 5 | 5 | 1/1 | 5/0 | 5 | 0 | — |  |
+| 87 | own | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 88 | to rule out | B2-C1 | обеспечено | 5 | 5 | 1/1 | 5/0 | 5 | 0 | — |  |
+| 89 | draft | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 90 | little | A1-A2 | обеспечено | 7 | 7 | 2/2 | 7/0 | 7 | 0 | — |  |
+| 91 | to get over | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 92 | to tweak | Pro | частично | 3 | 3 | 1/1 | 2/1 | 3 | 0 | — |  |
+| 93 | to sort out | B2-C1 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 94 | to know | A1-A2 | частично | 4 | 4 | 1/1 | 3/1 | 4 | 0 | — |  |
+| 95 | another | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 96 | to set up | B1-B2 | частично | 3 | 3 | 1/1 | 3/0 | 3 | 0 | — |  |
+| 97 | to take over | B2-C1 | частично | 3 | 3 | 1/1 | 3/0 | 3 | 0 | — |  |
+| 98 | to become | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 99 | to evaluate | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 100 | to take up | B1-B2 | обеспечено | 6 | 6 | 1/1 | 6/0 | 6 | 0 | — |  |
+| 101 | interest | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 102 | to take after | B2-C1 | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 103 | to think | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 104 | next | A1-A2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 105 | first | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 106 | to take off | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 107 | to wear off | B2-C1 | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 108 | where | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 109 | while | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 110 | to bring up | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 111 | much | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 112 | to reach out | Pro | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 113 | to include | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 114 | many | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 115 | to put forward | B2-C1 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 116 | to see | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 117 | before | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 118 | report | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 119 | to grow up | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 120 | great | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 121 | to give in | B2-C1 | частично | 2 | 2 | 1/1 | 2/0 | 2 | 0 | — |  |
+| 122 | around | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 123 | number | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 124 | to show up | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 125 | to hold on | B2-C1 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 126 | school | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 127 | to seem | B1-B2 | частично | 3 | 3 | 1/1 | 2/1 | 3 | 0 | — |  |
+| 128 | accurate | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 129 | high | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 130 | to look | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 131 | kind | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 132 | why | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 133 | to deal with | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 134 | to hang out | B2-C1 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 135 | book | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 136 | every | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 137 | to put up with | B1-B2 | обеспечено | 6 | 6 | 1/1 | 6/0 | 6 | 0 | — |  |
+| 138 | month | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 139 | to drop by | B2-C1 | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 140 | during | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 141 | business | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 142 | to watch | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 143 | to get stuck | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 144 | word | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 145 | to begin | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 146 | to carry on | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 147 | to build | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 148 | to drop out | B2-C1 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 149 | since | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 150 | plan | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 151 | to work out | B1-B2 | обеспечено | 6 | 6 | 1/1 | 6/0 | 6 | 0 | — |  |
+| 152 | to fall out | B2-C1 | обеспечено | 9 | 9 | 2/2 | 5/4 | 4 | 1 | — | «выпадать» в корпусе встречается намного чаще, чем «поссориться» |
+| 153 | hour | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 154 | few | A1-A2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 155 | to want | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 156 | student | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 157 | to point out | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 158 | early | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 159 | head | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 160 | to resolve | B1-B2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 161 | seamless | Pro | частично | 3 | 3 | 1/1 | 3/0 | 3 | 0 | — |  |
+| 162 | person | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 163 | state | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 164 | to fall behind | B2-C1 | обеспечено | 5 | 5 | 1/1 | 5/0 | 5 | 0 | — |  |
+| 165 | night | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 166 | to look up | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 167 | area | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 168 | force | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 169 | to fall through | B2-C1 | обеспечено | 9 | 9 | 2/2 | 6/3 | 5 | 1 | — |  |
+| 170 | to need | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 171 | bit | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 172 | large | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 173 | to run into | B1-B2 | обеспечено | 5 | 5 | 1/1 | 5/0 | 5 | 0 | — |  |
+| 174 | language | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 175 | burnout | B1-B2 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 176 | without | A1-A2 | частично | 1 | 1 | 1/1 | 0/1 | 1 | 0 | — |  |
+| 177 | town | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 178 | to overlap | Pro | частично | 4 | 4 | 1/1 | 3/1 | 4 | 0 | — |  |
+| 179 | to put up | B2-C1 | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 180 | top | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 181 | order | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 182 | to catch up | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 183 | colour | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 184 | to override | Pro | частично | 2 | 2 | 1/1 | 1/1 | 2 | 0 | — |  |
+| 185 | market | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 186 | note | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 187 | to pick up | B2-C1 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 188 | to like | A1-A2 | частично | 2 | 2 | 1/1 | 1/1 | 2 | 0 | — |  |
+| 189 | to create | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 190 | service | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 191 | to address | B2-C1 | частично | 2 | 2 | 1/1 | 1/1 | 2 | 0 | — |  |
+| 192 | game | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 193 | to check in | B1-B2 | обеспечено | 8 | 8 | 2/2 | 8/0 | 1 | 2 | — |  |
+| 194 | against | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 195 | to receive | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 196 | to overwrite | Pro | частично | 1 | 1 | 1/1 | 1/0 | 1 | 0 | — |  |
+| 197 | to show off | B2-C1 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 198 | body | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 199 | second | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 200 | to sign up | B1-B2 | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 201 | team | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 202 | to talk into | B2-C1 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 203 | though | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 204 | black | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 205 | to bear | B1-B2 | частично | 1 | 1 | 1/1 | 0/1 | 1 | 0 | — |  |
+| 206 | to love | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 207 | downside | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 208 | to regard | B2-C1 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 209 | research | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 210 | result | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 211 | foot | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 212 | to fill in | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 213 | war | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 214 | current | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 215 | to think over | B2-C1 | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 216 | example | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 217 | century | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 218 | account | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 219 | to break down | B1-B2 | обеспечено | 5 | 5 | 1/1 | 5/0 | 5 | 0 | — |  |
+| 220 | particularly | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 221 | to make out | B2-C1 | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 222 | major | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 223 | cell | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 224 | to offer | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 225 | to say | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 226 | art | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 227 | above | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 228 | to break up | B1-B2 | обеспечено | 5 | 5 | 1/1 | 5/0 | 5 | 0 | — |  |
+| 229 | plant | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 230 | to lead | B1-B2 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 231 | condition | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 232 | to paint | A1-A2 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 233 | to hand over | B1-B2 | обеспечено | 6 | 6 | 1/1 | 6/0 | 6 | 0 | — |  |
+| 234 | to set off | B2-C1 | частично | 1 | 1 | 1/1 | 1/0 | 1 | 0 | — |  |
+| 235 | to press | A1-A2 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 236 | certain | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 237 | far | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 238 | to fit | B1-B2 | частично | 2 | 2 | 1/1 | 1/1 | 2 | 0 | — |  |
+| 239 | to achieve | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 240 | main | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 241 | guy | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 242 | to acknowledge | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 243 | face | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 244 | wall | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 245 | to die | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 246 | to tell | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 247 | direct | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 248 | to accomplish | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 249 | to describe | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 250 | success | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 251 | less | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 252 | to avoid | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 253 | clearly | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 254 | especially | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 255 | scope | Pro | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 256 | lack | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 257 | until | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 258 | strong | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 259 | review | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 260 | to anticipate | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 261 | to speak | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 262 | to depend | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 263 | to rise | B1-B2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 264 | form | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 265 | race | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 266 | to afford | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 267 | girl | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 268 | to recognize | B1-B2 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 269 | to assume | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 270 | level | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 271 | to gain | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 272 | community | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 273 | to allow | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 274 | tree | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 275 | to ensure | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 276 | else | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 277 | to argue | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 278 | member | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 279 | to implement | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 280 | board | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 281 | particular | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 282 | to ask | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 283 | mark | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 284 | able | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 285 | to join | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 286 | church | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 287 | to admit | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 288 | to emphasize | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 289 | item | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 290 | detail | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 291 | support | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 292 | to prove | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 293 | to suggest | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 294 | difference | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 295 | season | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 296 | to hesitate | B2-C1 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 297 | whether | B1-B2 | частично | 1 | 1 | 1/1 | 0/1 | 1 | 0 | — |  |
+| 298 | floor | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 299 | step | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 300 | to answer | A1-A2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 301 | stuff | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 302 | to maintain | B1-B2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 303 | true | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 304 | wide | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 305 | to refer | B2-C1 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 306 | present | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 307 | to expect | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 308 | unclear | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 309 | anyone | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 310 | to draw | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 311 | directly | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 312 | to struggle | B2-C1 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 313 | below | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 314 | heavy | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 315 | quite | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 316 | white | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 317 | to remove | B1-B2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 318 | doctor | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 319 | to accept | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 320 | to conduct | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 321 | to cope with | B2-C1 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 322 | statement | B1-B2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 323 | equipment | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 324 | date | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 325 | term | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 326 | title | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 327 | link | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 328 | to work | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 329 | extra | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 330 | customer | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 331 | to introduce | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 332 | chair | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 333 | to refuse | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 334 | least | B1-B2 | частично | 2 | 2 | 1/1 | 1/1 | 2 | 0 | — |  |
+| 335 | sample | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 336 | to marry | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 337 | front | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 338 | to deliver | B1-B2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 339 | to follow through | Pro | обеспечено | 5 | 5 | 1/1 | 5/0 | 5 | 0 | — |  |
+| 340 | strike | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 341 | connection | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 342 | to postpone | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 343 | to explain | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 344 | to collect | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 345 | to seek | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 346 | age | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 347 | to inform | B1-B2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 348 | to reduce | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 349 | ability | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 350 | straight | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 351 | outside | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 352 | to overcome | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 353 | appeal | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 354 | hospital | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 355 | low | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 356 | highly | B1-B2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 357 | teacher | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 358 | quickly | A1-A2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 359 | to trust | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 360 | to live | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 361 | to increase | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 362 | wonderful | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 363 | agreement | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 364 | land | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 365 | flat | A1-A2 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 366 | within | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 367 | to release | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 368 | absolutely | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 369 | to overlook | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 370 | charge | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 371 | flow | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 372 | solution | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 373 | to outline | B2-C1 | частично | 2 | 2 | 1/1 | 1/1 | 2 | 0 | — |  |
+| 374 | additional | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 375 | public | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 376 | popular | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 377 | farm | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 378 | finally | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 379 | to require | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 380 | negative | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 381 | fear | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 382 | to tend to | B2-C1 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 383 | relative | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 384 | to enjoy | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 385 | to aim | B1-B2 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 386 | pair | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 387 | possible | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 388 | to eat | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 389 | double | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 390 | serious | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 391 | death | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 392 | leg | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 393 | to manage | B1-B2 | частично | 4 | 4 | 1/1 | 3/1 | 4 | 0 | — |  |
+| 394 | target | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 395 | to observe | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 396 | rather | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 397 | nice | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 398 | sentence | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 399 | degree | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 400 | to deserve | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 401 | truth | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 402 | to mention | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 403 | to pull | A1-A2 | частично | 3 | 3 | 1/1 | 2/1 | 3 | 0 | — |  |
+| 404 | nobody | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 405 | amount | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 406 | view | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 407 | to examine | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 408 | red | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 409 | to provide | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 410 | to lay | B2-C1 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 411 | picture | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 412 | husband | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 413 | to reply | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 414 | to fix | Pro | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 415 | parent | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 416 | to display | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 417 | access | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 418 | boy | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 419 | perfect | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 420 | to consider | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 421 | movement | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 422 | slightly | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 423 | to drink | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 424 | couple | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 425 | overall | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 426 | to treat | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 427 | hard | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 428 | to intend | B2-C1 | частично | 1 | 1 | 1/1 | 0/1 | 1 | 0 | — |  |
+| 429 | to remind | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 430 | loss | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 431 | to respond | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 432 | to act | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 433 | to confirm | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 434 | slow | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 435 | modern | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 436 | party | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 437 | regular | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 438 | quality | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 439 | treatment | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 440 | physical | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 441 | to rely on | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 442 | stakeholder | Pro | частично | 2 | 2 | 1/1 | 2/0 | 2 | 0 | — |  |
+| 443 | apart | B1-B2 | частично | 2 | 2 | 1/1 | 1/1 | 2 | 0 | — |  |
+| 444 | supply | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 445 | round | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 446 | to suit | B1-B2 | частично | 2 | 2 | 1/1 | 1/1 | 2 | 0 | — |  |
+| 447 | local | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 448 | village | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 449 | to reveal | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 450 | to convince | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 451 | road | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 452 | peace | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 453 | natural | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 454 | to sleep | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 455 | to decline | B2-C1 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 456 | story | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 457 | to express | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 458 | decade | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 459 | list | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 460 | to complain | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 461 | to launch | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 462 | to indicate | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 463 | to blame | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 464 | to warn | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 465 | to wish | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 466 | to attend | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 467 | favour | B1-B2 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 468 | almost | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 469 | to apologize | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 470 | dry | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 471 | brother | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 472 | kid | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 473 | spot | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 474 | to claim | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 475 | score | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 476 | horse | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 477 | to continue | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 478 | education | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 479 | heat | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 480 | beyond | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 481 | feasible | B2-C1 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 482 | excited | A1-A2 | частично | 3 | 3 | 1/1 | 2/1 | 3 | 0 | — |  |
+| 483 | to buy | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 484 | fish | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 485 | reader | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 486 | to measure | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 487 | whole | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 488 | importance | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 489 | to promise | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 490 | to appreciate | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 491 | distance | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 492 | to kill | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 493 | trouble | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 494 | guide | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 495 | to estimate | B2-C1 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 496 | yet | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 497 | to grant | B2-C1 | частично | 4 | 4 | 1/1 | 3/1 | 4 | 0 | — |  |
+| 498 | middle | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 499 | to serve | B1-B2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 500 | to feed | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 501 | to commit | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 502 | to suffer | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 503 | mistake | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 504 | to pay | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 505 | certainly | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 506 | to satisfy | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 507 | deep | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 508 | rate | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 509 | chief | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 510 | to prevent | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 511 | except | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 512 | cool | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 513 | field | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 514 | to put together | B1-B2 | обеспечено | 6 | 6 | 1/1 | 6/0 | 6 | 0 | — |  |
+| 515 | wave | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 516 | star | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 517 | to care | B1-B2 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 518 | south | A1-A2 | частично | 1 | 1 | 1/1 | 0/1 | 1 | 0 | — |  |
+| 519 | security | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 520 | generally | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 521 | surface | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 522 | to encourage | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 523 | to pretend | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 524 | library | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 525 | seat | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 526 | air | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 527 | excellent | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 528 | effect | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 529 | to throw | A1-A2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 530 | lift | A1-A2 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 531 | to settle | B2-C1 | частично | 4 | 4 | 1/1 | 3/1 | 4 | 0 | — |  |
+| 532 | trade | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 533 | to advertise | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 534 | task | B1-B2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 535 | to open | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 536 | to select | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 537 | ever | A1-A2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 538 | positive | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 539 | to surround | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 540 | news | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 541 | to waste | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 542 | extent | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 543 | option | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 544 | experience | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 545 | river | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 546 | to vote | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 547 | box | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 548 | annual | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 549 | anything | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 550 | to streamline | Pro | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 551 | fully | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 552 | huge | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 553 | stage | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 554 | entire | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 555 | to close | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 556 | message | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 557 | crowd | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 558 | cause | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 559 | space | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 560 | corner | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 561 | quarter | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 562 | opportunity | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 563 | shift | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 564 | awareness | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 565 | baby | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 566 | quick | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 567 | to realize | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 568 | past | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 569 | to spread | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 570 | successful | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 571 | opinion | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 572 | driver | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 573 | single | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 574 | to sing | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 575 | ball | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 576 | benefit | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 577 | power | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 578 | to cry | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 579 | doubt | B1-B2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 580 | society | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 581 | introduction | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 582 | to help | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 583 | to propose | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 584 | north | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 585 | robust | B2-C1 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 586 | choice | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 587 | senior | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 588 | argument | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 589 | nothing | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 590 | to emerge | B2-C1 | частично | 2 | 2 | 1/1 | 1/1 | 2 | 0 | — |  |
+| 591 | decision | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 592 | adult | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 593 | map | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 594 | to save | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 595 | burden | B2-C1 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 596 | island | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 597 | to fly | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 598 | to return | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 599 | to survive | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 600 | common | B1-B2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 601 | obviously | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 602 | flight | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 603 | advice | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 604 | concern | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 605 | left | A1-A2 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 606 | bill | A1-A2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 607 | demand | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 608 | to solve | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 609 | matter | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 610 | to search | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 611 | neighbour | A1-A2 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 612 | to wait | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 613 | due | B1-B2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 614 | background | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 615 | separate | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 616 | knowledge | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 617 | traffic | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 618 | value | B1-B2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 619 | speech | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 620 | tool | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 621 | to complete | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 622 | willing | B1-B2 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 623 | improvement | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 624 | dog | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 625 | contribution | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 626 | circumstance | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 627 | to lie | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 628 | throughout | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 629 | smoke | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 630 | to record | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 631 | skill | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 632 | rain | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 633 | to dress | A1-A2 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 634 | ground | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 635 | lesson | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 636 | bottleneck | Pro | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 637 | profit | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 638 | brain | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 639 | to stay | A1-A2 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 640 | animal | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 641 | funny | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 642 | to guess | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 643 | evidence | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 644 | to contribute | B2-C1 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 645 | to find | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 646 | fun | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 647 | failure | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 648 | to exist | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 649 | several | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 650 | schedule | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 651 | to protect | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 652 | goal | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 653 | speaker | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 654 | similar | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 655 | disease | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 656 | to adopt | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 657 | to be swamped | Pro | обеспечено | 7 | 7 | 1/1 | 6/1 | 2 | 1 | — |  |
+| 658 | light | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 659 | to combine | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 660 | balance | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 661 | to fight | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 662 | mountain | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 663 | workaround | Pro | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 664 | damage | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 665 | to hide | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 666 | feature | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 667 | fine | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 668 | marriage | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 669 | hair | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 670 | to develop | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 671 | meal | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 672 | reason | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 673 | to reflect | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 674 | colleague | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 675 | former | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 676 | edge case | Pro | нет материала | 0 | 0 | 0/1 | 0/0 | 0 | 0 | m1 | в корпусах (TED, 26 млн реплик фильмов, книги, Wikinews) не найдено ни одного употребления |
+| 677 | bag | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 678 | exercise | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 679 | to share | B1-B2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 680 | to repeat | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 681 | wife | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 682 | useful | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 683 | equal | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 684 | impact | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 685 | to lose | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 686 | expression | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 687 | income | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 688 | to prepare | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 689 | plus | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 690 | real | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 691 | property | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 692 | extremely | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 693 | redundant | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 694 | to discuss | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 695 | owner | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 696 | previous | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 697 | challenge | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 698 | plane | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 699 | letter | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 700 | dark | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 701 | lady | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 702 | response | B1-B2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 703 | insight | B2-C1 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 704 | duty | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 705 | to imagine | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 706 | attitude | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 707 | strength | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 708 | voice | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 709 | to earn | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 710 | to connect | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 711 | subject | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 712 | to remember | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 713 | to arrange | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 714 | daughter | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 715 | to suppose | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 716 | payment | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 717 | behaviour | B1-B2 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 718 | post | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 719 | unfortunately | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 720 | half | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 721 | to apply | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 722 | brief | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 723 | newspaper | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 724 | to roll back | Pro | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 725 | bird | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 726 | to bring sb up to speed | Pro | частично | 1 | 1 | 1/1 | 1/0 | 1 | 0 | — |  |
+| 727 | to define | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 728 | to demonstrate | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 729 | fire | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 730 | clear | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 731 | chapter | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 732 | conclusion | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 733 | priority | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 734 | secret | A1-A2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 735 | to compare | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 736 | clock | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 737 | novel | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 738 | habit | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 739 | future | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 740 | to burn | A1-A2 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 741 | everybody | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 742 | court | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 743 | pleasure | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 744 | to roll out | Pro | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 745 | to perform | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 746 | suggestion | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 747 | to forget | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 748 | store | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 749 | to gather | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 750 | memory | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 751 | ago | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 752 | mostly | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 753 | relationship | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 754 | green | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 755 | earth | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 756 | poor | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 757 | to crash | Pro | частично | 3 | 3 | 1/1 | 2/1 | 3 | 0 | — |  |
+| 758 | desire | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 759 | song | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 760 | to remain | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 761 | to promote | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 762 | to laugh | A1-A2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 763 | object | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 764 | currently | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 765 | to reassure | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 766 | range | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 767 | to employ | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 768 | ring | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 769 | arm | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 770 | path | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 771 | among | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 772 | to discover | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 773 | topic | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 774 | environment | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 775 | heart | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 776 | beach | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 777 | dead | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 778 | to freeze | Pro | частично | 2 | 2 | 1/1 | 1/1 | 2 | 0 | — |  |
+| 779 | to attract | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 780 | to win | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 781 | afternoon | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 782 | to engage | B2-C1 | частично | 3 | 3 | 1/1 | 2/1 | 3 | 0 | — |  |
+| 783 | source | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 784 | to understand | A1-A2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 785 | powerful | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 786 | to prefer | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 787 | advantage | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 788 | flower | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 789 | employee | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 790 | to extend | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 791 | aid | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 792 | to involve | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 793 | shortage | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 794 | twice | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 795 | possibility | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 796 | simply | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 797 | fresh | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 798 | bottom line | Pro | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 799 | direction | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 800 | delay | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 801 | period | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 802 | fast | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 803 | safety | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 804 | variety | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 805 | salary | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 806 | quiet | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 807 | scalable | Pro | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 808 | daily | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 809 | insurance | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 810 | foreign | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 811 | type | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 812 | nurse | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 813 | clothes | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 814 | threat | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 815 | to divide | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 816 | surprise | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 817 | screen | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 818 | length | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 819 | to learn | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 820 | sound | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 821 | investigation | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 822 | to dance | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 823 | pretty | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 824 | package | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 825 | deadline | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 826 | completely | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 827 | somewhere | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 828 | user-friendly | Pro | частично | 1 | 1 | 1/1 | 0/1 | 1 | 0 | — |  |
+| 829 | recently | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 830 | to expand | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 831 | responsibility | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 832 | moment | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 833 | to jump | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 834 | to procrastinate | B2-C1 | частично | 4 | 4 | 1/1 | 3/1 | 4 | 0 | — |  |
+| 835 | sister | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 836 | weapon | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 837 | to affect | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 838 | trend | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 839 | relatively | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 840 | rock | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 841 | sale | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 842 | host | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 843 | recent | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 844 | dream | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 845 | winter | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 846 | effort | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 847 | wealth | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 848 | broad | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 849 | nor | B2-C1 | частично | 1 | 1 | 1/1 | 0/1 | 1 | 0 | — |  |
+| 850 | to relate | B1-B2 | частично | 4 | 4 | 1/1 | 3/1 | 4 | 0 | — |  |
+| 851 | to tire | B1-B2 | частично | 3 | 3 | 1/1 | 2/1 | 3 | 0 | — |  |
+| 852 | further | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 853 | easily | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 854 | spring | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 855 | to teach | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 856 | to miss | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 857 | spirit | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 858 | garden | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 859 | consequence | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 860 | lunch | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 861 | general | B1-B2 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 862 | ahead | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 863 | actual | B1-B2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 864 | private | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 865 | to troubleshoot | Pro | частично | 1 | 1 | 1/1 | 0/1 | 1 | 0 | — |  |
+| 866 | pool | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 867 | to cross | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 868 | hands-on | Pro | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 869 | battle | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 870 | everyone | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 871 | weight | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 872 | cash | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 873 | to appear | B1-B2 | частично | 4 | 4 | 1/1 | 3/1 | 4 | 0 | — |  |
+| 874 | mood | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 875 | award | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 876 | proposal | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 877 | to worry | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 878 | coach | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 879 | available | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 880 | conversation | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 881 | strange | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 882 | full | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 883 | summer | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 884 | possibly | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 885 | shape | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 886 | guilt | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 887 | accident | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 888 | to study | A1-A2 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 889 | sea | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 890 | to represent | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 891 | perhaps | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 892 | immediately | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 893 | reliable | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 894 | key | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 895 | to smile | A1-A2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 896 | pressure | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 897 | to add | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 898 | to replace | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 899 | inside | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 900 | accountable | B2-C1 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 901 | judge | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 902 | responsible | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 903 | to contain | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 904 | suddenly | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 905 | to pass | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 906 | patience | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 907 | favourite | A1-A2 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 908 | to notice | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 909 | to read | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 910 | difficulty | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 911 | to produce | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 912 | nature | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 913 | purchase | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 914 | reasonable | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 915 | significant | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 916 | to shoot | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 917 | exactly | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 918 | to sell | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 919 | to announce | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 920 | suitable | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 921 | worker | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 922 | independent | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 923 | to fine-tune | Pro | частично | 1 | 1 | 1/1 | 0/1 | 1 | 0 | — |  |
+| 924 | law | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 925 | to recommend | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 926 | whatever | B1-B2 | частично | 2 | 2 | 1/1 | 1/1 | 2 | 0 | — |  |
+| 927 | sufficient | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 928 | survey | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 929 | to write | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 930 | necessary | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 931 | to stick | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 932 | everything | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 933 | aware | B1-B2 | частично | 1 | 1 | 1/1 | 0/1 | 1 | 0 | — |  |
+| 934 | request | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 935 | growth | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 936 | efficient | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 937 | rich | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 938 | to cover | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 939 | influence | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 940 | wind | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 941 | confident | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 942 | relevant | B2-C1 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 943 | none | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 944 | respect | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 945 | paper | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 946 | exchange | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 947 | to overthink | B2-C1 | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 948 | various | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 949 | famous | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 950 | to listen | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 951 | position | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 952 | blood | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 953 | attempt | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 954 | comfortable | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 955 | appropriate | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 956 | relieved | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 957 | son | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 958 | to count | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 959 | near | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 960 | convenient | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 961 | writer | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 962 | simple | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 963 | grateful | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 964 | to invite | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 965 | human | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 966 | bed | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 967 | to mix | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 968 | to hear | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 969 | to sign off on | Pro | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 970 | correct | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 971 | to hit | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 972 | situation | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 973 | to beat | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 974 | obvious | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 975 | to establish | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 976 | to copy | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 977 | anxious | B2-C1 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 978 | staff | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 979 | to handle | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 980 | indeed | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 981 | curious | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 982 | glass | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 983 | accuracy | Pro | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 984 | size | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 985 | trial | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 986 | activity | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 987 | cautious | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 988 | to ride | A1-A2 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 989 | addition | B1-B2 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 990 | to call | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 991 | event | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 992 | to determine | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 993 | self-conscious | B2-C1 | частично | 3 | 3 | 1/1 | 2/1 | 3 | 0 | — |  |
+| 994 | likely | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 995 | to fail | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 996 | special | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 997 | bias | Pro | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 998 | player | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 999 | challenging | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1000 | average | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1001 | to enter | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1002 | demanding | B2-C1 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 1003 | to send | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1004 | to occur | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1005 | to pitch | Pro | частично | 1 | 1 | 1/1 | 0/1 | 1 | 0 | — |  |
+| 1006 | essential | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1007 | alone | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1008 | overwhelmed | B2-C1 | частично | 4 | 4 | 1/1 | 3/1 | 4 | 0 | — |  |
+| 1009 | disappointed | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1010 | straightforward | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1011 | to bring | A1-A2 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 1012 | embarrassed | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1013 | versatile | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1014 | sophisticated | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1015 | exhausted | B1-B2 | частично | 3 | 3 | 1/1 | 2/1 | 3 | 0 | — |  |
+| 1016 | specific | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1017 | to put | A1-A2 | частично | 2 | 2 | 1/1 | 1/1 | 2 | 0 | — |  |
+| 1018 | upset | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1019 | vague | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1020 | to justify | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1021 | rude | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1022 | valid | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1023 | to start | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1024 | polite | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1025 | to scale up | Pro | частично | 3 | 3 | 1/1 | 3/0 | 3 | 0 | — |  |
+| 1026 | vivid | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1027 | tedious | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1028 | patient | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1029 | workload | Pro | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 1030 | tough | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1031 | to finish | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1032 | however | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1033 | to sync up | Pro | частично | 5 | 5 | 1/2 | 4/1 | 1 | 0 | m1 | рабочее значение «созвониться, свериться» в корпусах не найдено — m1 без реальных примеров |
+| 1034 | to proceed | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1035 | genuine | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1036 | therefore | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1037 | to follow up | Pro | обеспечено | 5 | 5 | 1/1 | 4/1 | 2 | 0 | — | в корпусе follow up шире, чем «вернуться к вопросу»: «заняться дальше, проверить, довести до конца» |
+| 1038 | generous | B2-C1 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 1039 | to stop | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1040 | otherwise | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1041 | to touch base | Pro | частично | 2 | 2 | 1/1 | 2/0 | 2 | 0 | — |  |
+| 1042 | inevitable | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1043 | although | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1044 | to loop in | Pro | частично | 6 | 6 | 1/1 | 6/0 | 0 | 1 | — | только сериалы (американские процедуралы); в TED, книгах и новостях не найдено |
+| 1045 | to try | A1-A2 | частично | 4 | 4 | 1/1 | 3/1 | 4 | 0 | — |  |
+| 1046 | unless | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1047 | to push back | Pro | обеспечено | 8 | 8 | 1/1 | 6/2 | 2 | 1 | — |  |
+| 1048 | eager | B2-C1 | частично | 1 | 1 | 1/1 | 0/1 | 1 | 0 | — |  |
+| 1049 | actually | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1050 | to wrap up | Pro | частично | 3 | 3 | 1/1 | 3/0 | 3 | 0 | — |  |
+| 1051 | fluent | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1052 | to use | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1053 | probably | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1054 | to walk sb through | Pro | обеспечено | 7 | 7 | 1/1 | 6/1 | 1 | 1 | — |  |
+| 1055 | awkward | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1056 | nearly | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1057 | to run late | Pro | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1058 | complicated | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1059 | to feel | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1060 | hardly | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1061 | to be on track | Pro | обеспечено | 7 | 7 | 1/1 | 5/2 | 2 | 0 | — |  |
+| 1062 | lately | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1063 | to be on hold | Pro | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 1064 | moreover | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1065 | to leave | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1066 | instead | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1067 | heads-up | Pro | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 1068 | whereas | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1069 | anyway | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1070 | ASAP | Pro | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 1071 | despite | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1072 | to arrive | A1-A2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 1073 | according to | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1074 | FYI | Pro | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 1075 | meanwhile | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1076 | to make a decision | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1077 | ETA | Pro | частично | 2 | 2 | 1/1 | 1/1 | 2 | 0 | — |  |
+| 1078 | apparently | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1079 | to meet | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1080 | to pay attention | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1081 | bandwidth | Pro | частично | 1 | 1 | 1/1 | 0/1 | 1 | 0 | — |  |
+| 1082 | approximately | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1083 | to take part in | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1084 | to take ownership | Pro | частично | 2 | 2 | 1/1 | 2/0 | 2 | 0 | — |  |
+| 1085 | gradually | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1086 | to visit | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1087 | to take place | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1088 | to raise a concern | Pro | частично | 1 | 1 | 1/1 | 1/0 | 1 | 0 | — |  |
+| 1089 | thoroughly | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1090 | to keep in touch | B1-B2 | обеспечено | 5 | 5 | 1/1 | 5/0 | 5 | 0 | — |  |
+| 1091 | to get back to sb | Pro | частично | 4 | 4 | 1/1 | 3/1 | 1 | 1 | — | в корпусе get back to чаще значит «вернуться к делу, теме»; «ответить позже» — только get back to you / them |
+| 1092 | definitely | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1093 | to travel | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1094 | to be about to | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1095 | to be up for | Pro | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 1096 | deliberately | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1097 | to be used to | B1-B2 | частично | 1 | 1 | 1/1 | 1/0 | 1 | 0 | — |  |
+| 1098 | on my end | Pro | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 1099 | regardless | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1100 | to walk | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1101 | worth it | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1102 | it's a known issue | Pro | нет материала | 0 | 0 | 0/1 | 0/0 | 0 | 0 | m1 | в корпусах не найдено ни одного употребления |
+| 1103 | as long as | B2-C1 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1104 | it depends | B1-B2 | обеспечено | 5 | 5 | 1/1 | 5/0 | 5 | 0 | — |  |
+| 1105 | good catch | Pro | частично | 7 | 7 | 2/2 | 7/0 | 5 | 1 | — |  |
+| 1106 | as soon as | B2-C1 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1107 | to run | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1108 | no wonder | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1109 | good call | Pro | обеспечено | 5 | 5 | 1/1 | 5/0 | 5 | 0 | — |  |
+| 1110 | to make ends meet | B2-C1 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1111 | by the way | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1112 | to make a point | Pro | частично | 3 | 3 | 1/1 | 3/0 | 3 | 0 | — |  |
+| 1113 | to keep an eye on | B2-C1 | обеспечено | 5 | 5 | 1/1 | 5/0 | 5 | 0 | — |  |
+| 1114 | to drive | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1115 | on purpose | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1116 | to get the hang of | B2-C1 | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 1117 | in advance | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1118 | to prioritize | Pro | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 1119 | to break the ice | B2-C1 | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 1120 | to play | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1121 | to delegate | Pro | обеспечено | 6 | 6 | 1/1 | 6/0 | 6 | 0 | — |  |
+| 1122 | to be on the same page | B2-C1 | частично | 2 | 2 | 1/1 | 2/0 | 2 | 0 | — |  |
+| 1123 | to negotiate | Pro | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1124 | to be on the safe side | B2-C1 | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 1125 | to cook | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1126 | to keep sb posted | Pro | обеспечено | 7 | 7 | 1/1 | 6/1 | 1 | 0 | — |  |
+| 1127 | to cut corners | B2-C1 | частично | 1 | 1 | 1/1 | 1/0 | 1 | 0 | — |  |
+| 1128 | no worries | Pro | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 1129 | to call it a day | B2-C1 | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 1130 | to clean | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1131 | to brainstorm | Pro | частично | 1 | 1 | 1/1 | 0/1 | 1 | 0 | — |  |
+| 1132 | under the weather | B2-C1 | обеспечено | 5 | 5 | 1/1 | 5/0 | 5 | 0 | — |  |
+| 1133 | deliverable | Pro | частично | 1 | 1 | 1/1 | 0/1 | 1 | 0 | — |  |
+| 1134 | over the moon | B2-C1 | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 1135 | to wash | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1136 | milestone | Pro | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 1137 | out of the blue | B2-C1 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1138 | once in a blue moon | B2-C1 | обеспечено | 5 | 5 | 1/1 | 5/0 | 5 | 0 | — |  |
+| 1139 | to sit | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1140 | to ship | Pro | частично | 1 | 1 | 1/1 | 0/1 | 1 | 0 | — |  |
+| 1141 | a piece of cake | B2-C1 | обеспечено | 5 | 5 | 1/1 | 5/0 | 5 | 0 | — |  |
+| 1142 | a pain in the neck | B2-C1 | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 1143 | to stand | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1144 | no big deal | B2-C1 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1145 | to be up to | B2-C1 | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 1146 | to wake up | A1-A2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1147 | to be fed up with | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 1 | 0 | — |  |
+| 1148 | to be keen on | B2-C1 | обеспечено | 8 | 8 | 1/1 | 6/2 | 2 | 0 | — |  |
+| 1149 | to get up | A1-A2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1150 | it's on me | B2-C1 | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 1151 | fair enough | B2-C1 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1152 | to turn on | A1-A2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1153 | that makes two of us | B2-C1 | частично | 4 | 4 | 1/1 | 4/0 | 4 | 0 | — |  |
+| 1154 | not my cup of tea | B2-C1 | частично | 2 | 2 | 1/1 | 2/0 | 2 | 0 | — |  |
+| 1155 | to turn off | A1-A2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1156 | to look for | A1-A2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1157 | to show | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1158 | to change | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1159 | to choose | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1160 | to decide | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1161 | to move | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1162 | to cost | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1163 | to spend | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1164 | to rest | A1-A2 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 1165 | to hope | A1-A2 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 1166 | to believe | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1167 | to happen | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1168 | to agree | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1169 | time | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1170 | day | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1171 | week | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1172 | year | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1173 | morning | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1174 | evening | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1175 | weekend | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1176 | people | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1177 | man | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1178 | woman | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1179 | child | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1180 | friend | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1181 | family | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1182 | mother | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1183 | father | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1184 | home | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1185 | house | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1186 | room | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1187 | kitchen | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1188 | door | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1189 | window | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1190 | table | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1191 | car | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1192 | bus | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1193 | train | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1194 | street | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1195 | city | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1196 | country | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1197 | money | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1198 | price | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1199 | shop | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1200 | job | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1201 | food | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1202 | water | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1203 | breakfast | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1204 | dinner | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1205 | question | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1206 | problem | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1207 | idea | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1208 | phone | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1209 | name | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1210 | weather | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1211 | holiday | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1212 | trip | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1213 | ticket | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1214 | place | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1215 | way | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1216 | thing | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1217 | life | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1218 | world | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1219 | health | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1220 | good | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1221 | bad | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1222 | big | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1223 | small | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1224 | new | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1225 | old | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1226 | young | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1227 | long | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1228 | short | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1229 | easy | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1230 | difficult | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1231 | hot | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1232 | cold | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1233 | warm | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1234 | cheap | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1235 | expensive | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1236 | free | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1237 | busy | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1238 | tired | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1239 | hungry | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1240 | happy | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1241 | sad | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1242 | beautiful | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1243 | interesting | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1244 | important | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1245 | ready | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1246 | sure | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1247 | right | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1248 | wrong | A1-A2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 1249 | different | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1250 | same | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1251 | always | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1252 | never | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1253 | often | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1254 | sometimes | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1255 | usually | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1256 | already | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1257 | still | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1258 | again | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1259 | soon | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1260 | now | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1261 | today | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1262 | tomorrow | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1263 | yesterday | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1264 | here | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1265 | there | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1266 | very | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1267 | too | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1268 | maybe | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1269 | together | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1270 | thank you | A1-A2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1271 | please | A1-A2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1272 | you're welcome | A1-A2 | обеспечено | 5 | 5 | 1/1 | 5/0 | 5 | 0 | — |  |
+| 1273 | excuse me | A1-A2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1274 | sorry | A1-A2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1275 | of course | A1-A2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1276 | see you | A1-A2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1277 | good luck | A1-A2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1278 | never mind | A1-A2 | обеспечено | 5 | 5 | 1/1 | 5/0 | 5 | 0 | — |  |
+| 1279 | How are you? | A1-A2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1280 | What time is it? | A1-A2 | обеспечено | 6 | 6 | 1/1 | 6/0 | 6 | 0 | — |  |
+| 1281 | part | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1282 | point | A1-A2 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 1283 | to keep | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1284 | case | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1285 | to set | A1-A2 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 1286 | to follow | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1287 | to turn | A1-A2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 1288 | to hold | A1-A2 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 1289 | side | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1290 | line | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1291 | to fall | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1292 | deal | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1293 | base | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1294 | to grow | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1295 | mind | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1296 | figure | B1-B2 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 1297 | to break | A1-A2 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 1298 | to reach | A1-A2 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 1299 | across | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1300 | along | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1301 | toward | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1302 | sense | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1303 | rule | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1304 | to carry | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1305 | forward | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1306 | to cut | A1-A2 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 1307 | to raise | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1308 | behind | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1309 | sign | A1-A2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 1310 | either | B1-B2 | частично | 1 | 1 | 1/1 | 0/1 | 1 | 0 | — |  |
+| 1311 | once | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1312 | enough | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1313 | to wear | A1-A2 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 1314 | industry | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1315 | total | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1316 | limit | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1317 | attention | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1318 | to check | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1319 | to pick | A1-A2 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 1320 | personal | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1321 | piece | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1322 | article | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1323 | to drop | A1-A2 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 1324 | to wonder | A1-A2 | частично | 2 | 2 | 1/1 | 1/1 | 2 | 0 | — |  |
+| 1325 | to catch | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1326 | thus | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1327 | stock | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1328 | character | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1329 | population | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1330 | drug | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1331 | department | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1332 | election | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1333 | military | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1334 | tax | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1335 | capital | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1336 | to identify | B1-B2 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 1337 | to be worth | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1338 | relation | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1339 | to touch | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1340 | to tend | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1341 | to advance | B1-B2 | частично | 3 | 3 | 1/1 | 2/1 | 3 | 0 | — |  |
+| 1342 | to fill | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1343 | to match | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1344 | to associate | B2-C1 | частично | 4 | 4 | 1/1 | 3/1 | 4 | 0 | — |  |
+| 1345 | to push | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1346 | competition | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1347 | reference | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1348 | pattern | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1349 | application | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1350 | oil | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1351 | science | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1352 | to operate | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1353 | facility | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1354 | track | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1355 | female | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1356 | male | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1357 | legal | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1358 | magazine | A1-A2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 1359 | to welcome | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1360 | generation | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1361 | favorite | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1362 | majority | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1363 | content | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1364 | safe | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1365 | effective | B1-B2 | частично | 4 | 4 | 1/1 | 3/1 | 4 | 0 | — |  |
+| 1366 | medical | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1367 | complex | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1368 | executive | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1369 | primary | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1370 | fair | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1371 | to hang | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1372 | to print | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1373 | speed | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1374 | to transfer | B1-B2 | частично | 2 | 2 | 1/1 | 1/1 | 2 | 0 | — |  |
+| 1375 | crime | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1376 | favor | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1377 | institution | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1378 | pain | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1379 | labor | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1380 | edge | B1-B2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 1381 | audience | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1382 | to roll | B1-B2 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 1383 | reality | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1384 | artist | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1385 | presence | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1386 | defense | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1387 | nuclear | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1388 | scale | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1389 | neither | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1390 | neighbor | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1391 | technique | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1392 | bottom | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1393 | commercial | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1394 | union | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1395 | initial | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1396 | critical | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1397 | boat | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1398 | fan | A1-A2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 1399 | district | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1400 | consideration | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1401 | to conclude | B1-B2 | частично | 4 | 4 | 1/1 | 3/1 | 4 | 0 | — |  |
+| 1402 | impossible | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1403 | revenue | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1404 | to be afraid | A1-A2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1405 | to vary | B1-B2 | частично | 3 | 3 | 1/1 | 2/1 | 3 | 0 | — |  |
+| 1406 | cancer | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1407 | healthy | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1408 | to blow | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1409 | volume | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1410 | location | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1411 | to invest | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1412 | glad | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1413 | opposite | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1414 | stone | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1415 | murder | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1416 | to hate | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1417 | usual | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1418 | carefully | A1-A2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 1419 | to pack | A1-A2 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 1420 | to recall | B1-B2 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 1421 | to manufacture | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1422 | totally | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1423 | visitor | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1424 | freedom | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1425 | construction | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1426 | dear | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1427 | objective | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1428 | to oppose | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1429 | branch | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1430 | vehicle | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1431 | scientist | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1432 | to bind | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1433 | to belong | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1434 | taste | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1435 | tonight | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1436 | fashion | A1-A2 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 1437 | danger | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1438 | dangerous | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1439 | to decrease | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1440 | to hurt | A1-A2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 1441 | council | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1442 | sight | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1443 | to generate | B1-B2 | обеспечено | 5 | 5 | 1/1 | 4/1 | 5 | 0 | — |  |
+| 1444 | gift | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1445 | delivery | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1446 | to deny | B1-B2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 1447 | guest | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1448 | quote | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1449 | to climb | A1-A2 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 1450 | basically | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1451 | violence | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1452 | mainly | B1-B2 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 1453 | noise | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1454 | manner | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1455 | gun | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1456 | square | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1457 | occasion | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1458 | familiar | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1459 | to ignore | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1460 | to destroy | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1461 | affair | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1462 | civil | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1463 | to locate | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1464 | citizen | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1465 | domestic | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1466 | load | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1467 | belief | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1468 | arrangement | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1469 | skin | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1470 | prison | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1471 | to switch | B1-B2 | обеспечено | 6 | 6 | 1/1 | 5/1 | 6 | 0 | — |  |
+| 1472 | to acquire | B2-C1 | обеспечено | 7 | 7 | 1/1 | 6/1 | 7 | 0 | — |  |
+| 1473 | fairly | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1474 | to participate | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1475 | wood | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1476 | tear | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1477 | representative | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1478 | capacity | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1479 | to shake | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1480 | ought to | B1-B2 | обеспечено | 7 | 7 | 1/1 | 7/0 | 7 | 0 | — |  |
+| 1481 | fee | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1482 | hall | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1483 | regulation | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1484 | to escape | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1485 | to relax | A1-A2 | частично | 4 | 4 | 1/1 | 3/1 | 4 | 0 | — |  |
+| 1486 | lawyer | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1487 | description | A1-A2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1488 | confidence | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1489 | perspective | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1490 | industrial | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1491 | to suspect | B1-B2 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1492 | to assess | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
+| 1493 | assessment | B2-C1 | обеспечено | 8 | 8 | 1/1 | 7/1 | 8 | 0 | — |  |
