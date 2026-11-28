@@ -56,7 +56,11 @@ def main(priv: Path) -> None:
         ('UNITS = ROOT / "data" / "units.jsonl"', 'UNITS = ROOT / "units.jsonl"'),
         ('CORPUS_EXAMPLES = ROOT / "data" / "corpus" / "examples.jsonl"', 'CORPUS_EXAMPLES = ROOT / "corpus" / "examples.jsonl"'),
         ('CORPUS_SOURCES = ROOT / "data" / "corpus" / "sources.jsonl"', 'CORPUS_SOURCES = ROOT / "corpus" / "sources.jsonl"'),
+        ('CORPUS_DIFFICULTY = ROOT / "data" / "corpus" / "difficulty.json"', 'CORPUS_DIFFICULTY = ROOT / "corpus" / "difficulty.json"'),
     ]))
+    if (priv / "data" / "corpus" / "difficulty.json").exists():   # easiest examples first (tools/coverage.py)
+        (DECK / "corpus").mkdir(parents=True, exist_ok=True)
+        shutil.copy(priv / "data" / "corpus" / "difficulty.json", DECK / "corpus" / "difficulty.json")
     put(DECK / "corpus" / "__init__.py", "")
     put(DECK / "corpus" / "quality.py", rd("corpus/quality.py"))
     for t in ("kinds_sim.py", "test_core.js"):

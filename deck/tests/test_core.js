@@ -132,6 +132,13 @@ t('pickExample: never the last shown, prefers weak ones, respects "needs transla
   assert.strictEqual(C.pickExample([UNIT.x[0]], { last: ['e1'] }).id, 'e1');
 });
 
+t('pickExample: the easiest sentence first (fewest unknown words), then the next ones once seen', function () {
+  var xs = [{ id: 'a', en: 'A hard one.', d: 21 }, { id: 'b', en: 'An easy one.', d: 0 }, { id: 'c', en: 'Middle.', d: 3 }];
+  for (var i = 0; i < 20; i++) assert.strictEqual(C.pickExample(xs, {}).id, 'b');
+  for (var j = 0; j < 20; j++) assert.strictEqual(C.pickExample(xs, { seen: ['b'] }).id, 'c');
+  assert.strictEqual(C.pickExample(xs, { seen: ['b', 'c'] }).id, 'a');
+});
+
 t('acceptFor: dictionary form, listed forms and the form in the sentence are accepted', function () {
   var acc = C.acceptFor(['to come across'], UNIT.f, 'came across');
   ['come across', 'came across', 'comes across', 'to come across'].forEach(function (w) {

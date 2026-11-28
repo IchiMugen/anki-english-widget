@@ -30,6 +30,7 @@ ROOT = Path(__file__).parent
 UNITS = ROOT / "units.jsonl"
 CORPUS_EXAMPLES = ROOT / "corpus" / "examples.jsonl"
 CORPUS_SOURCES = ROOT / "corpus" / "sources.jsonl"
+CORPUS_DIFFICULTY = ROOT / "corpus" / "difficulty.json"
 MIN_EXAMPLES = 5            # rich unit
 MIN_EXAMPLES_COMPLEX = 6    # phrasal verbs, idioms, several meanings
 
@@ -120,6 +121,9 @@ def load_corpus(public: bool = False) -> dict[str, list[dict]]:
     licence, not synthetic, not rejected, no open doubt. public=True also requires a source that may be
     redistributed (public domain / CC BY / CC BY-SA)."""
     src = {s["id"]: s for s in _jsonl(CORPUS_SOURCES)}
+    diff = {}
+    if CORPUS_DIFFICULTY.exists():   # tools/coverage.py: unknown words / later deck words per example
+        diff = json.loads(CORPUS_DIFFICULTY.read_text(encoding="utf-8"))
     out: dict[str, list[dict]] = {}
     for e in _jsonl(CORPUS_EXAMPLES):
         s = src.get(e.get("src", ""))
@@ -129,8 +133,12 @@ def load_corpus(public: bool = False) -> dict[str, list[dict]]:
                 or e.get("origin") == "synthetic" or e.get("doubt")
                 or (public and not s.get("public"))):
             continue
-        out.setdefault(e["guid"], []).append({"id": "q-" + e["id"], "en": e["quote"], "ru": e.get("ru", ""),
-                                              "t": e["t"], "m": e.get("m", "m1"), "s": source_label(s)})
+        x = {"id": "q-" + e["id"], "en": e["quote"], "ru": e.get("ru", ""),
+             "t": e["t"], "m": e.get("m", "m1"), "s": source_label(s)}
+        dd = diff.get(x["id"])
+        if dd:
+            x["d"] = dd["u"] * 10 + dd["l"]
+        out.setdefault(e["guid"], []).append(x)
     return out
 
 

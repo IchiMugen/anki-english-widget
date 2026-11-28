@@ -219,6 +219,11 @@ var ETCore = (function () {
       var u = pool.filter(function (x) { return seen.indexOf(x.id) < 0; });
       if (u.length) pool = u;
     }
+    // easiest first (x.d from tools/coverage.py: 10 per word not in the deck + 1 per deck word learnt later):
+    // a sentence where only the studied word is new comes before one full of unknown words
+    var dmin = Infinity;
+    pool.forEach(function (x) { if (typeof x.d === 'number' && x.d < dmin) dmin = x.d; });
+    if (dmin < Infinity) pool = pool.filter(function (x) { return typeof x.d !== 'number' || x.d === dmin; });
     return pool[Math.floor(rnd() * pool.length)];
   }
 
