@@ -885,7 +885,9 @@
     var day = new Date().toISOString().slice(0, 10), st = null;
     try { st = JSON.parse(localStorage.getItem('et-upd') || 'null'); } catch (e) { st = null; }
     function show(s) {
-      if (!s || !/^https:\/\/github\.com\//.test(s.url || '') || !newer(s.tag, U.version) ||
+      // only this repo's release files (also re-checked for the cached state in localStorage)
+      var prefix = 'https://github.com/' + U.repo + '/releases/download/';
+      if (!s || String(s.url || '').indexOf(prefix) !== 0 || /[\s"'<>]/.test(s.url) || !newer(s.tag, U.version) ||
           document.getElementById('et-upd')) return;
       var a = document.createElement('a');
       a.id = 'et-upd';
