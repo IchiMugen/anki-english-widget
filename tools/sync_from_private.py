@@ -19,7 +19,8 @@ DECK = ROOT / "deck"
 # public deck only: the cards on a phone check the latest GitHub release once a day (src/ui.js updateBanner)
 UPDATE_DEF = '''# public deck: cards compare their version with the latest GitHub release (src/ui.js updateBanner)
 _VER = (ROOT.parent / "addon" / "english_widget" / "VERSION").read_text(encoding="utf-8").strip()
-UPDATE_JS = "\\nwindow.ET_UPDATE = {repo: 'IchiMugen/anki-english-widget', version: '" + _VER + "'};\\n"
+UPDATE_JS = ("\\nwindow.ET_UPDATE = {repo: 'IchiMugen/anki-english-widget', version: '" + _VER + "', level: '"
+             + LEVEL + "'};\\n")
 '''
 
 

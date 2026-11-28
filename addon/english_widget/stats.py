@@ -13,6 +13,7 @@ from aqt import gui_hooks, mw
 from aqt.qt import QTimer
 
 from . import pacing
+from . import level  # noqa: E402
 
 NOTETYPE = "English Trainer"
 MATURE_DAYS = 21
@@ -122,7 +123,11 @@ def fsrs_hint(col, deck_id) -> str:
 def render_pacing(p) -> str:
     if not p or not p["order"]:
         return ""
-    text = (f"Сложные слова (B2-C1): примерно каждое {p['every']}-е новое. "
+    name = level.NAMES.get(p.get("level", ""), "")
+    if not p["every"]:
+        return (f"<div style='opacity:.6;font-size:12px;margin-top:6px'>Уровень: {name}. Сложные слова (B2-C1) "
+                "появятся, когда выучите примерно треть базовых.</div>")
+    text = (f"Уровень: {name}. " if name else "") + (f"Сложные слова (B2-C1): примерно каждое {p['every']}-е новое. "
             "Будет чаще по мере того, как выучишь базу" if not p["braked"] else
             f"Сложные слова (B2-C1) сейчас даются тяжело — новых меньше: примерно каждое {p['every']}-е. "
             "Вернётся, когда повторения пойдут легче")
@@ -146,7 +151,7 @@ def _on_overview(overview, content) -> None:
             return
         block = render(level_stats(mw.col))
         from . import practice
-        extra = (render_pacing(pacing.plan(mw.col)) + practice.overview_button()
+        extra = (render_pacing(pacing.plan(mw.col, level.current())) + practice.overview_button()
                  + render_hard(hard_words(mw.col)) + fsrs_hint(mw.col, deck["id"]))
         if extra:
             block = block[: -len("</div>")] + extra + "</div>"
@@ -167,7 +172,7 @@ def _pace() -> None:
     """Re-balance the order of new cards (only when not in the middle of a review)."""
     try:
         if mw.col and mw.state != "review":
-            pacing.apply(mw.col)
+            pacing.apply(mw.col, level.current())
     except Exception as e:
         print("English Trainer pacing:", e)
 

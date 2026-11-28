@@ -245,7 +245,12 @@ def _card_state(text: str, card, kind: str) -> str:
     choice / typing from it. Read-only: nothing about scheduling changes."""
     try:
         if card.note_type()["name"] == NOTETYPE and not kind.startswith("clayout"):
-            state = json.dumps(mastery.card_info(mw.col, card), ensure_ascii=False)
+            info = mastery.card_info(mw.col, card)
+            try:   # cards left in this lesson (the template shows the lesson report on the last one)
+                info["left"] = sum(mw.col.sched.counts())
+            except Exception:
+                pass
+            state = json.dumps(info, ensure_ascii=False)
             return f"<script>window.ET_CARD={state};</script>" + text
     except Exception as e:
         print("English Trainer card state:", e)
@@ -321,3 +326,4 @@ from . import trainer  # noqa: E402,F401  (floating widget, tray, lessons)
 from . import practice  # noqa: E402,F401  (Reinforcement: extra practice outside the schedule)
 from . import deck_update  # noqa: E402,F401  (Tools → update the deck with the right import options)
 from . import updater  # noqa: E402,F401  (one-click / automatic update from the GitHub release)
+from . import level  # noqa: E402,F401  (the learner's level: asked at the first start, Tools menu)

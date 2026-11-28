@@ -34,7 +34,11 @@ MODEL_NAME = "English Trainer"
 
 DECK_NAME = "English Trainer"
 WORDS = ROOT / "words.csv"
-OUT = "English_Trainer.apkg"
+# --level=beginner|advanced: the same deck with another order of NEW words (public release: one file per level)
+#   beginner — A1-A2 first, then B1-B2 / Pro, B2-C1 last;  advanced — B1-B2 / Pro and B2-C1 first, A1-A2 last;
+#   none (default, the maintainer's deck) — the words.csv order. Notes, GUIDs and progress are the same in all.
+LEVEL = next((a.split("=", 1)[1] for a in sys.argv if a.startswith("--level=")), "")
+OUT = "English_Trainer" + (f"_{LEVEL}" if LEVEL else "") + ".apkg"
 
 FIELDS = ["English", "Russian", "Example", "Audio", "WrongEN", "WrongRU", "Explanation", "Hint", "Data"]
 # Data: the Vocabulary Unit (meanings, examples, forms, contrast) from data/units.jsonl — see units.py
@@ -64,7 +68,8 @@ def load_sources():
 
 # public deck: cards compare their version with the latest GitHub release (src/ui.js updateBanner)
 _VER = (ROOT.parent / "addon" / "english_widget" / "VERSION").read_text(encoding="utf-8").strip()
-UPDATE_JS = "\nwindow.ET_UPDATE = {repo: 'IchiMugen/anki-english-widget', version: '" + _VER + "'};\n"
+UPDATE_JS = ("\nwindow.ET_UPDATE = {repo: 'IchiMugen/anki-english-widget', version: '" + _VER + "', level: '"
+             + LEVEL + "'};\n")
 NO_EXAMPLE = "\u2014"   # "—": not a sentence; the card shows an honest notice (src/ui.js NOEX)
 
 
@@ -103,6 +108,7 @@ def read_rows(path):
         for k in FIELDS + ["Tags", "GUID"]:
             r[k] = (r.get(k) or "").strip()
     rows = [r for r in rows if r["English"] and r["Russian"]]
+    rows = by_level(rows, LEVEL)
     U = units.load()
     Q = units.load_corpus()
     gaps = gap_options(rows)
@@ -111,6 +117,20 @@ def read_rows(path):
         # the old Example column is synthetic (archived). The field only keeps the context card alive in Anki
         # ({{#Example}}): a real quote, or NO_EXAMPLE when the word has no real material yet.
         r["Example"] = Q[note_guid(r)][0]["en"] if Q.get(note_guid(r)) else NO_EXAMPLE
+    return rows
+
+
+def tier(r) -> int:
+    t = r.get("Tags", "").lower()
+    return 0 if "level::a1-a2" in t else 2 if ("level::b2-c1" in t or "level::c1-c2" in t) else 1
+
+
+def by_level(rows, level):
+    """Learning order for a level (stable: inside a tier the words.csv order stays)."""
+    if level == "beginner":
+        return sorted(rows, key=tier)
+    if level == "advanced":
+        return sorted(rows, key=lambda r: 1 if tier(r) == 0 else 0)
     return rows
 
 

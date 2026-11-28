@@ -489,6 +489,7 @@
   }
 
   function drawFront(kind, xId, info) {
+    CARD_NEW = !!(info && info.type === 0);
     K = setupKind(kind, xId, info);
     window.__etK = K;   // read by the browser tests (tests/kinds_sim.py)
     if (K.x) { rememberEx(K.x.id); prefetch(K.x.en); }
@@ -533,6 +534,7 @@
   // Result is decided: remember it and move to the answer side, which shows the same picture.
   function finish(st, delay) {
     answered = true;
+    st.n = CARD_NEW;
     revealSentence();
     st.t = Date.now();
     st.kind = K.kind;
@@ -641,11 +643,82 @@
   function grade(st, ease, auto) {
     if (graded && !(autoPending && !auto)) return;   // a click while waiting answers at once
     var first = !graded;
+    if (first && !PRACTICE) sessAdd(ease, st);
     graded = true;
     autoPending = !!auto;
     if (st) { st.graded = true; saveResult(st); }
     if (!auto) root.classList.add('is-leaving');
     if (first || !PRACTICE) sendGrade(ease, auto, st, !first);
+  }
+
+  /* ---------- the lesson report (owner's wife, 2026-11-28): per session, at the end of the lesson ----------
+   * Every answer goes into a small log on this device (localStorage et-sess). A session = answers without a
+   * pause longer than 30 min. On the last card of the lesson (Anki says nothing is left) the back side shows
+   * the session: cards, correct, new words, time, the words with mistakes. Nothing is sent anywhere. */
+  var CARD_NEW = false, SESS_GAP = 30 * 60 * 1000;
+  function sessLoad() { try { return JSON.parse(localStorage.getItem('et-sess') || '[]') || []; } catch (e) { return []; } }
+  function sessAdd(ease, st) {
+    var log = sessLoad();
+    var n = st && typeof st.n === 'boolean' ? st.n : CARD_NEW;
+    log.push({ t: Date.now(), w: EN[0], e: ease, n: n ? 1 : 0, k: CTX ? 'c' : TO_EN ? 'r' : 'e' });
+    try { localStorage.setItem('et-sess', JSON.stringify(log.slice(-400))); } catch (e) {}
+  }
+  function sessCurrent(extra) {
+    var log = sessLoad().concat(extra ? [extra] : []), out = [];
+    for (var i = log.length - 1; i >= 0; i--) {
+      if (out.length && out[0].t - log[i].t > SESS_GAP) break;
+      out.unshift(log[i]);
+    }
+    if (out.length && Date.now() - out[out.length - 1].t > SESS_GAP) return [];
+    return out;
+  }
+  function remaining(cb) {
+    if (window.ET_CARD && typeof window.ET_CARD.left === 'number') { cb(window.ET_CARD.left); return; }
+    var api = host() === 'ankidroid' ? ankiDroid() : null;
+    if (!api || typeof api.ankiGetNewCardCount !== 'function') { cb(null); return; }
+    function val(r) { return r && typeof r === 'object' && 'value' in r ? r.value : r; }
+    try {
+      var p = [api.ankiGetNewCardCount(), api.ankiGetLrnCardCount(), api.ankiGetRevCardCount()];
+      if (p[0] && typeof p[0].then === 'function') {
+        Promise.all(p).then(function (r) { cb(+val(r[0]) + +val(r[1]) + +val(r[2])); }, function () { cb(null); });
+      } else cb(+val(p[0]) + +val(p[1]) + +val(p[2]));
+    } catch (e) { cb(null); }
+  }
+  function plural(n, one, few, many) {
+    var m10 = n % 10, m100 = n % 100;
+    return n + ' ' + (m10 === 1 && m100 !== 11 ? one : m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20) ? few : many);
+  }
+  function reportHtml(xs) {
+    if (!xs.length) return '';
+    var ok = xs.filter(function (x) { return x.e >= 3; }).length;
+    var words = {}, newW = {}, bad = {};
+    xs.forEach(function (x) { words[x.w] = 1; if (x.n) newW[x.w] = 1; if (x.e < 3) bad[x.w] = 1; });
+    var mins = Math.max(1, Math.round((xs[xs.length - 1].t - xs[0].t) / 60000));
+    var best = 0, run = 0;
+    xs.forEach(function (x) { run = x.e >= 3 ? run + 1 : 0; if (run > best) best = run; });
+    var badList = Object.keys(bad);
+    return '<section class="et-report et-in"><div class="et-report-title">Урок пройден — ура!</div>' +
+      '<div class="et-report-grid">' +
+      '<div><b>' + xs.length + '</b><span>' + plural(xs.length, 'карточка', 'карточки', 'карточек').replace(/^\d+ /, '') + '</span></div>' +
+      '<div><b>' + Math.round(ok * 100 / xs.length) + '%</b><span>верно с первого раза</span></div>' +
+      '<div><b>' + Object.keys(newW).length + '</b><span>новых слов</span></div>' +
+      '<div><b>' + mins + '</b><span>мин</span></div>' +
+      '</div>' +
+      (best >= 3 ? '<div class="et-report-line">Лучшая серия: ' + plural(best, 'верный ответ', 'верных ответа', 'верных ответов') + ' подряд</div>' : '') +
+      (badList.length ? '<div class="et-report-line">Повторить: ' + badList.slice(0, 12).map(esc).join(', ') +
+        (badList.length > 12 ? ' и ещё ' + (badList.length - 12) : '') + '</div>'
+        : '<div class="et-report-line">Без единой ошибки!</div>') +
+      '</section>';
+  }
+  function showReportIfLast(st) {
+    if (PRACTICE || !st || !(st.status === 'correct' || st.status === 'self' || st.status === 'recall')) return;
+    remaining(function (left) {
+      if (left === null || left > 1) return;
+      var fb = root.querySelector('.et-fb');
+      if (!fb || root.querySelector('.et-report')) return;
+      var cur = st.graded ? null : { t: Date.now(), w: EN[0], e: 3, n: CARD_NEW ? 1 : 0 };
+      fb.insertAdjacentHTML('afterbegin', reportHtml(sessCurrent(cur)));
+    });
   }
 
   // Desktop only: on views where Anki's own Space/Enter would mean "Good",
@@ -817,6 +890,7 @@
     bindReveals();
     bindSay();
     each('.et-seg button', function (b) { b.disabled = true; });
+    showReportIfLast(st);
     // the sentence of this exercise aloud, after the word (Anki plays the word itself)
     if (K.x && status !== 'graded' && CFG.exampleAudio !== false && !QUIET) say(K.x.en);
     QUIET = false;
@@ -922,7 +996,8 @@
     }).then(function (rel) {
       if (!rel) return;
       var url = '';
-      (rel.assets || []).forEach(function (a) { if (a.name === 'English_Trainer.apkg') url = a.browser_download_url; });
+      var asset = 'English_Trainer' + (U.level ? '_' + U.level : '') + '.apkg';   // the same level as installed
+      (rel.assets || []).forEach(function (a) { if (a.name === asset) url = a.browser_download_url; });
       var s = { day: day, tag: rel.tag_name || '', url: url };
       try { localStorage.setItem('et-upd', JSON.stringify(s)); } catch (e) {}
       show(s);

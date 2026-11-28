@@ -3,5 +3,6 @@
   "voice": "en_US-lessac-high",
   "speed": 1.0,
   "view": "widget",
-  "auto_update": true
+  "auto_update": true,
+  "level": ""
 }
