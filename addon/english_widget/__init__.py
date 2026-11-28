@@ -210,7 +210,7 @@ def prefetch(text: str) -> None:
 
 
 def _on_js_message(handled, message: str, context):
-    """Card → add-on: et_say:<text>, et_prefetch:<text>, et_log:<json>, et_auto_easeN."""
+    """Card → add-on: et_say:<text>, et_prefetch:<text>, et_log:<json>, et_autonext:0|1, et_auto_easeN."""
     from aqt.reviewer import Reviewer
     if message.startswith("et_say:"):
         say(message[7:])
@@ -224,6 +224,14 @@ def _on_js_message(handled, message: str, context):
             level.set_level(message[9:])
         except Exception as e:
             print("English Trainer level:", e)
+        return (True, None)
+    if message.startswith("et_autonext:"):       # the card's switch «листать самому» — kept in the config for good
+        try:
+            cfg = mw.addonManager.getConfig(__name__.split(".")[0]) or {}
+            cfg["auto_next"] = message[12:] == "1"
+            mw.addonManager.writeConfig(__name__.split(".")[0], cfg)
+        except Exception as e:
+            print("English Trainer auto-next:", e)
         return (True, None)
     if message.startswith("et_log:"):
         if isinstance(context, Reviewer) and context.card:
@@ -260,6 +268,12 @@ def _card_state(text: str, card, kind: str) -> str:
             try:   # the learner's level chosen in the add-on (the card uses it instead of its own memory)
                 from . import level
                 info["level"] = (mw.addonManager.getConfig(level.PKG) or {}).get("level") or ""
+            except Exception:
+                pass
+            try:   # the switch «листать самому после верного ответа», remembered across restarts
+                an = (mw.addonManager.getConfig(__name__.split(".")[0]) or {}).get("auto_next")
+                if isinstance(an, bool):
+                    info["autonext"] = an
             except Exception:
                 pass
             state = json.dumps(info, ensure_ascii=False)

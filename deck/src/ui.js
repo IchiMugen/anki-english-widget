@@ -32,8 +32,20 @@
   var AUTO = CFG.autoGrade !== false;
   var CORRECT_DELAY = typeof CFG.correctDelay === 'number' ? CFG.correctDelay : 3000;
   // the user's own switch on the card (per device): after a correct answer go on by itself, or wait for «Дальше»
-  function autoNext() { try { return localStorage.getItem('et-autonext') !== '0'; } catch (e) { return true; } }
-  function setAutoNext(on) { try { localStorage.setItem('et-autonext', on ? '1' : '0'); } catch (e) {} }
+  // Remembered for good: the add-on keeps it in its config (window.ET_CARD.autonext) — localStorage alone is lost
+  // when Anki / AnkiDroid restarts (the card page gets a new address each start); without a saved choice the deck
+  // default holds: wait for «Дальше» (owner, 2026-11-28: no time to re-read the examples otherwise).
+  function autoNext() {
+    var c = window.ET_CARD;
+    if (c && typeof c.autonext === 'boolean') return c.autonext;
+    try { var v = localStorage.getItem('et-autonext'); if (v === '1' || v === '0') return v === '1'; } catch (e) {}
+    return CFG.autoNext === true;
+  }
+  function setAutoNext(on) {
+    try { localStorage.setItem('et-autonext', on ? '1' : '0'); } catch (e) {}
+    if (window.ET_CARD) window.ET_CARD.autonext = !!on;
+    try { if (typeof pycmd === 'function') pycmd('et_autonext:' + (on ? '1' : '0')); } catch (e) {}
+  }
   var BACK_TOKEN = 0, QUIET = false;
   var RETRY = CFG.retryAfterError !== false;
   var PRACTICE = window.ET_PRACTICE || null;

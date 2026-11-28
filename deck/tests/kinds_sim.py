@@ -38,7 +38,7 @@ function show(h) {
   [].slice.call(qa.querySelectorAll('script')).forEach(function (s) {
     var n = document.createElement('script'); n.text = s.text; s.parentNode.replaceChild(n, s); });
 }
-try { localStorage.clear(); sessionStorage.clear(); localStorage.setItem('et-level', 'medium'); } catch (e) {}   // public deck: the level is chosen
+try { localStorage.clear(); sessionStorage.clear(); localStorage.setItem('et-level', 'medium'); localStorage.setItem('et-autonext', '1'); } catch (e) {}   // public deck: the level is chosen
 var DIR = %(dir)s, HOST = %(host)s, ACT = %(act)s, A = %(a)s, Q = %(q)s;
 if (%(recent)s) localStorage.setItem('et-x:' + %(note)s, JSON.stringify(%(recent)s));
 if (HOST === 'android') {
@@ -162,6 +162,15 @@ def main():
                 else:
                     want = ["api:ans", "api:ease3"] if act == "right" else ["api:ans", "api:ease"]
                 check(f"{host} auto {d} {act}", log, want, forbid=["et_practice:"])
+    # «листать самому»: not chosen -> waits for «Дальше» (no ease sent); the add-on's remembered choice wins
+    for name, force, want, forbid in (
+            ("default waits", "localStorage.removeItem('et-autonext');", ["ans"], ["ease3"]),
+            ("remembered on", "localStorage.setItem('et-autonext', '0'); ET_CARD.autonext = true;", ["et_log:", "ease3"], []),
+            ("remembered off", "ET_CARD.autonext = false;", ["ans"], ["ease3"])):
+        n += 1
+        p = tmp / f"p{n}.html"
+        p.write_text(page("en-ru", "choice", "desktop", "right", force=FORCE_SETTING % '"choice"' + force), encoding="utf-8")
+        check(f"auto-next {name}", run(p, exe), want, forbid=forbid + ["et_practice:"])
     # a new example each time: with the first two examples shown last, the next pick is neither of them
     import html as _h
     ids = [x["id"] for x in json.loads(_h.unescape(note["Data"]))["x"]]
